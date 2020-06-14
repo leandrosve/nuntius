@@ -1,0 +1,83 @@
+.App {
+    text-align: center;
+    background: #0e0e10;  /* fallback for old browsers */ 
+    background: -webkit-linear-gradient(to bottom left,#0e0e10, #232526,#0e0e10);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to bottom left,#0e0e10, #232526,#0e0e10); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.App-logo {
+    height: 20vmin;
+    width: 20vmin;
+    pointer-events: none;
+    -webkit-filter: drop-shadow( 3px 3px 2px rgba(0, 0, 0, .7));
+    filter: drop-shadow( 3px 3px 2px rgba(0, 0, 0, .7));
+}
+
+
+.App-header {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
+    font-family: 'Bellota', cursive;
+    
+}
+
+.App-link {
+    color: white;
+    font-size: 5vh;
+    text-shadow: 2px 2px 8px black;
+    margin: 20px;
+}
+
+.Nav {
+    width: 100%;
+    background: #18181b;
+    color: white;
+    height: 60px;
+    border-bottom: 1px solid black;
+}
+
+.Nav-logo{
+    width:50px;
+    height:50px;
+    -webkit-filter: drop-shadow( 3px 3px 2px rgba(0, 0, 0, .7));
+    filter: drop-shadow( 3px 3px 2px rgba(0, 0, 0, .7));
+}
+
+.Nav h1{
+    font-family: 'Bellota', cursive;
+    font-size: 30px;
+    text-shadow: 3px 3px 2px  rgba(0, 0, 0, .7) ;
+}
+
+.Nav-content {
+    width: 80%;
+    height: 100%;
+    display: flex;
+    margin: auto;
+    flex-direction: row;
+    align-items: center;
+}
+
+.Nav-links {
+    margin-left: auto; 
+}
+
+.Nav-links a{
+    color: white;
+    text-decoration: none;
+}
+
+.Browse-content {
+    width: 80%;
+    margin: auto;
+    display: flex;
+    height: calc(100vh - 70px);
+    overflow: hidden;
+    border: 1px solid #42433d;
+    border-top: none;
+}
