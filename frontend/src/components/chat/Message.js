@@ -3,7 +3,7 @@ import './assets/Chat.css';
 import profilePicPlaceholder from '../assets/images/profile-pic-placeholder.jpg';
 import {BsTriangleFill} from 'react-icons/bs';
 
-function Message() {
+function Message({text}) {
     const selectMessage = ()=>{
         alert('holaa');
       }
@@ -11,7 +11,7 @@ function Message() {
         <div className='Message'>
             <div className='Message-box' onClick={selectMessage} >
                 <div className='Message-text'>                   
-                    <p>Euuu holaaaa lpm,asdasd asdasd, asdadasad asdasdasd,asdasd <br/> asdasd</p>
+                    <p>{text}</p>
                 </div>
                 <BsTriangleFill className='Message-dialogShape'/>
                 <div>

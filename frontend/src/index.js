@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import WebFont from 'webfontloader';
+import "./i18n";
 
 WebFont.load({
   google: {

@@ -1,5 +1,5 @@
 .Chat {
-    width: 70vw;
+    width: 75vw;
     color: white;
     background: ivory;
     display: flex;
@@ -11,9 +11,9 @@
 }
 
 .ChatList {
-    background: #1f1f23;
+    
     color: white;
-    width: 30vw;
+    width: 25vw;
     height: 100%;
     overflow: auto;
     display: flex;
@@ -21,6 +21,7 @@
     align-content: stretch;
     scrollbar-color: #42433d #6d615b;
     scrollbar-width: thin;
+    border-right: 1px solid #42433d;;
 }
 
 .ChatList h1 {
@@ -28,30 +29,81 @@
 }
 
 .ChatPreview {
+    background: #1f1f23;
     border-bottom: 1px solid #42433d;
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
     align-content: center;
     align-items: center;
     cursor: pointer;
+    padding:10px;
+}
+
+.ChatPreview:hover {
+    background: #50504e;
 }
 
 .ChatPreview-image{
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    overflow: hidden;
 }
 
 .ChatPreview-user-data {
     display: flex;
     flex-direction: column;
     align-content: space-around;
-    justify-content: space-between;
+    justify-content: left;
+    margin-left: 5px;
+    
 }
 
+
 .ChatPreview-chat-data {
+    display: flex;
+    flex-direction: column;
+ 
+    justify-content: right;
+    margin-left: 5px;
+    
+}
+
+
+.ChatPreview h3, .ChatPreview p{
+    margin: 5px;
+    text-align: left;
+}
+
+.ChatPreview h3, .ChatPreview p{
+    margin: 5px;
+    
+}
+
+.ChatPreview-time{
+    display:flex;
+    align-items: center;
+}
+
+.ChatPreview-messageCount{
+    background-color: aqua;
+    color: black;
+    padding:0px 5px 0px 5px;
+    font-weight: 700;
+    width: fit-content;
+    border-radius: 11px;
+    float: right;
+}
+
+
+.ChatPreview-chat-data {
+    display: flex;
+    flex-direction: column;
+    align-content: space-between;
+    justify-self: right;
+    margin-left: auto;
+}
+
+.ChatPreview-chat-data  {
     display: flex;
     flex-direction: column;
     align-content: space-between;
@@ -75,14 +127,15 @@
     margin-right: 10px;
 }
 
-.ChatUserInfo {
+.ChatHeader-userInfo {
     display: flex;
     flex-direction: row;
     align-items: center;
 }
 
-.ChatUserInfo h1 {
+.ChatHeader-userInfo h1 {
     font-size:20px;
+    margin-right: 10px;
 }
 
 .ChatHeader-options {
@@ -124,7 +177,7 @@
     height: calc(100% - 165px);
     /* max-height: calc(100% - 100px); */
     /* background:greenyellow; */
-    background-image: url('./images/chat-background-placeholder.jpg');
+    background-image: url('https://images.pexels.com/photos/346529/pexels-photo-346529.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260');
     background-position: center; /* Center the image */
     background-repeat: no-repeat; /* Do not repeat the image */
     background-size: cover; /* Resize the background image to cover the entire container */
@@ -161,6 +214,7 @@
     flex-direction: row;
     justify-self: end;
     align-self: end;
+    
 }
 
 .Message-box{
@@ -168,7 +222,8 @@
     margin:10px;
     flex-direction: row;
     margin-left: auto;
-    width:70%;
+    max-width:70%;
+   
     height:90%;   
     cursor: pointer;
 }
@@ -183,12 +238,16 @@
     width:100%;
     box-shadow: 2px 2px 8px rgba(0, 0, 0, .7);
     text-align: start;
+    min-width:10px;
+    min-height: 30px;
     align-self: center;
     padding-left:10px;
+    
 }
 
 .Message-text p{
     margin: 10px;
+    padding: 10px;
 }
 
 
@@ -205,6 +264,56 @@
     position: relative;
     color:white;
     margin-left: -15px;
+    margin-top: 5px;
     transform:rotate(60deg);
+    
     overflow: visible;
+}
+
+.MessageForm{
+    display: flex;
+    justify-items: right;
+    align-items: center;
+    background: white;
+
+}
+.MessageForm-emojiPicker{
+    position: absolute;
+    bottom:0;
+    right:0;
+}
+
+.MessageForm-textInput{
+    width:80%;
+    margin:5px;
+    height:70px;
+    padding:10px;
+    font-size: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    border-radius: 15px;
+    border: 2px solid gray;
+    overflow: auto;
+    outline: none;
+
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+
+    resize: none; 
+
+}
+
+.MessageForm-profilePic{
+    border-radius: 50%;
+    width:70px;
+    height:70px;
+}
+
+.MessageForm-emojiPicker-button{
+    width:70px;
+    height:70px;
+    color:gray;
+}
+.emoji-picker-react{
+    background: black;
 }
