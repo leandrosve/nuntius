@@ -1,26 +1,19 @@
 
-import React, { useState, useEffect } from "react";
+import React from "react";
+import { useField } from "formik";
 
-
-function TextInput() {
+import TextField from '@material-ui/core/TextField'
+const TextInput = ({ ...props }) => {
   
-  const [messageText, setMessageText] = useState("");
-
-    console.log('Renderizando input');
-
-    const handleChange = (e) =>{
-      setMessageText(e.target.value)
-    }
-
-
+  const [field, meta] = useField(props);
   return (
-    <input
-    type='text'
-    className="MessageForm-textInput"
-    onChange={handleChange}
-    value={messageText}
-  />
+    <>
+      <TextField {...props} {...field}/>
+        <div className="error">
+          {meta.touched && meta.error && meta.error !== 'r' ? meta.error : null}</div>
+    
+    </>
   );
-}
+};
 
 export default TextInput;

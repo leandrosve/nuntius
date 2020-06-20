@@ -1,7 +1,4 @@
-.App {
-    text-align: center;
-   
-}
+
 
 .App-logo {
     height: 20vmin;
@@ -55,6 +52,8 @@
 .Nav-menuButton{
     width:40px;
     height:40px;
+    transition: .3s ease-in;
+    color:white;
 
     
 }
@@ -100,30 +99,3 @@
     border-top: none;
 }
 
-.DropdownMenu{
-    position: absolute;
-    top:61px;
-    width:300px;
-    background: #1f1f23; 
-    padding:1rem;
-    text-align: left;
-    box-shadow: 3px 3px 8px black;
-}
-
-.DropdownMenu ul{
-    margin: 0; padding: 0;
-}
-.DropdownMenu-item{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    align-content: center;
-    color: white;
-    text-decoration: none;
-    font-size: 20px;
-    padding: 5px;
-    border-radius: 10px;
-}
-.DropdownMenu-item:hover{
-    background: gray;
-}

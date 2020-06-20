@@ -1,0 +1,118 @@
+.Modal {
+    z-index: 500;
+    background-color: white;
+    min-width: 500px;
+    max-width:800px;
+    border: 1px solid #ccc;
+    box-shadow: 1px 1px 1px black;
+    padding: 5px;
+    margin: auto;
+    box-sizing: border-box;
+    color:black;
+  }
+
+  .Modal form{
+    display: flex;
+    flex-direction: column;
+  }
+
+  .Modal h2{
+    margin: 10px;
+  }
+
+
+ 
+  
+  .Modal-back{
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    justify-items: center;
+    overflow: auto;
+    z-index: 499;
+    top:0;
+    left: 0;
+    transition: 0.3s ease-in;
+    background-color: rgba(0,0,0,.5);
+    width:100vw;
+    height:100vh;
+    
+  }
+
+  .Modal-dismissButton{
+    border: none;
+    padding: 5px 5px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    float:right;
+    margin-top: 20px;
+  }
+
+  .Modal-dismissButton svg{
+    width:32px;
+    height:32px;
+  }
+
+  .DropdownMenu{
+    position: absolute;
+    top:61px;
+    width:300px;
+    background: #1f1f23; 
+    padding:1rem;
+    text-align: left;
+    box-shadow: 3px 3px 8px black;
+    z-index: 480;
+}
+
+.DropdownMenu ul{
+    margin: 0; padding: 0;
+}
+.DropdownMenu-item{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    align-content: center;
+    color: white;
+    text-decoration: none;
+    font-size: 20px;
+   
+    border-radius: 10px;
+}
+.DropdownMenu-item:hover{
+    background: gray;
+}
+
+.avatar{
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin: 8px;
+}
+
+.ListItem{
+
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  justify-content: space-around;
+  align-items: center;
+  cursor: pointer;
+  padding: 10px;
+}
+
+.ListItem h3,
+.ListItem p {
+  margin: 5px;
+  text-align: left;
+}
+
+
+.paper{
+  margin-top: 32px;
+  display: "flex";
+  flex-direction: "column";
+  align-items: "center";
+}
+

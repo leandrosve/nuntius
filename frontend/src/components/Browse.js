@@ -1,6 +1,6 @@
 import React from 'react';
 import '../App.css';
-import Nav from './Nav';
+import Nav from './nav/Nav';
 import ChatList from './chat/ChatList';
 import Chat from './chat/Chat';
 

@@ -1,22 +1,52 @@
-import React from 'react';
-import './assets/Chat.css';
-import profilePicPlaceholder from '../assets/images/profile-pic-placeholder.jpg';
-import {BsClock} from 'react-icons/bs';
+import React from "react";
+import "./assets/Chat.css";
+import { BsClock, BsCheckAll } from "react-icons/bs";
+import ListItem2 from "../util/ListItem";
+import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
+import Badge from "@material-ui/core/Badge";
 
-function ChatPreview() {
+function ChatPreview({avatar, alias, lastMessage, unreadMessagesCount, lastMessageTime}) {
   return (
-    <div className='ChatPreview'>
-      <img src={profilePicPlaceholder} className='ChatPreview-image' alt='user' />
-        <div className='ChatPreview-user-data'>
-          <h3>Juan Perez</h3>
-          <p>You: euuu ultimo mensaje</p>
-        </div>
-        <div className='ChatPreview-chat-data'>    
-          <div className='ChatPreview-time'><BsClock/><p>3:03</p></div>
-          <div><span className='ChatPreview-messageCount'>15</span></div>
-        </div>
-    </div>
+    <ListItem2
+    style={{ background: '#1f1f23', borderBottom:'1px solid #303035'}}
+      left={
+        <img
+          src={avatar}
+          className="ChatPreview-image"
+          alt="user"
+        />
+       
+      }
+      center={
+        <React.Fragment>
+          <h3>{alias}</h3>
+          <div>
+            <p>
+              <BsCheckAll />
+              {lastMessage}
+            </p>
+          </div>
+        </React.Fragment>
+      }
+      right={
+        <React.Fragment>
+          <div className="ChatPreview-time">
+            <BsClock />
+            <p>{lastMessageTime}</p>
+          </div>
+          <div>
+            {unreadMessagesCount > 0 && (
+              <Badge
+                className="ChatPreview-messageCount"
+                badgeContent={unreadMessagesCount}
+                color="secondary"
+                children={<ChatBubbleOutlineIcon />}
+              />
+            )}
+          </div>
+        </React.Fragment>
+      }
+    />
   );
 }
-
 export default ChatPreview;

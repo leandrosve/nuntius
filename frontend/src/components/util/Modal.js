@@ -1,27 +1,27 @@
-import React, { Component } from "react";
-import { createPortal } from "react-dom";
+import React, { useEffect, useCallback } from "react";
+import "./Util.css";
+import { BsX } from "react-icons/bs";
+import CloseIcon from "@material-ui/icons/Close";
 
-const modalStyle = {
-  position: "fixed",
-  left: 0,
-  top: 0,
-  bottom: 0,
-  right: 0,
-  backgroundColor: "rgba(0,0,0,.2)",
-  color: "##FFF",
-  fontSize: "40px",
+import ClickAwayListener from "@material-ui/core/ClickAwayListener";
+
+const Modal = (props) => {
+  const handleClickAway = () => {
+    props.handleClose();
+  };
+  return (
+    <div className="Modal-back">
+      <ClickAwayListener onClickAway={handleClickAway}>
+        <div className="Modal">
+          {props.children}
+
+          <button class="Modal-dismissButton" onClick={props.handleClose}>
+            <CloseIcon />
+          </button>
+        </div>
+      </ClickAwayListener>
+    </div>
+  );
 };
 
-export default class Modal extends Component {
-  render() {
-    return createPortal(
-      <div style={modalStyle} onClick={this.props.onClick}>
-        <div>
-          <h1>props.title</h1>
-        </div>
-        {this.props.children}
-      </div>,
-      document.getElementById("modal_root")
-    );
-  }
-}
+export default Modal;

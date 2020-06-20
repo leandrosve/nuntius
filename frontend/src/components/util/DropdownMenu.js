@@ -1,21 +1,30 @@
 import React from "react";
-import "../../App.css";
-import { useTranslation } from "react-i18next";
+import "./Util.css";
 
 export const DropdownItem = (props) => {
-
   return (
-    <a href="#" className="DropdownMenu-item" onClick={props.onClick}>
-      <span className="icon-button">{props.icon}</span>
-      {props.text}
-    </a>
+    <li className="DropdownMenu-item" style={{cursor:"pointer"}} onClick={props.onClick}>   
+        <span className="icon-button" style={{textAlign:"center"}}>{props.icon}</span>
+        {props.text}
+    </li>
   );
 };
 
 function DropdownMenu(props) {
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   return (
     <div className="DropdownMenu">
-      <ul>{props.children}</ul>
+      <ul style={{display:"inline-block", width:"100%"}}>{props.children}</ul>
     </div>
   );
 }
