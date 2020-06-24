@@ -53,6 +53,7 @@ const LoginForm = () => {
             <TextField
               variant="outlined"
               margin="normal"
+              size='small'
               fullWidth
               id="username"
               label={t('username')}
@@ -64,6 +65,7 @@ const LoginForm = () => {
               margin="normal"
               required
               fullWidth
+              size="small"
               name="password"
               label={t('password')}
               type="password"

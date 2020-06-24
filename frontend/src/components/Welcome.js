@@ -62,7 +62,9 @@ function Welcome() {
         </Button>
       </Grid>
       {showModal.open && (
-        <Modal handleClose={() => setShowModal({ open: false })}>
+        <Modal 
+        open={showModal.open}
+        handleClose={() => setShowModal({ open: false })}>
           {showModal.content}
         </Modal>
       )}

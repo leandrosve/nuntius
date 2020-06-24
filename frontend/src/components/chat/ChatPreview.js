@@ -21,9 +21,12 @@ function ChatPreview({avatar, alias, lastMessage, unreadMessagesCount, lastMessa
         <React.Fragment>
           <h3>{alias}</h3>
           <div>
-            <p>
+            <p style={{whiteSpace:'nowrap',  overflow:'hidden', textOverflow: 'ellipsis'}}>
+              <span style={{position:'relative',top:'3px', paddingRight:'5px',display:'inline-block',margin:'0'}}>
               <BsCheckAll />
+              </span>
               {lastMessage}
+              
             </p>
           </div>
         </React.Fragment>

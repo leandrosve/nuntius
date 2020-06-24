@@ -3,7 +3,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import { FormikTextField as TextField } from "formik-material-fields";
-import { Formik, Form } from "formik";
+import { Formik } from "formik";
 import * as Yup from "yup";
 import FormContainer from "./util/FormContainer";
 import Button from "@material-ui/core/Button";
@@ -73,11 +73,13 @@ function RegisterForm() {
               label={t("username")}
               name="username"
               autoFocus
+              size='small'
             />
 
             <TextField
               label={t("email")}
               name="email"
+              size='small'
               type="text"
               variant="outlined"
               margin="normal"
@@ -89,6 +91,7 @@ function RegisterForm() {
               label={`${t("alias")} (${t("optional")})`}
               name="alias"
               type="text"
+              size='small'
               variant="outlined"
               margin="normal"
               fullWidth
@@ -102,6 +105,7 @@ function RegisterForm() {
               variant="outlined"
               margin="normal"
               fullWidth
+              size='small'
               id="password"
             />
 
@@ -112,6 +116,7 @@ function RegisterForm() {
               variant="outlined"
               margin="normal"
               fullWidth
+              size='small'
               id="password_repeat"
             />
 

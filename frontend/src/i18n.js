@@ -25,7 +25,13 @@ i18n
           password_remember: 'Remember me',
           password_forgot: 'Forgot password?',
           alias:'Alias',
-          "optional" : "Optional"
+          "optional" : "Optional",
+          contact_add:'Add contact',
+          "username or email" : 'Username or email',
+          save:"Save",
+          info:'Info.',
+          language:'Language',
+          image_adjust:'Adjust image'
         },
         error: {
           "passwords_must_match" : "Passwords must match",
@@ -34,6 +40,15 @@ i18n
           "username_long": 'Usernames must be between {{min}} and {{max}} characters',
           "email_invalid": 'Please enter a valid email.',
           "required_field": 'This field is obligatory'
+        },
+        success: {
+          saved: 'Saved!',
+        },
+        confirmation:{
+          "accept":'Accept',
+          "cancel":'Cancel',
+          "contact_delete": 'Are you sure you want to remove {{name}} from your list of contacts?',
+          "exit_without_saving": 'Exit without saving?',
         }
       },
       en: {
@@ -53,7 +68,13 @@ i18n
           password_remember: 'Recordar',
           password_forgot: '¿Olvidó su contraseña?',
           alias:'Alias (nombre visible)',       
-          "optional" : "Opcional"         
+          "optional" : "Opcional",
+          contact_add:'Agregar contacto',      
+          "username or email" : 'Nombre de usuario o correo electrónico',
+          save:"Guardar",
+          info:'Info.',
+          language:'Idioma',
+          image_adjust:'Ajustar imágen',
         },
         error: {
           "passwords_must_match" : "Las contraseñas no coinciden",
@@ -62,6 +83,15 @@ i18n
           "username_long": 'Debe tener entre {{min}} y {{max}} carácteres',
           "email_invalid": 'Ingrese un email válido',
           "required_field": 'Este campo es obligatorio'
+        },
+        success: {
+          saved: 'Guardado!',
+        },
+        confirmation:{
+          "accept":'Aceptar',
+          "cancel":'Cancelar',
+          "contact_delete": '¿Confirma que desea eliminar a {{name}} de su lista de contactos?',
+          "exit_without_saving": '¿Desea salir sin guardar los cambios?',
         }
       }
     },

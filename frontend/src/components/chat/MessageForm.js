@@ -5,22 +5,16 @@ import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
 import OutlinedInput from "@material-ui/core/OutlinedInput";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import IconButton from "@material-ui/core/IconButton";
-import { Emoji } from "emoji-mart";
 import FormControl from "@material-ui/core/FormControl";
 import SendIcon from '@material-ui/icons/Send';
 
 
 function MessageForm() {
-  console.log("Renderizando form entero");
-
+  const [ text, setText ] = useState('');
   const InputText = ()=>{
-    const [messageText, setMessageText] = useState("");
-
-    const handleChange = (e) => {
-      setMessageText(e.target.value);
-    };  
     return(
       <FormControl fullWidth variant="outlined">
+
       <OutlinedInput
             id="outlined-adornment-amount"
             multiline

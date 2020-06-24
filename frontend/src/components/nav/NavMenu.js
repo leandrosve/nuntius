@@ -11,13 +11,27 @@ import ListItemText from "@material-ui/core/ListItemText";
 import GroupIcon from '@material-ui/icons/Group';
 import SettingsIcon from '@material-ui/icons/Settings';
 import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
-import Contacts from '../Contacts';
+import Contacts from '../contacts/Contacts';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import Profile from '../profile/Profile';
+import {Route , Link , useHistory } from 'react-router-dom';
+import Settings from '../Settings';
+import { withRouter } from "react-router-dom";
+import PropTypes from "prop-types";
 
-function NavMenu() {
+const propTypes = {
+  match: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired
+};
+
+function NavMenu(props) {
+  const { match, location, history } = props;
+
   const { t } = useTranslation();
 
   const [open, setOpenMenu] = useState(false);
-  const [showModal, setShowModal] = useState({open:false, content:''});
+  const [showModal, setShowModal] = useState({open:false, content:'', confirmClose:false});
 
   const openMenu = () => {
     setOpenMenu(!open);
@@ -27,9 +41,11 @@ function NavMenu() {
      setShowModal({open:true, content:<Contacts/>});
   };
 
+
   return (
     <>
      
+
       <IconButton onClick={openMenu} color="primary" aria-label="upload picture" component="span">
       <BsList
           className={"Nav-menuButton " + (open && "Nav-menuButton--open")}
@@ -37,33 +53,38 @@ function NavMenu() {
       </IconButton>
         
       {open && (
+        <ClickAwayListener onClickAway={()=>setShowModal({open:false})}>
         <DropdownMenu>
-          <ListItem button  onClick={()=>{setOpenMenu(false);openContacts()}}>
+          <ListItem button  component={ Link }  to={`${match.path}/contacts`}  onClick={()=>{setOpenMenu(false);setShowModal({open:true})}}>
             <ListItemIcon>
             <GroupIcon style={{ color: 'white'}}/>
             </ListItemIcon>
             <ListItemText primary={t("contacts")} />
           </ListItem>
-          <ListItem button  onClick={()=>{setOpenMenu(false);openContacts()}}>
+          <ListItem button  component={ Link }  to={`${match.path}/profile`} onClick={()=>{setOpenMenu(false);setShowModal({open:true, confirmClose:true})}}>
             <ListItemIcon>
             <AssignmentIndIcon style={{ color: 'white'}}/>
             </ListItemIcon>
             <ListItemText primary={t("profile")} />
           </ListItem>
-          <ListItem button  onClick={()=>{setOpenMenu(false);openContacts()}}>
+          <ListItem button   component={ Link }  to={`${match.path}/settings`} onClick={()=>{setOpenMenu(false);setShowModal({open:true});}} >
             <ListItemIcon>
             <SettingsIcon style={{ color: 'white'}}/>
             </ListItemIcon>
             <ListItemText primary={t("settings")} />
           </ListItem>
         </DropdownMenu>
+        </ClickAwayListener>
       )}
-      {showModal.open &&
-      <Modal handleClose={()=>setShowModal({open:false})}>
-          {showModal.content}
+ 
+      <Modal open={showModal.open} handleClose={()=>{setShowModal({open:false});history.push("/browse")}} confirmClose={showModal.confirmClose}>
+          <Route path={`${match.path}/contacts`} component={Contacts}/>
+          <Route path={`${match.path}/profile`} component={Profile}/>
+          <Route path={`${match.path}/settings`} component={Settings}/>
+
       </Modal>
-      }
+      
     </>
   );
 }
-export default NavMenu;
+export default withRouter(NavMenu);

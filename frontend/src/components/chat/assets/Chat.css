@@ -158,7 +158,7 @@
   height: calc(100% - 165px);
   /* max-height: calc(100% - 100px); */
   background-color:gray; 
-  background-image: url("https://images.pexels.com/photos/346529/pexels-photo-346529.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260");
+  background-image: url("https://images.pexels.com/photos/1134166/pexels-photo-1134166.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260");
   background-position: center; /* Center the image */
   background-repeat: no-repeat; /* Do not repeat the image */
   background-size: cover; /* Resize the background image to cover the entire container */
@@ -182,8 +182,7 @@
 
 .ChatMessages-content {
   height: 100%;
-  display: flex;
-  flex-direction: column;
+
 
 }
 
