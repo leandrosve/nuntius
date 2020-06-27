@@ -11,15 +11,17 @@ const useStyles = makeStyles((theme) => ({
       display:'flex',
       flexDirection:'column',
       flex:'1',
-      height:'100%',
+      height:'inherit',
       padding:'0px',
+  
   
     }
     ,
     content:{
         overflowY:'scroll',
         scrollbarWidth: 'thin',
-        marginTop:'10px'
+        marginTop:'10px',
+        flex:'1',
     },
     header: {
       margin: theme.spacing(1),
@@ -54,6 +56,7 @@ const TitledContainer = ({title, icon, children,actions, fixedContent})=>{
         {fixedContent }
         {fixedContent && <Divider/>}
       </div>
+  
       <div className={classes.content}>
         {children}
       </div>

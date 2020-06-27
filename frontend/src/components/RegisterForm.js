@@ -1,15 +1,16 @@
-import React from "react";
+import React, {useState} from "react";
 
 import { useTranslation } from "react-i18next";
 
 import { FormikTextField as TextField } from "formik-material-fields";
-import { Formik } from "formik";
+import { Formik , Form} from "formik";
 import * as Yup from "yup";
 import FormContainer from "./util/FormContainer";
 import Button from "@material-ui/core/Button";
 import AccountBoxIcon from "@material-ui/icons/AccountBox";
 
 import { makeStyles } from "@material-ui/core/styles";
+import Alert from './util/Alert';
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -26,6 +27,8 @@ function RegisterForm() {
 
   const classes = useStyles();
 
+  const [openAlert, setOpenAlert] = useState(false);
+
   return (
     <FormContainer title={t("register")} icon={<AccountBoxIcon />}>
       <Formik
@@ -35,13 +38,16 @@ function RegisterForm() {
           password: "",
           email: "",
           password_repeat: "",
-          alias: "",
+          name: "",
         }}
         validationSchema={Yup.object({
           username: Yup.string()
             .min(3, t("error:username_short", { min: 3, max: 25 }))
             .max(25, t("error:username_long", { min: 3, max: 25 }))
-            .required(t("error:required_field")),
+            .required(t("error:required_field"))
+            .matches(
+              /^\S+$/,
+              t("error:no_spaces")),
 
           email: Yup.string()
             .email(t("error:email_invalid"))
@@ -60,11 +66,19 @@ function RegisterForm() {
           setTimeout(() => {
             alert(JSON.stringify(values, null, 2));
             setSubmitting(false);
+            setOpenAlert(true);
           }, 400);
         }}
       >
         {({ isValid }) => (
-          <form className={classes.form}>
+          <Form className={classes.form}>
+              <Alert
+            severity='error'
+            open={openAlert}
+            onClick={() => setOpenAlert(false)}  
+          >
+            Username and password don't match
+            </Alert>
             <TextField
               variant="outlined"
               margin="normal"
@@ -88,14 +102,14 @@ function RegisterForm() {
             />
 
             <TextField
-              label={`${t("alias")} (${t("optional")})`}
-              name="alias"
+              label={`${t("name")}`}
+              name="name"
               type="text"
               size='small'
               variant="outlined"
               margin="normal"
               fullWidth
-              id="alias"
+              id="name"
             />
 
             <TextField
@@ -130,7 +144,7 @@ function RegisterForm() {
             >
               {t("register")}
             </Button>
-          </form>
+          </Form>
         )}
       </Formik>
     </FormContainer>

@@ -1,13 +1,17 @@
-import React from "react";
+import React, {useState} from "react";
 import "./assets/Chat.css";
 import { BsClock, BsCheckAll } from "react-icons/bs";
-import ListItem2 from "../util/ListItem";
+import ListItem from "../util/ListItem";
 import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
 import Badge from "@material-ui/core/Badge";
+import {Link} from "react-router-dom";
+
 
 function ChatPreview({avatar, alias, lastMessage, unreadMessagesCount, lastMessageTime}) {
+  const [user, setUser] = useState({username:'@donramon'});
   return (
-    <ListItem2
+    <ListItem  button component={Link} to={`/browse/chat/${user.username}`}
+    
     style={{ background: '#1f1f23', borderBottom:'1px solid #303035'}}
       left={
         <img

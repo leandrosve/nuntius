@@ -12,10 +12,10 @@ export const DropdownItem = (props) => {
 
 function DropdownMenu(props) {
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [] = React.useState(null);
 
   return (
-    <div className="DropdownMenu">
+    <div className="DropdownMenu" {...props}>
       <ul style={{display:"inline-block", width:"100%"}}>{props.children}</ul>
     </div>
   );

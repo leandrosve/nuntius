@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "../App.css";
 import { useTranslation } from "react-i18next";
 import { Formik, Form } from "formik";
@@ -13,7 +13,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { makeStyles } from '@material-ui/core/styles';
 import FormContainer from './util/FormContainer';
 
-
+import Alert from './util/Alert';
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -31,10 +31,13 @@ const LoginForm = () => {
 
   const classes = useStyles();
 
+  const [openAlert, setOpenAlert] = useState(false);
+
   const initialValues = {
     username: "",
     password: "",
   };
+
 
   return (
     <Formik
@@ -45,11 +48,25 @@ const LoginForm = () => {
         username: Yup.string().required(t("error:required_field")),
         password: Yup.string().required(t("error:required_field")),
       })}
+      onSubmit={(values, { setSubmitting }) => {
+        setTimeout(() => {
+          alert(JSON.stringify(values, null, 2));
+          setOpenAlert(true);
+          setSubmitting(false);
+        }, 400);
+      }}
     >
       {({ isValid }) => (
 
         <FormContainer title={t('login')} icon={<LockOutlinedIcon/>}>
-          <Form className={classes.form} noValidate>
+          <Alert
+            severity='error'
+            open={openAlert}
+            onClick={() => setOpenAlert(false)}  
+          >
+            Username and password don't match
+            </Alert>
+          <Form className={classes.form} >
             <TextField
               variant="outlined"
               margin="normal"

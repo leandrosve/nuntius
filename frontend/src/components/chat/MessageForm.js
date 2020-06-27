@@ -10,10 +10,9 @@ import SendIcon from '@material-ui/icons/Send';
 
 
 function MessageForm() {
-  const [ text, setText ] = useState('');
   const InputText = ()=>{
     return(
-      <FormControl fullWidth variant="outlined">
+      <FormControl fullWidth variant="outlined" >
 
       <OutlinedInput
             id="outlined-adornment-amount"

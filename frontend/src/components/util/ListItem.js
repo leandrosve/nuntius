@@ -1,21 +1,21 @@
 import React from "react";
 import "../chat/assets/Chat.css";
 import "./Util.css"
-import ListItem from "@material-ui/core/ListItem";
+import  MaterialListItem from "@material-ui/core/ListItem";
 import classnames from 'classnames';
 
-function ListItem2({left,center, right, style, className, onClick}) {
+function ListItem(props) {
   return (
-    <ListItem onClick={onClick} button className={classnames("ListItem",className)} style={({justifyContent:'space-between'},style)}>
-      {left}
+    <MaterialListItem {...props} className={classnames("ListItem",props.className)} style={({justifyContent:'space-between'},props.style)}>
+      {props.left}
       <div style={{overflow:'hidden',flexGrow:'1',flexShrink: '1'}}>
-        {center}
+        {props.center}
       </div>
       <div >
-        {right}
+        {props.right}
       </div>
-    </ListItem>
+    </MaterialListItem>
   );
 }
 
-export default ListItem2;
+export default ListItem;

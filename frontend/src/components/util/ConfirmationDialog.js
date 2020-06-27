@@ -16,6 +16,7 @@ export default function ConfirmationDialog({open, title, description, handleCanc
   const accept= () =>{
     if(handleAccept ){
       handleAccept();
+      handleCancel();
     }else{
       handleCancel();
     }

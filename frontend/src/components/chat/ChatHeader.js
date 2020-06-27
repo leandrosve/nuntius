@@ -1,24 +1,33 @@
-import React from "react";
+import React, {useState} from "react";
 import "./assets/Chat.css";
-import { FiMoreHorizontal } from "react-icons/fi";
-import { BsSearch } from "react-icons/bs";
-import { IoIosAttach } from "react-icons/io";
 import profilePicPlaceholder from "../assets/images/profile-pic-placeholder.jpg";
 import { useTranslation } from "react-i18next";
-import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import AttachFileIcon from '@material-ui/icons/AttachFile';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
-
+import Modal from '../util/Modal';
 import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from '@material-ui/icons/Search';
 import ListItem from "@material-ui/core/ListItem";
+import ContactDetail from "../contacts/ContactDetail";
+import Button from '@material-ui/core/Button';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
+import  DropdownMenu, { DropdownItem, } from "../util/DropdownMenu";
+import PersonIcon from '@material-ui/icons/Person';
+
+
+
 function ChatHeader() {
   const { t } = useTranslation();
+
+  const [openUserDetail, setOpenUserDetail] = useState(false);
+
   return (
     <div>
     <Toolbar style={{padding:'0px'}}className="ChatHeader">
-     <ListItem button  style={{width:'auto'}}className="ChatHeader-userInfo">
+     <ListItem button  style={{width:'auto'}}className="ChatHeader-userInfo" onClick={()=>setOpenUserDetail(true)}>
         <img
           src={profilePicPlaceholder}
           className="ChatHeader-profilePic"
@@ -36,14 +45,44 @@ function ChatHeader() {
       <IconButton color="primary" >
         <AttachFileIcon  style={{fontSize:'30px', color:'white'}} />
       </IconButton>
-      <IconButton color="primary" >
-        <MoreHorizIcon  style={{fontSize:'30px', color:'white'}} />
-      </IconButton>
+      <MoreButton handleOpenUserDetail={()=>setOpenUserDetail(true)}/>
        
       </div>
     </Toolbar>
+
+    <Modal open={openUserDetail} handleClose={()=>setOpenUserDetail(false)}>
+      <ContactDetail/>
+    </Modal>
+
     </div>
   );
 }
+
+const MoreButton = ({handleOpenUserDetail})=>{
+  const { t } = useTranslation();
+  const [openMenu, setOpenMenu] = useState(false);
+  const handleToggleMenu = () =>{
+    setOpenMenu((prev) => !prev)
+  }
+  return (
+
+        <React.Fragment>
+           <IconButton color="primary" onClick={()=>handleToggleMenu()} >
+             <MoreHorizIcon  style={{fontSize:'30px', color:'white'}} />
+          </IconButton>
+          {openMenu &&
+          
+            <DropdownMenu style={{position:'absolute', right:'0'}}>
+                <ListItem button  onClick={()=>{handleToggleMenu();handleOpenUserDetail()}}>{t('contact_detail')}</ListItem>
+                
+            </DropdownMenu>
+         
+          }
+         
+         
+        </React.Fragment>
+      )
+    }
+
 
 export default ChatHeader;

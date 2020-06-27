@@ -90,6 +90,7 @@
 }
 
 .Browse-content {
+    background: #1f1f23;
     width: 80%;
     margin: auto;
     display: flex;
@@ -99,3 +100,8 @@
     border-top: none;
 }
 
+@media screen and (max-width: 1200px) {
+    .Browse-content , .Nav-content {
+        width: 100vw;
+    }
+  }

@@ -1,10 +1,8 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, {  } from "react";
 import "./Util.css";
-import { BsX } from "react-icons/bs";
 import CloseIcon from "@material-ui/icons/Close";
 import { makeStyles } from "@material-ui/core/styles";
 import MaterialModal from "@material-ui/core/Modal";
-import Fade from "@material-ui/core/Fade";
 import Backdrop from "@material-ui/core/Backdrop";
 import ConfirmationDialog from "./ConfirmationDialog";
 import { useTranslation } from "react-i18next";
@@ -24,9 +22,11 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: theme.shadows[5],
     padding:'10px',
     maxHeight: "80vh",
+    zIndex:'1500'
   },
   content: {
     overflow: "hidden",
+    display:"flex"
   },
   dismissButon: {
     marginLeft: "auto",
@@ -41,7 +41,7 @@ const Modal = ({ children, open, handleClose, header, hasCloseButton = true, con
     title: "",
   });
 
-  const handleOpenDialog = (name) => {
+  const handleOpenDialog = () => {
     let title = "Are you sure you want to exit?";
     setShowCloseDialog({ open: true, title: title });
   };
@@ -61,13 +61,13 @@ const Modal = ({ children, open, handleClose, header, hasCloseButton = true, con
       className={classes.modal}
       open={open}
       onClose={handleClick}
-      closeAfterTransition
+      closeAfterTransition={false}
       BackdropComponent={Backdrop}
       BackdropProps={{
         timeout: 500,
       }}
     >
-      <Fade in={open}>
+
         <React.Fragment>
         <div className={classes.paper}>
           {header}
@@ -89,7 +89,6 @@ const Modal = ({ children, open, handleClose, header, hasCloseButton = true, con
         handleAccept={()=>{setShowCloseDialog({open:false});handleClose()}}
         handleCancel={()=>{setShowCloseDialog({open:false})}}/>
         </React.Fragment>
-      </Fade>
      
     </MaterialModal>
   );

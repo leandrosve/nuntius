@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import Modal from './util/Modal';
 
 import { makeStyles } from '@material-ui/core/styles';
-import Profile from './profile/Profile';
+import Contacts from './contacts/Contacts';
 import Button from "@material-ui/core/Button";
 
 import Backdrop from "@material-ui/core/Backdrop";
@@ -33,7 +33,7 @@ function Develop() {
   return (
     
     <div>
-      <button type="button" onClick={()=>setShowModal({open:true, content:<Profile/>})}>
+      <button type="button" onClick={()=>setShowModal({open:true, content:<Contacts/>})}>
         react-transition-group
       </button>
       <Modal
@@ -43,7 +43,7 @@ function Develop() {
       hasCloseButton={true} 
       confirmClose={true}
       >
-        <Profile/>  
+        <Contacts/>  
       </Modal>
       
     </div>

@@ -13,7 +13,18 @@ function ChatList() {
         <ChatPreview avatar={profilePicPlaceholder} alias='José Peralta' lastMessage='a ver a verrr' unreadMessagesCount='30' lastMessageTime='20:00'/>
         <ChatPreview avatar={profilePicPlaceholder} alias='José Peralta' lastMessage='a ver a verrr' unreadMessagesCount='30' lastMessageTime='20:00'/>
         <ChatPreview avatar={profilePicPlaceholder} alias='José Peralta' lastMessage='a ver a verrr' unreadMessagesCount='30' lastMessageTime='20:00'/>
+        <ChatPreview avatar={profilePicPlaceholder} alias='José Peralta' lastMessage='a ver a verrr' unreadMessagesCount='30' lastMessageTime='20:00'/>
         <ChatPreview avatar={profilePicPlaceholder} alias='José Peralta' lastMessage='a ver a verrr' unreadMessagesCount='30' lastMessageTime='20:00'/>       
+        <ChatPreview avatar={profilePicPlaceholder} alias='José Peralta' lastMessage='a ver a verrr' unreadMessagesCount='30' lastMessageTime='20:00'/>       
+        <ChatPreview avatar={profilePicPlaceholder} alias='José Peralta' lastMessage='a ver a verrr' unreadMessagesCount='30' lastMessageTime='20:00'/>       
+        <ChatPreview avatar={profilePicPlaceholder} alias='José Peralta' lastMessage='a ver a verrr' unreadMessagesCount='30' lastMessageTime='20:00'/>       
+        <ChatPreview avatar={profilePicPlaceholder} alias='José Peralta' lastMessage='a ver a verrr' unreadMessagesCount='30' lastMessageTime='20:00'/>       
+        <ChatPreview avatar={profilePicPlaceholder} alias='José Peralta' lastMessage='a ver a verrr' unreadMessagesCount='30' lastMessageTime='20:00'/>       
+        <ChatPreview avatar={profilePicPlaceholder} alias='José Peralta' lastMessage='a ver a verrr' unreadMessagesCount='30' lastMessageTime='20:00'/>       
+        <ChatPreview avatar={profilePicPlaceholder} alias='José Peralta' lastMessage='a ver a verrr' unreadMessagesCount='30' lastMessageTime='20:00'/>       
+        <ChatPreview avatar={profilePicPlaceholder} alias='José Peralta' lastMessage='a ver a verrr' unreadMessagesCount='30' lastMessageTime='20:00'/>       
+        <ChatPreview avatar={profilePicPlaceholder} alias='José Peralta' lastMessage='a ver a verrr' unreadMessagesCount='30' lastMessageTime='20:00'/>       
+        <ChatPreview avatar={profilePicPlaceholder} alias='José Peralta' lastMessage='a ver a verrr' unreadMessagesCount='30' lastMessageTime='20:00'/>              
     </div>
   );
 }

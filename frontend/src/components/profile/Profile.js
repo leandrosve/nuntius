@@ -14,11 +14,7 @@ import AcUnitIcon from "@material-ui/icons/AcUnit";
 import CameraAltIcon from "@material-ui/icons/CameraAlt";
 import Slider from "@material-ui/core/Slider";
 import Grid from '@material-ui/core/Grid';
-import Alert from '@material-ui/lab/Alert';
-import IconButton from '@material-ui/core/IconButton';
-import Collapse from '@material-ui/core/Collapse';
-import CloseIcon from '@material-ui/icons/Close';
-
+import Alert from '../util/Alert';
 import Typography from "@material-ui/core/Typography";
 import { Spring } from "react-spring/renderprops";
 
@@ -92,7 +88,6 @@ const Profile = () => {
   const [openSuccessAlert, setOpenSuccesAlert] = useState(false);
 
   const getEditedImage = () =>{
-    console.log(editorRef.current.getImage().toDataURL('image/png'));
     setEditedImage(editorRef.current.getImage().toDataURL('image/png'));
     setUneditedImage(null);
   }
@@ -102,37 +97,27 @@ const Profile = () => {
       title={t("profile")}
       actions={<Button onClick={()=>setOpenSuccesAlert(true)}>{t("save")}</Button>}
       fixedContent={
-        <Collapse in={openSuccessAlert}>
-        <Alert
-          action={
-            <IconButton
-              aria-label="close"
-              color="inherit"
-              size="small"
-              onClick={() => {
-                setOpenSuccesAlert(false);
-              }}
-            >
-              <CloseIcon fontSize="inherit" />
-            </IconButton>
-          }
-        >
-          {t('success:saved')}
-        </Alert>
-       </Collapse>
+       <Alert
+        severity='success'
+        open={openSuccessAlert}
+        onClick={()=>setOpenSuccesAlert(false)}
+       > 
+         {t('success:saved')}
+       </Alert>
+       
       }
     >
       <Container maxWidth="xs">
         <TextField
-          label={`${t("alias")} (${t("optional")})`}
-          name="alias"
+          label={t("name")}
+          name="name"
           type="text"
           size="small"
           variant="outlined"
           margin="normal"
           value="Juan perez"
           fullWidth
-          id="alias"
+          id="name"
         />
         <div
           style={{
