@@ -9,7 +9,7 @@ import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
 import TitledContainer from './util/TitledContainer';
 import GroupIcon from "@material-ui/icons/Group";
-import Settings from "./Settings";
+
 
 
 

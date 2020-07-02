@@ -5,12 +5,12 @@ import { useTranslation } from "react-i18next";
 import { FormikTextField as TextField } from "formik-material-fields";
 import { Formik , Form} from "formik";
 import * as Yup from "yup";
-import FormContainer from "./util/FormContainer";
+import FormContainer from "../util/FormContainer";
 import Button from "@material-ui/core/Button";
 import AccountBoxIcon from "@material-ui/icons/AccountBox";
 
 import { makeStyles } from "@material-ui/core/styles";
-import Alert from './util/Alert';
+import Alert from '../util/Alert';
 
 const useStyles = makeStyles((theme) => ({
   form: {

@@ -25,10 +25,15 @@ const useStyles = makeStyles((theme) => ({
   toolBar:{
     padding:'0px',
     width:'80%',
-    margin:'auto'
+    margin:'auto',
+    height:theme.mixins.toolbar,
+    minHeight:theme.mixins.toolbar,
   },
   appBar:{
-    background: '#18181b',
+   boxShadow:theme.shadows[1],
+   borderBottom:'1px solid black',
+    background: '#171719',
+    zindex:theme.zIndex.appBar,
   },
 
 
@@ -40,11 +45,11 @@ function Nav() {
   return (
       <AppBar position="static" className={classes.appBar}>
         
-      <Toolbar className={classes.toolBar}>
+      <Toolbar className={classes.toolBar} >
           
         <NavMenu/>
 
-        <AiFillAlipayCircle className="Nav-logo" />
+        <AiFillAlipayCircle style={{fontSize:'40px'}}  />
         <Typography variant="h5" color="inherit" className={classes.title} >NUNTIUS</Typography>
         <div className="Nav-links">
           <Link to="/">

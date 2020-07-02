@@ -30,10 +30,10 @@ const ContactDetail = ({handleStartChat}) => {
     return(
     <Spring from={{ opacity: 0 }} to={{ opacity: 1 }} duration={2500}>
       {(props) => (
-        <div style={props}>
+        <div style={(props.style, {paddingTop:'10px'})}>
          < Box display='flex' flexDirection='row' alignItems='center' maxWidth='400px'>
-         <Avatar src={profilePicPlaceholder} style={{width:'125px', height:'125px'}}/>
-         <Box display='flex' flexDirection='column' margin='10px' paddingTop='10px'>
+         <Avatar src={profilePicPlaceholder} style={{width:'125px', height:'125px', marginBottom:'auto'}}/>
+         <Box display='flex' flexDirection='column' style={{ marginLeft:'10px'}}>
            <Box display='flex' flexDirection='row' alignItems='center' flexGrow='1' flexShrink='1' >
             {openAliasForm ?
                 <React.Fragment>

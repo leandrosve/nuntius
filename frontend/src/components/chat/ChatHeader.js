@@ -17,16 +17,28 @@ import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import  DropdownMenu, { DropdownItem, } from "../util/DropdownMenu";
 import PersonIcon from '@material-ui/icons/Person';
 
+import { makeStyles } from '@material-ui/core/styles';
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    height:theme.mixins.toolbar,
+    minHeight:theme.mixins.toolbar,  
+    "background":"#1f1f23",
+    "display":"flex",
+    "flexDirection":"row",
+    "alignItems":"center",
+    "padding":"0px 10px 0px 10px",
+    zIndex:theme.zIndex.appbar -1 ,
+  },
+}));
 
 function ChatHeader() {
   const { t } = useTranslation();
-
   const [openUserDetail, setOpenUserDetail] = useState(false);
-
+  const classes= useStyles();
   return (
     <div>
-    <Toolbar style={{padding:'0px'}}className="ChatHeader">
+    <Toolbar style={{padding:'0px'}}className={classes.root}>
      <ListItem button  style={{width:'auto'}}className="ChatHeader-userInfo" onClick={()=>setOpenUserDetail(true)}>
         <img
           src={profilePicPlaceholder}

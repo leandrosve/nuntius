@@ -5,8 +5,8 @@ import { AiFillAlipayCircle } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Modal from "./util/Modal";
-import LoginForm from "./LoginForm";
-import RegisterForm from "./RegisterForm";
+import LoginForm from "./user/LoginForm";
+import RegisterForm from "./user/RegisterForm";
 
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";

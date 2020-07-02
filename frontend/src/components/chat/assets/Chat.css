@@ -22,6 +22,11 @@
 
 }
 
+.ChatList::-webkit-scrollbar-thumb {
+  border-radius: 20px;
+  background:rgba(255, 255, 255, 0.1);
+}
+
 .ChatList h1 {
   font-size: 20px;
 }
@@ -87,14 +92,7 @@
   align-content: space-between;
 }
 
-.ChatHeader {
 
-  background: #1f1f23;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding: 0px 10px 0px 10px;
-}
 
 .ChatHeader-profilePic {
   height: 45px;
@@ -126,35 +124,18 @@
   margin-left: auto;
 }
 
-.ChatHeader-button {
-  padding: 10px;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: 0.3s ease;
-}
-.ChatHeader-button:hover {
-  background: #6d615b;
-}
-
-.ChatHeader-button-icon {
-  width: 30px !important;
-  height: 30px !important;
-}
-
-.OnlineMarker {
-  color: #21ff30;
-  width: 20px !important;
-  height: 20px !important;
-}
-
 .ChatContent {
   display: flex;
   flex-direction: column;
+
 }
 
 .ChatMessages {
   width: 100%;
-  height: calc(100% - 165px);
+  display:flex;
+  flex-grow:1;
+  flex-shrink:1;
+  overflow: hidden;
   position:relative;
   /* max-height: calc(100% - 100px); */
   background-color:gray; 
@@ -162,8 +143,7 @@
   background-position: center; /* Center the image */
   background-repeat: no-repeat; /* Do not repeat the image */
   background-size: cover; /* Resize the background image to cover the entire container */
-  
-  margin-top: auto;
+
 }
 
 .ChatSendForm {
@@ -184,7 +164,7 @@
   overflow: auto;
   scrollbar-color: #42433d #6d615b;
   scrollbar-width: thin;
-
+  width:100%;
 }
 
 .Message {

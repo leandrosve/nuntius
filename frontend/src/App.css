@@ -90,8 +90,8 @@
 }
 
 .Browse-content {
-    background: #1f1f23;
     width: 80%;
+    background:#1f1f23;
     margin: auto;
     display: flex;
     height: calc(100vh - 70px);

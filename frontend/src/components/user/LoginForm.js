@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../App.css";
+
 import { useTranslation } from "react-i18next";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
@@ -11,9 +11,9 @@ import Checkbox from '@material-ui/core/Checkbox';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 
 import { makeStyles } from '@material-ui/core/styles';
-import FormContainer from './util/FormContainer';
+import FormContainer from '../util/FormContainer';
 
-import Alert from './util/Alert';
+import Alert from '../util/Alert';
 
 const useStyles = makeStyles((theme) => ({
   form: {

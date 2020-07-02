@@ -12,6 +12,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    zIndex: theme.zIndex.modal,
   },
   paper: {
     backgroundColor: theme.palette.background.paper,
@@ -22,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: theme.shadows[5],
     padding:'10px',
     maxHeight: "80vh",
-    zIndex:'1500'
+
   },
   content: {
     overflow: "hidden",

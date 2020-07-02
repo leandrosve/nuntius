@@ -1,5 +1,5 @@
 import React from "react";
-import TitledContainer from "./util/TitledContainer";
+import TitledContainer from "../util/TitledContainer";
 
 import { useTranslation } from "react-i18next";
 import Container from "@material-ui/core/Container";
