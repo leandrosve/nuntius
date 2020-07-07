@@ -37,7 +37,7 @@ public class User implements UserDetails {
     @Column(unique = true)
     private String username;
   
-    @NotBlank
+    @NotBlank(message="Email must be present")
     @Email(message="Invalid email address")
     private String email;
 
@@ -47,7 +47,7 @@ public class User implements UserDetails {
     @Size(max=128, message="Biography maximum length is 128 characters")
     private String biography;
    
-    @NotBlank
+    @NotBlank(message="You must specify a secure password")
     @Size(min=3, message="Password is too short")
     @JsonProperty(access = Access.WRITE_ONLY)
     @Pattern(regexp ="^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$", message="Password is too weak")
@@ -63,7 +63,7 @@ public class User implements UserDetails {
         this.username = username;
     }
 
-    @JsonIgnore
+ 
     public String getEmail() {
         return email;
     }

@@ -3,13 +3,12 @@ package com.leandrosve.nuntius.controller;
 import java.util.List;
 
 import javax.validation.Valid;
-
 import com.leandrosve.nuntius.model.User;
-import com.leandrosve.nuntius.repository.IUserRepository;
 import com.leandrosve.nuntius.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,12 +20,14 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @Autowired
-    IUserRepository users;
-
     @GetMapping("/users")
     public List<User> users() {
         return userService.listUsers();
+    }
+
+    @GetMapping("/profile")
+    public UserDetails profile() {
+        return userService.profile();
     }
 
     @PostMapping("/signup")

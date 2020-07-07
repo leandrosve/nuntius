@@ -1,14 +1,11 @@
 package com.leandrosve.nuntius.service;
 
-import java.util.ArrayList;
 import java.util.List;
-
+import com.leandrosve.nuntius.facade.IAuthenticationFacade;
 import com.leandrosve.nuntius.model.User;
 import com.leandrosve.nuntius.repository.IUserRepository;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -23,6 +20,10 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private IAuthenticationFacade authenticationFacade;
+
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException{
@@ -46,5 +47,9 @@ public class UserService implements UserDetailsService {
     public List<User> listUsers() {
         return usersRepository.findAll();
     }
+
+    public UserDetails profile() {
+        return authenticationFacade.getCurrentUser();
+    }  
 
 }
