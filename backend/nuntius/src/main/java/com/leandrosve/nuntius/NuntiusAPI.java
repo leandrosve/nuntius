@@ -19,4 +19,5 @@ public class NuntiusAPI implements CommandLineRunner {
 		LOG.info("hello world");
 	}
 
+	
 }

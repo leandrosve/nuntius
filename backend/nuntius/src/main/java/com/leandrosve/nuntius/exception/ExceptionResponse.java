@@ -4,8 +4,13 @@ import java.util.Date;
 
 public class ExceptionResponse {
     private Date timestamp;
+    private Integer status;
     private String message;
     private String details;
+
+    public Integer getStatus(){
+        return status;
+    }
 
     public Date getTimestamp() {
         return timestamp;
@@ -19,10 +24,11 @@ public class ExceptionResponse {
         return details;
     }
 
-    public ExceptionResponse(Date timestamp, String message, String details) {
-        this.timestamp = timestamp;
+    public ExceptionResponse(Integer status, String message, String details) {
+        this.timestamp = new Date();
         this.message = message;
         this.details = details;
+        this.status = status;
     }
     
 }

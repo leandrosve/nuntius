@@ -1,11 +1,14 @@
 package com.leandrosve.nuntius.service;
 
 import java.util.List;
-import com.leandrosve.nuntius.facade.IAuthenticationFacade;
+
+import com.leandrosve.nuntius.exception.BadRequestException;
 import com.leandrosve.nuntius.model.User;
 import com.leandrosve.nuntius.repository.IUserRepository;
+import com.leandrosve.nuntius.util.AuthUtil;
+import com.leandrosve.nuntius.util.LangUtil;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,9 +25,10 @@ public class UserService implements UserDetailsService {
     PasswordEncoder passwordEncoder;
 
     @Autowired
-    private IAuthenticationFacade authenticationFacade;
+    private AuthUtil authUtil;
 
-
+    @Autowired
+    LangUtil langUtil;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException{
         UserDetails user = usersRepository.findByUsername(username);
@@ -36,12 +40,14 @@ public class UserService implements UserDetailsService {
     }
 
     public void createUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        try {
-            usersRepository.save(user);
-        } catch (DataIntegrityViolationException e) {
-            throw new DataIntegrityViolationException("Username already exists", e);
-        }
+        if(usersRepository.existsByUsername(user.getUsername())){
+            throw new BadRequestException(langUtil.t("username.taken"));
+        };
+        if(usersRepository.existsByEmail(user.getEmail())){
+            throw new BadRequestException(langUtil.t("email.taken"));
+        };
+        user.setPassword(passwordEncoder.encode(user.getPassword()));       
+        usersRepository.save(user);     
     }
 
     public List<User> listUsers() {
@@ -49,7 +55,17 @@ public class UserService implements UserDetailsService {
     }
 
     public UserDetails profile() {
-        return authenticationFacade.getCurrentUser();
+        return authUtil.getCurrentUser();
     }  
+
+    public User getUser(Long id){
+        return usersRepository.findById(id);
+
+    }
+
+    public User getUser(String username){
+        return usersRepository.findByUsername(username);
+
+    }
 
 }

@@ -1,14 +1,14 @@
 package com.leandrosve.nuntius.model;
 
 import java.util.Collection;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -21,7 +21,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
-@Table(name="user", uniqueConstraints = @UniqueConstraint(name="username", columnNames = {"username"}))
 public class User implements UserDetails {
 
     private static final long serialVersionUID = 1L;
@@ -32,27 +31,30 @@ public class User implements UserDetails {
     private long id;
 
     @NotBlank
-    @Size(min=3, message="Username is too short")
-    @Pattern(regexp = "^\\S+$", message="Username cannot have spaces")
+    @Size(min=3, message="{username.short}")
+    @Pattern(regexp = "^\\S+$", message="{username.nospaces}")
     @Column(unique = true)
     private String username;
   
-    @NotBlank(message="Email must be present")
-    @Email(message="Invalid email address")
+    @NotBlank(message="{email.notempty}")
+    @Email(message="{email.notvalid}")
+    @Column(unique=true)
     private String email;
 
-    @NotBlank(message="Name must be present")
+    @NotBlank(message="{name.notempty}")
     private String name;
 
-    @Size(max=128, message="Biography maximum length is 128 characters")
+    @Size(max=128, message="{biography.toolong}")
     private String biography;
    
-    @NotBlank(message="You must specify a secure password")
-    @Size(min=3, message="Password is too short")
+    @NotBlank(message="{password.insecure}")
+    @Size(min=3, message="{password.insecure}")
     @JsonProperty(access = Access.WRITE_ONLY)
-    @Pattern(regexp ="^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$", message="Password is too weak")
+    @Pattern(regexp ="^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$", message="{password.insecure}")
     private String password;
 
+    @OneToMany(mappedBy="owner")
+	private Set<Contact> contacts;
 
     public String getUsername() {
         
@@ -125,6 +127,23 @@ public class User implements UserDetails {
     @JsonIgnore
     public boolean isEnabled() {
         return true;
+    }
+
+    @JsonIgnore
+    public Set<Contact> getContacts() {
+        return contacts;
+    }
+
+    public void setContacts(Set<Contact> contacts) {
+        this.contacts = contacts;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
    
 }
