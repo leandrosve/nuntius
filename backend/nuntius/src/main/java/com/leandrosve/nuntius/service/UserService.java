@@ -59,7 +59,7 @@ public class UserService implements UserDetailsService {
     }  
 
     public User getUser(Long id){
-        return usersRepository.findById(id);
+        return usersRepository.findById(id).get();
 
     }
 

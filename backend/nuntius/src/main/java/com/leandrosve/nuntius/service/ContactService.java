@@ -6,7 +6,8 @@ import java.util.Set;
 
 import com.leandrosve.nuntius.beans.ContactDTO;
 import com.leandrosve.nuntius.exception.BadRequestException;
-import com.leandrosve.nuntius.exception.NotFoundException;
+import com.leandrosve.nuntius.exception.ContactAlreadyExistsException;
+import com.leandrosve.nuntius.exception.ContactNotFoundException;
 import com.leandrosve.nuntius.model.Contact;
 import com.leandrosve.nuntius.model.User;
 import com.leandrosve.nuntius.repository.IContactRepository;
@@ -15,6 +16,7 @@ import com.leandrosve.nuntius.util.LangUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 
 @Service
 public class ContactService {
@@ -32,18 +34,29 @@ public class ContactService {
     LangUtil langUtil;
 
     private ContactDTO mapToDTO(Contact c){
-        return new ContactDTO(c.getId(), c.getUser().getUsername(), c.getAlias(), 
+        ContactDTO contact = new ContactDTO(c.getId(), c.getUser().getUsername(), c.getAlias(), 
                                 c.getUser().getBiography(), c.getUser().getName(), 
                                 c.getUser().getId());
+        if(contact.getAlias() == null || contact.getAlias().isEmpty()){
+            contact.setAlias(c.getUser().getName());
+        }
+        return contact;
     }
 
     public ContactDTO createContact(ContactDTO contactDTO){
         final User owner= authUtil.getCurrentUser();
         if(contactDTO.getUserId() == owner.getId()){throw new BadRequestException(langUtil.t("contact.invalid"));}
         final User user= userService.getUser(contactDTO.getUserId());
-
-        if(contactRepository.findByOwnerAndUser(owner, user)!= null){ throw new BadRequestException(langUtil.t("contact.exists"));}
+        if(contactRepository.findByOwnerAndUser(owner, user)!= null){ throw new ContactAlreadyExistsException();}
         Contact contact = new Contact(contactDTO.getAlias(),user, owner );
+        return saveContact(contact);
+    }
+
+    public ContactDTO updateContact(Long id, ContactDTO contactDTO){
+        final Contact contact= contactRepository.findById(id).get();
+        if(contact == null ){throw new ContactNotFoundException();}
+        authUtil.authenticate(contact.getOwnerId());
+        contact.setAlias(contactDTO.getAlias());      
         return saveContact(contact);
     }
 
@@ -55,14 +68,14 @@ public class ContactService {
 
     public ContactDTO getContact(Long id){
         final Optional<Contact> contact= contactRepository.findById(id);
-        if(!contact.isPresent()){throw new NotFoundException(langUtil.t("contact.notfound"));}
+        if(!contact.isPresent()){throw new ContactNotFoundException();}
         authUtil.authenticate(contact.get().getOwnerId());
         return mapToDTO(contact.get());
     }
 
     public ContactDTO deleteContact(Long id){
         final Optional<Contact> contact= contactRepository.findById(id);
-        if(!contact.isPresent()){throw new NotFoundException(langUtil.t("contact.notfound"));}
+        if(!contact.isPresent()){throw new ContactNotFoundException();}
         authUtil.authenticate(contact.get().getOwnerId());
         contactRepository.delete(contact.get());
         return mapToDTO(contact.get());

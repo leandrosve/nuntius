@@ -1,0 +1,46 @@
+Table user {
+  id Long [pk]
+  username string [not null, unique]
+  email email [not null, unique]
+  name string [not null]
+  password password [not null]
+}
+
+
+Table contact {
+  id Long [pk]
+  owner_id Long [not null, ref: < user.id]
+  user_id Long [not null, ref: < user.id]
+  alias string
+}
+
+
+Table chatroom {
+  id Long [pk]
+  group boolean
+  name string
+}
+
+
+Table participants {
+  id Long [pk]
+  user_id Long [ref: < user.id]
+  chatroom_id Long [ref: < chatroom.id]
+}
+
+Table message{
+  id Long [pk]
+  user_id Long [not null, ref: < user.id]
+  chatroom_id Long [not null, ref: < chatroom.id]
+  message string
+  media_id Long [ref: - media.id]
+  sent_time datetime
+  received_time datetime
+  seen_time datetime
+}
+
+Table media{
+  id Long[pk]
+  type varchar [not null]
+  path url
+}
