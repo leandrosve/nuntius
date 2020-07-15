@@ -1,20 +1,17 @@
-package com.leandrosve.nuntius.exception;
+package com.leandrosve.nuntius.exception.contact;
 
-import com.leandrosve.nuntius.util.LangUtil;
+import com.leandrosve.nuntius.exception.CustomException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
 public class ContactAlreadyExistsException extends CustomException {
 
     private static final long serialVersionUID = 1L;
 
-    @Autowired
-    LangUtil langUtil;
-
     @Override
     public String getMessage() {
-        return langUtil.t("contact.exists");
+      
+        return "contact.exists";
     }
 
     @Override

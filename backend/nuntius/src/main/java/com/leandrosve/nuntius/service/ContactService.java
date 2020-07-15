@@ -6,8 +6,8 @@ import java.util.Set;
 
 import com.leandrosve.nuntius.beans.ContactDTO;
 import com.leandrosve.nuntius.exception.BadRequestException;
-import com.leandrosve.nuntius.exception.ContactAlreadyExistsException;
-import com.leandrosve.nuntius.exception.ContactNotFoundException;
+import com.leandrosve.nuntius.exception.contact.ContactAlreadyExistsException;
+import com.leandrosve.nuntius.exception.contact.ContactNotFoundException;
 import com.leandrosve.nuntius.model.Contact;
 import com.leandrosve.nuntius.model.User;
 import com.leandrosve.nuntius.repository.IContactRepository;

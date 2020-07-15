@@ -1,10 +1,10 @@
 package com.leandrosve.nuntius.util;
 
+import com.leandrosve.nuntius.exception.AccessDeniedException;
 import com.leandrosve.nuntius.model.User;
 import com.leandrosve.nuntius.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -32,7 +32,7 @@ public class AuthUtil {
 
     public void authenticate(Long id){
         if(!isUserAuthenticated(id)){
-            throw new AccessDeniedException(langUtil.t("access.denied"));
+            throw new AccessDeniedException();
         };
     }
 }

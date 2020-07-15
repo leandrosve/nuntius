@@ -14,7 +14,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 @Service
 public class JwtUtil {
-    public static final long JWT_TOKEN_VALIDITY = 1000 * 3600;
+    public static final long JWT_TOKEN_VALIDITY = 10000 * 3600;
     
     //SACAR DE ACAAAAAAAAAAAAAAAAAAAAAAAAAA
     //SACAR DE ACAAAAAAAAAAAAAAAAAAAAAAAAAA

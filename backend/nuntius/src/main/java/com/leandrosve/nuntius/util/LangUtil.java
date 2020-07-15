@@ -15,12 +15,12 @@ public class LangUtil {
 
     public String t(String message){
         final Locale locale =LocaleContextHolder.getLocale();
-        System.out.println(locale);
-        String returnMessage=message;
-        try {
-            returnMessage=messageSource.getMessage(message, null, locale);
-        } catch (NoSuchMessageException e) {}
-       
+        String returnMessage= "";
+        try{
+            returnMessage = messageSource.getMessage(message, null, locale);  
+        }catch(NoSuchMessageException e){
+            returnMessage=message;
+        }
         return returnMessage;
     }
    

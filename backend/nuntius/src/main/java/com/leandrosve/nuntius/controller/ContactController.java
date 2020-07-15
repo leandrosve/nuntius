@@ -10,6 +10,8 @@ import com.leandrosve.nuntius.service.UserService;
 import com.leandrosve.nuntius.util.AuthUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -43,8 +45,9 @@ public class ContactController {
     }
 
     @PostMapping("/contacts")
-    public ContactDTO createContact(@Valid @RequestBody ContactDTO contact){   
-      return contactService.createContact(contact);
+    public ResponseEntity<ContactDTO> createContact(@Valid @RequestBody ContactDTO contact){   
+      final ContactDTO createdContact=contactService.createContact(contact);
+      return new ResponseEntity<ContactDTO>(createdContact, HttpStatus.CREATED);
     }
 
     @PatchMapping("/contacts/{id}")

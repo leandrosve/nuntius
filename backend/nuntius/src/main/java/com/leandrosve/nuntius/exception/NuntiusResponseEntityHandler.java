@@ -59,7 +59,7 @@ public class NuntiusResponseEntityHandler extends ResponseEntityExceptionHandler
 
     @ExceptionHandler(CustomException.class)
     public final ResponseEntity<Object> handleCustomException(CustomException ex)  {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(ex.getHttpStatus().value(), ex.getMessage(), ex.getDetails());
+        ExceptionResponse exceptionResponse = new ExceptionResponse(ex.getHttpStatus().value(), langUtil.t(ex.getMessage()), ex.getDetails());
         return new ResponseEntity<Object>(exceptionResponse,ex.getHttpStatus());
     }
 

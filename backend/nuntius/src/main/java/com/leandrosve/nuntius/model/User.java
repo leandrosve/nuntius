@@ -3,11 +3,14 @@ package com.leandrosve.nuntius.model;
 import java.util.Collection;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -17,6 +20,7 @@ import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -54,7 +58,11 @@ public class User implements UserDetails {
     private String password;
 
     @OneToMany(mappedBy="owner")
-	private Set<Contact> contacts;
+    private Set<Contact> contacts;
+    
+    
+    @ManyToMany(mappedBy="users", cascade = CascadeType.ALL,  fetch = FetchType.EAGER)
+    private Set<Chat> chats;
 
     public String getUsername() {
         
@@ -144,6 +152,14 @@ public class User implements UserDetails {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public Set<Chat> getChats() {
+        return chats;
+    }
+
+    public void setChats(Set<Chat> chats) {
+        this.chats = chats;
     }
    
 }

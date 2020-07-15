@@ -1,5 +1,6 @@
-package com.leandrosve.nuntius.exception;
+package com.leandrosve.nuntius.exception.contact;
 
+import com.leandrosve.nuntius.exception.CustomException;
 import com.leandrosve.nuntius.util.LangUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,7 @@ public class ContactNotFoundException extends CustomException {
 
     @Override
     public String getMessage() {
-        return langUtil.t("contact.notfound");
+        return "contact.notfound";
     }
 
     @Override
@@ -24,7 +25,7 @@ public class ContactNotFoundException extends CustomException {
 
     @Override
     public HttpStatus getHttpStatus() {
-        return HttpStatus.BAD_REQUEST;
+        return HttpStatus.NOT_FOUND;
     }
 
     
