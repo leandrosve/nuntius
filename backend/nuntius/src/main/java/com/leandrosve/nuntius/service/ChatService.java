@@ -30,10 +30,12 @@ public class ChatService {
     AuthUtil authUtil;
 
     @Autowired
-    IChatRepository chatRepository;
+    IChatRepository chatV2Repository;
+
 
     @Autowired
     MessageService messageService;
+
 
     public ChatDTO createChat(ChatDTO chatDTO) {
         final User currentUser = authUtil.getCurrentUser();
@@ -43,50 +45,53 @@ public class ChatService {
             userIds.addAll(chatDTO.getUserIds());
         }
         List<User> users = userRepository.findByUserIds(userIds);
+
         Chat chat = new Chat(users, null, true, chatDTO.getTitle());
-        return mapToDTO(chatRepository.save(chat));
+        return mapToDTOV2(chatV2Repository.save(chat));
     }
 
     public ChatDTO addMember(long chatId, long userId) {
         final Chat chat = retrieveChat(chatId);
         if(chat.isUserMember(userId)){throw new UserAlreadyMemberException();};
         final User user = userRepository.findById(userId).orElseThrow( () -> new UserNotFoundException());
-        chat.getUsers().add(user);
-        chatRepository.save(chat);
-        return mapToDTO(chat);
+        chat.addMember(user);
+        chatV2Repository.save(chat);
+        return mapToDTOV2(chat);
     }
 
     public List<ChatDTO> getChats() {
-        final Set<Chat> chats = authUtil.getCurrentUser().getChats();
+        final User currentUser = authUtil.getCurrentUser();
         List<ChatDTO> chatDTOs = new ArrayList<ChatDTO>();
-        chats.forEach(c -> chatDTOs.add(mapToDTO(c)));
+        final Set<Chat> chats= currentUser.getChats();
+        chats.forEach((c) -> chatDTOs.add(mapToDTOV2(c)));
         return chatDTOs;
     }
 
     public ChatDTO getChat(Long id) {
         Chat chat = retrieveChat(id);
-        return mapToDTO(chat);
+        return mapToDTOV2(chat);
     }
 
     public ChatDTO deleteChat(Long id) {
-        Chat chat = chatRepository.findById(id).orElseThrow(() -> new ChatNotFoundException());
+        Chat chat = chatV2Repository.findById(id).orElseThrow(() -> new ChatNotFoundException());
         final User currentUser = authUtil.getCurrentUser();
         if (!chat.isUserMember(currentUser.getId())) {
             throw new AccessDeniedException();
         }
-        chat.getUsers().remove(currentUser);
-        if(chat.getUsers().isEmpty()){
-            chatRepository.delete(chat);
+        chat.removeMember(currentUser);
+        if(chat.getMemberships().isEmpty()){
+            chatV2Repository.delete(chat);
             return null;
         }
-        chatRepository.save(chat);
-        return mapToDTO(chat);
+        Chat savedChat= chatV2Repository.save(chat);
+        return mapToDTOV2(savedChat);
     }
 
-    private ChatDTO mapToDTO(Chat chat) {
+
+    private ChatDTO mapToDTOV2(Chat chat) {
         List<Long> usersIds = new ArrayList<Long>();
-        chat.getUsers().forEach(u -> {
-            usersIds.add(u.getId());
+        chat.getMemberships().forEach(u -> {
+            usersIds.add(u.getUser().getId());
         });
         ChatDTO chatDTO = new ChatDTO(chat.getId(), usersIds, chat.getGroupal(), chat.getTitle());
         final Message lastMessage = chat.getLastMessage();
@@ -98,7 +103,7 @@ public class ChatService {
 
 
     private Chat retrieveChat(Long id) throws AccessDeniedException, ChatNotFoundException{
-        Chat chat = chatRepository.findById(id).orElseThrow(() -> new ChatNotFoundException());
+        Chat chat = chatV2Repository.findById(id).orElseThrow(() -> new ChatNotFoundException());
         final User currentUser = authUtil.getCurrentUser();
         if (!chat.isUserMember(currentUser.getId())) {
             throw new AccessDeniedException();

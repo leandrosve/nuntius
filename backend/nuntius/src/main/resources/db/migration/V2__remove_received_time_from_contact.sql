@@ -1,0 +1,1 @@
+ALTER TABLE message drop received_time;

@@ -1,6 +1,9 @@
 package com.leandrosve.nuntius.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -10,7 +13,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -58,11 +60,13 @@ public class User implements UserDetails {
     private String password;
 
     @OneToMany(mappedBy="owner")
-    private Set<Contact> contacts;
+    private Set<Contact> contacts = new HashSet<Contact>();
     
-    
-    @ManyToMany(mappedBy="users", cascade = CascadeType.ALL,  fetch = FetchType.EAGER)
-    private Set<Chat> chats;
+    @OneToMany(mappedBy="user", cascade = CascadeType.ALL)
+    private List<MessageReception> messageReceptions = new ArrayList<MessageReception>();
+
+    @OneToMany(mappedBy="user", cascade = CascadeType.ALL,  fetch = FetchType.LAZY)
+    private Set<ChatMembership> memberships=new HashSet<ChatMembership>(); 
 
     public String getUsername() {
         
@@ -155,11 +159,18 @@ public class User implements UserDetails {
     }
 
     public Set<Chat> getChats() {
+        Set<Chat> chats = new HashSet<Chat>();
+        final Set<ChatMembership> memberships = getMemberships();
+        memberships.forEach((m) -> chats.add(m.getChat()));
         return chats;
     }
 
-    public void setChats(Set<Chat> chats) {
-        this.chats = chats;
+    public Set<ChatMembership> getMemberships() {
+        return memberships;
+    }
+
+    public void setMemberships(Set<ChatMembership> memberships) {
+        this.memberships = memberships;
     }
    
 }

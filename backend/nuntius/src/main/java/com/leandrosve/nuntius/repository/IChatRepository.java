@@ -7,5 +7,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface IChatRepository extends JpaRepository<Chat, Long>{
+
     
 }

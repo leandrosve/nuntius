@@ -1,38 +1,29 @@
 package com.leandrosve.nuntius.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-
 
 @Entity
 public class Chat {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(updatable = false, nullable = false)
+    @Column(updatable = false, nullable = false)
     private long id;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL })
-    @JoinTable(
-	        name = "chat_user", 
-	        joinColumns = { @JoinColumn(name = "chat_id") }, 
-	        inverseJoinColumns = { @JoinColumn(name = "user_id") }
-        )
-    private List<User> users;
+    @OneToMany(mappedBy = "chat", cascade = {CascadeType.ALL},orphanRemoval = true)
+    private List<ChatMembership> memberships;
 
-    @OneToMany(mappedBy="chat")
+    @OneToMany(mappedBy = "chat")
     private List<Message> messages;
 
     @Column(updatable = false, nullable = false)
@@ -40,8 +31,7 @@ public class Chat {
 
     private String title;
 
-  
-    private Date lastModified=new Date(); 
+    private Date lastModifiedTime = new Date();
 
     public long getId() {
         return id;
@@ -49,14 +39,6 @@ public class Chat {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public List<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<User> users) {
-        this.users = users;
     }
 
     public List<Message> getMessages() {
@@ -83,12 +65,14 @@ public class Chat {
         this.title = title;
     }
 
-    public boolean isUserMember(Long userId){
-        return users.stream().anyMatch(o -> o.getId() == userId);
+    public boolean isUserMember(Long userId) {
+        return memberships.stream().anyMatch(o -> o.getUser().getId() == userId);
     }
 
     public Chat(List<User> users, List<Message> messages, Boolean groupal, String title) {
-        this.users = users;
+        final List<ChatMembership> members = new ArrayList<ChatMembership>();
+        users.forEach((u) -> members.add(new ChatMembership(u, this, new Date())));
+        this.memberships = members;
         this.messages = messages;
         this.groupal = groupal;
         this.title = title;
@@ -98,20 +82,64 @@ public class Chat {
         super();
     }
 
-    public Date getLastModified() {
-        return lastModified;
+    public Date getLastModifiedTime() {
+        return lastModifiedTime;
     }
 
-    public void setLastModified(Date lastModified) {
-        this.lastModified = lastModified;
+    public void setLastModifiedTime(Date lastModified) {
+        this.lastModifiedTime = lastModified;
     }
 
-    public Message getLastMessage(){
-        if(messages != null && !messages.isEmpty()){
+    public Message getLastMessage() {
+        if (messages != null && !messages.isEmpty()) {
             return messages.get(0);
-        }else{
+        } else {
             return null;
         }
     }
-    
+
+    public List<ChatMembership> getMemberships() {
+        return memberships;
+    }
+
+    public List<User> getMembers() {
+        List<User> users = new ArrayList<User>();
+        if (memberships != null) {
+            memberships.forEach((m) -> users.add(m.getUser()));
+        }
+        return users;
+    }
+
+    public void setMemberships(List<ChatMembership> memberships) {
+        this.memberships = memberships;
+    }
+
+    public ChatMembership getMembership(User user) {
+        if (memberships != null) {
+            for (ChatMembership member : memberships) {
+                if (member.getUser() == user) {
+                    getMemberships().remove(member);
+                    return member;
+                };
+            }
+        }
+        return null;
+    }
+
+    public void addMember(User user) {
+        ChatMembership member = new ChatMembership(user, this, new Date());
+        this.memberships.add(member);
+    }
+
+    public boolean removeMember(User user) {
+        for (ChatMembership member : memberships) {
+            if (member.getUser() == user) {
+                getMemberships().remove(member);
+                return true;
+            }
+            ;
+        }
+        return false;
+    }
+
 }

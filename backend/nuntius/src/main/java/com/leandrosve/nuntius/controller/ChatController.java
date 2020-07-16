@@ -23,11 +23,15 @@ public class ChatController {
     @Autowired
     ChatService chatService;
     
+
     @PostMapping("/chats")
     public ResponseEntity<ChatDTO> createChat(@Valid @RequestBody ChatDTO chatDTO){   
       final ChatDTO createdChat=chatService.createChat(chatDTO);
       return new ResponseEntity<ChatDTO>(createdChat, HttpStatus.CREATED);
     }
+
+
+    
 
     @PostMapping("/chats/{chatId}/users/{userId}")
     public ResponseEntity<ChatDTO> addMember(@PathVariable Long chatId, @PathVariable Long userId){   
@@ -41,7 +45,7 @@ public class ChatController {
     public List<ChatDTO> getChats(){   
       return chatService.getChats();
     }
-
+    
     @GetMapping("/chats/{id}")
     public ChatDTO getChat(@PathVariable Long id){   
       return chatService.getChat(id);

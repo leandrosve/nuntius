@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.leandrosve.nuntius.beans.MessageDTO;
+import com.leandrosve.nuntius.beans.MessageReceptionDTO;
 import com.leandrosve.nuntius.exception.AccessDeniedException;
 import com.leandrosve.nuntius.exception.chat.ChatNotFoundException;
 import com.leandrosve.nuntius.exception.message.MessageNotFoundException;
@@ -26,16 +27,21 @@ public class MessageService {
     @Autowired
     IChatRepository chatRepository;
 
+    
     @Autowired
     IMessageRepository messageRepository;
+
 
     public MessageDTO createMessage(MessageDTO messageDTO, Long chatId){
         final User currentUser = authUtil.getCurrentUser(); 
         final Chat chat = chatRepository.findById(chatId).orElseThrow(()-> new ChatNotFoundException());
         if(!chat.isUserMember(currentUser.getId())){throw new AccessDeniedException();}
         Message message= new Message(currentUser, chat, messageDTO.getText());
+        List<User> users =chat.getMembers();
+        users.remove(currentUser);
+        message.setReceiverUsers(users);
         messageRepository.save(message);
-        return mapToDTO(messageRepository.save(message));
+        return mapToDTO(message);
     }
 
     public MessageDTO getMessage(Long id){
@@ -66,10 +72,12 @@ public class MessageService {
         return mapToDTO(message);
     }
 
-
-
     public MessageDTO mapToDTO(Message message){
-        return new MessageDTO(message.getId(), message.getUser().getId(), message.getText(), message.getSentTime(), message.getReceivedTime());
+        MessageDTO messageDTO = new MessageDTO(message.getId(), message.getSender().getId(), message.getText(), message.getSentTime());
+        List<MessageReceptionDTO> details = new ArrayList<MessageReceptionDTO>();
+        message.getReceivers().forEach((mr) -> details.add(new MessageReceptionDTO(mr.getUser().getId(), mr.getSeenTime(), mr.getReceivedTime())));
+        messageDTO.setDetails(details);
+        return messageDTO;
     }
     
 }

@@ -1,7 +1,10 @@
 package com.leandrosve.nuntius.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -17,34 +21,25 @@ public class Message {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(updatable = false, nullable = false)
+    @Column(updatable = false, nullable = false)
     private Long id;
-   
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "USER_ID")
+    @JoinColumn(name = "SENDER_ID")
     @NotNull(message = "{user.notfound}")
-    private User user;
+    private User sender;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "CHAT_ID")
     @NotNull(message = "{chat.notfound}")
     private Chat chat;
 
+    @OneToMany(mappedBy= "message", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+    private List<MessageReception> receivers;
+
     private String text;
 
     private Date sentTime = new Date();
-
-    private Date receivedTime;
-
-    private Date seenTime;
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
 
     public Chat getChat() {
         return chat;
@@ -70,40 +65,43 @@ public class Message {
         this.sentTime = sendTime;
     }
 
-    public Date getReceivedTime() {
-        return receivedTime;
-    }
-
-    public void setReceivedTime(Date receivedTime) {
-        this.receivedTime = receivedTime;
-    }
-
-    public Date getSeenTime() {
-        return seenTime;
-    }
-
-    public void setSeenTime(Date seenTime) {
-        this.seenTime = seenTime;
-    }
-
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Message(@NotNull(message = "{user.notfound}") User user, @NotNull(message = "{chat.notfound}") Chat chat,
+    public Message(@NotNull(message = "{user.notfound}") User sender, @NotNull(message = "{chat.notfound}") Chat chat,
             String text) {
-        this.user = user;
+        this.sender = sender;
         this.chat = chat;
         this.text = text;
     }
 
-    public Message(){
+    public Message() {
         super();
     }
+
+    public User getSender() {
+        return sender;
+    }
+
+    public void setSender(User sender) {
+        this.sender = sender;
+    }
+
+    public List<MessageReception> getReceivers() {
+        return receivers;
+    }
+
+    public void setReceivers(List<MessageReception> receivers) {
+        this.receivers = receivers;
+    }
+
+    public void setReceiverUsers(List<User> users) {
+        List<MessageReception> receivers = new ArrayList<MessageReception>();
+        users.forEach((u)->receivers.add(new MessageReception(u, this, null, null)));
+        this.receivers = receivers;
+    }
+
     
-    
+
 }

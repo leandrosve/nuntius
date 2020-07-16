@@ -23,6 +23,7 @@ public class MessageController {
     @Autowired
     MessageService messageService;
     
+
     @PostMapping("/chats/{chatId}/messages")
     public ResponseEntity<MessageDTO> createMessage(@Valid @RequestBody MessageDTO messageDTO, @PathVariable long chatId){   
       final MessageDTO createdMessage=messageService.createMessage(messageDTO, chatId);
