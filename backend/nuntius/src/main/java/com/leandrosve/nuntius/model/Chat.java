@@ -118,7 +118,6 @@ public class Chat {
         if (memberships != null) {
             for (ChatMembership member : memberships) {
                 if (member.getUser() == user) {
-                    getMemberships().remove(member);
                     return member;
                 };
             }

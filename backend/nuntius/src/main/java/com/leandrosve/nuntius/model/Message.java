@@ -102,6 +102,24 @@ public class Message {
         this.receivers = receivers;
     }
 
+    public boolean isReceived(){
+        for(MessageReception r: receivers){
+            if(r.getReceivedTime() == null){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean isSeen(){
+        for(MessageReception r: receivers){
+            if(r.getSeenTime() == null){
+                return false;
+            }
+        }
+        return true;
+    }
+
     
 
 }

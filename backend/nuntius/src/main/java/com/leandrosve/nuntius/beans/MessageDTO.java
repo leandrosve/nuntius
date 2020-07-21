@@ -1,15 +1,14 @@
 package com.leandrosve.nuntius.beans;
 
 import java.util.Date;
-import java.util.List;
 
 public class MessageDTO {
+
     private long id;
     private long userId;
     private String text;
     private Date sentTime;
-
-    private List<MessageReceptionDTO> details;
+    private MessageDetailsDTO details;
 
 
     public long getId() {
@@ -57,12 +56,16 @@ public class MessageDTO {
         super();
     }
 
-    public List<MessageReceptionDTO> getDetails() {
+   
+    public MessageDetailsDTO getDetails() {
         return details;
     }
 
-    public void setDetails(List<MessageReceptionDTO> details) {
+    public void setDetails(MessageDetailsDTO details) {
         this.details = details;
     }
+
+
+
 
 }

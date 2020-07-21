@@ -29,7 +29,7 @@ public class ChatMembership {
 
     private Date joinedTime;
 
-    private Date lastFetchTime;
+    private Date lastFetchTime = new Date();
 
     public Long getId() {
         return id;

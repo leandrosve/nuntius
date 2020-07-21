@@ -26,7 +26,7 @@ public class Contact {
     @Size(max=128, message="{alias.toolong}")
     private String alias;
     
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "USER_ID")
     @NotNull(message = "{user.notfound}")
     private User user;

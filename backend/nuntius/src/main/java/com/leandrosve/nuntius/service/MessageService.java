@@ -1,16 +1,20 @@
 package com.leandrosve.nuntius.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.leandrosve.nuntius.beans.MessageDTO;
+import com.leandrosve.nuntius.beans.MessageDetailsDTO;
 import com.leandrosve.nuntius.beans.MessageReceptionDTO;
 import com.leandrosve.nuntius.exception.AccessDeniedException;
 import com.leandrosve.nuntius.exception.chat.ChatNotFoundException;
 import com.leandrosve.nuntius.exception.message.MessageNotFoundException;
 import com.leandrosve.nuntius.model.Chat;
+import com.leandrosve.nuntius.model.ChatMembership;
 import com.leandrosve.nuntius.model.Message;
 import com.leandrosve.nuntius.model.User;
+import com.leandrosve.nuntius.repository.IChatMembershipRepository;
 import com.leandrosve.nuntius.repository.IChatRepository;
 import com.leandrosve.nuntius.repository.IMessageRepository;
 import com.leandrosve.nuntius.util.AuthUtil;
@@ -26,6 +30,10 @@ public class MessageService {
 
     @Autowired
     IChatRepository chatRepository;
+
+    
+    @Autowired
+    IChatMembershipRepository chatMembershipRepository;
 
     
     @Autowired
@@ -53,9 +61,16 @@ public class MessageService {
 
     public List<MessageDTO> getMessages(Long chatId){
         final User currentUser = authUtil.getCurrentUser(); 
-        final Chat chat = chatRepository.findById(chatId).orElseThrow(() -> new MessageNotFoundException());
+        final Chat chat = chatRepository.findById(chatId).orElseThrow(() -> new ChatNotFoundException());
         if(!chat.isUserMember(currentUser.getId())){throw new AccessDeniedException();};
-        final List<Message> messages = chat.getMessages();
+
+        ChatMembership membership = chat.getMembership(currentUser);      
+
+        membership.setLastFetchTime(new Date());
+        chatMembershipRepository.save(membership);
+
+       // final List<Message> messages = chat.getMessages();
+       final List<Message> messages = messageRepository.findAllByChatIdAndSentTimeLessThan(chatId, new Date());
         List<MessageDTO> messageDTOs = new ArrayList<MessageDTO>();
         if(messages != null && messages.size() > 0){
             messages.forEach((m) -> messageDTOs.add(mapToDTO(m)));
@@ -74,9 +89,11 @@ public class MessageService {
 
     public MessageDTO mapToDTO(Message message){
         MessageDTO messageDTO = new MessageDTO(message.getId(), message.getSender().getId(), message.getText(), message.getSentTime());
-        List<MessageReceptionDTO> details = new ArrayList<MessageReceptionDTO>();
-        message.getReceivers().forEach((mr) -> details.add(new MessageReceptionDTO(mr.getUser().getId(), mr.getSeenTime(), mr.getReceivedTime())));
-        messageDTO.setDetails(details);
+        List<MessageReceptionDTO> receptions = new ArrayList<MessageReceptionDTO>();
+        message.getReceivers().forEach((mr) -> receptions.add(new MessageReceptionDTO(mr.getUser().getId(), mr.getSeenTime(), mr.getReceivedTime())));
+        if(messageDTO.getUserId() == authUtil.getCurrentUser().getId()){
+            messageDTO.setDetails(new MessageDetailsDTO(receptions,message.isReceived(),message.isSeen()));
+        }
         return messageDTO;
     }
     
