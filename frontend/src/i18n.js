@@ -8,7 +8,7 @@ i18n
   .init({
     // we init with resources
     resources: {
-      es: {
+      en: {
         translations: {
           start:'Start',
           login:'Log in',
@@ -29,12 +29,12 @@ i18n
           "optional" : "Optional",
           contact_add:'Add contact',
           contact_detail:'Contact details',
-          "username or email" : 'Username or email',
+          "search_username" : 'Search by username',
           save:"Save",
           info:'Info.',
           language:'Language',
           image_adjust:'Adjust image',
-          welcome_message:'Welcome, please select chat to start messaging. Have a nice day!',
+          welcome_message:'Welcome {{name}}, please select chat to start messaging. Have a nice day!',
           watch:'Watch',
         },
         error: {
@@ -45,6 +45,7 @@ i18n
           "email_invalid": 'Please enter a valid email.',
           "required_field": 'This field is obligatory',
           "no_spaces": 'This field cannot have spaces',
+          login_failed: 'Username and password do not match'
         },
         success: {
           saved: 'Saved!',
@@ -57,7 +58,7 @@ i18n
           "exit_without_saving": 'Exit without saving?',
         }
       },
-      en: {
+      es: {
         translations: {     
           start:'Comenzar',     
           login:'Iniciar Sesión',
@@ -78,12 +79,12 @@ i18n
           "optional" : "Opcional",
           contact_add:'Agregar contacto',  
           contact_detail:'Detalles del contacto',    
-          "username or email" : 'Nombre de usuario o correo electrónico',
+          "search_username" : 'Buscar por nombre de usuario',
           save:"Guardar",
           info:'Info.',
           language:'Idioma',
           image_adjust:'Ajustar imágen',
-          welcome_message:'Bienvenido, selecciona un chat para empezar a hablar. Ten un buen día!',
+          welcome_message:'Bienvenido {{name}}, selecciona un chat para empezar a hablar. Ten un buen día!',
           watch:'Ver',
         },
         error: {
@@ -94,6 +95,7 @@ i18n
           "email_invalid": 'Ingrese un email válido',
           "required_field": 'Este campo es obligatorio',
           "no_spaces": 'No puede contener espacios',
+          login_failed: 'El nombre de usuario y contraseña no coinciden',
         },
         success: {
           saved: 'Guardado!',

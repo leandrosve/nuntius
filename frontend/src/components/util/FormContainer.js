@@ -1,5 +1,4 @@
 import React from "react";
-import { useTranslation } from "react-i18next";
 import Avatar from "@material-ui/core/Avatar";
 import "./Util.css";
 import Typography from "@material-ui/core/Typography";
@@ -20,7 +19,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const FormContainer = (props) => {
-  const { t } = useTranslation();
 
   const classes = useStyles();
 

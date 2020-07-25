@@ -9,6 +9,8 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import {connect} from 'react-redux';
+import {logout} from '../../redux/user/userActions';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -39,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-function Nav() {
+function Nav({currentUser, logout}) {
   const { t } = useTranslation();
   const classes = useStyles();
   return (
@@ -52,7 +54,7 @@ function Nav() {
         <AiFillAlipayCircle style={{fontSize:'40px'}}  />
         <Typography variant="h5" color="inherit" className={classes.title} >NUNTIUS</Typography>
         <div className="Nav-links">
-          <Link to="/">
+          <Link to="/" onClick={logout}>
              <Button color="inherit">{t("logout")}</Button>
           </Link>
         </div>
@@ -61,4 +63,15 @@ function Nav() {
   );
 }
 
-export default Nav;
+const mapStateToProps = state =>{
+  return {
+      currentUser: state.currentUser
+  }
+}
+const mapDispatchToProps = dispatch =>  {
+  return {
+    logout: () => dispatch(logout())
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Nav);

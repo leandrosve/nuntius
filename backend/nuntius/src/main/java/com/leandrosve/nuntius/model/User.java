@@ -59,10 +59,10 @@ public class User implements UserDetails {
     @Pattern(regexp ="^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$", message="{password.insecure}")
     private String password;
 
-    @OneToMany(mappedBy="owner")
+    @OneToMany(mappedBy="owner", fetch = FetchType.LAZY)
     private Set<Contact> contacts = new HashSet<Contact>();
     
-    @OneToMany(mappedBy="user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy="user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<MessageReception> messageReceptions = new ArrayList<MessageReception>();
 
     @OneToMany(mappedBy="user", cascade = CascadeType.ALL,  fetch = FetchType.LAZY)

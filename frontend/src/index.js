@@ -5,12 +5,20 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import WebFont from 'webfontloader';
 import "./i18n";
+import axios from "axios";
 
 WebFont.load({
   google: {
     families: ['Bellota','Titillium Web:300,400,700', 'sans-serif']
   }
 });
+
+//axios.defaults.baseURL = 'http://localhost:8080';
+
+
+//axios.defaults.headers.common['Authorization'] = "Bearer "+localStorage.getItem('jwtToken');
+
+//axios.defaults.headers.common['Accept-Language'] = localStorage.getItem('i18nextLng');
 
 ReactDOM.render(
   <React.StrictMode>

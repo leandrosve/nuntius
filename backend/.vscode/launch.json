@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-NuntiusAPI<nuntius>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "mainClass": "com.leandrosve.nuntius.NuntiusAPI",
+            "projectName": "nuntius",
+            "args": ""
+        }
+    ]
+}

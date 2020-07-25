@@ -1,4 +1,4 @@
-import React, {useCallback} from "react";
+import React, {useEffect} from "react";
 
 import profilePicPlaceholder from "../assets/images/profile-pic-placeholder.jpg";
 import GroupIcon from "@material-ui/icons/Group";
@@ -17,15 +17,24 @@ import Alert from "../util/Alert";
 import Button from "@material-ui/core/Button";
 import ContactListItem from "./ContactListItem";
 import ContactDetail from "./ContactDetail";
+import {connect} from "react-redux";
+import {contacts} from "../../redux/contacts/contactActions";
 
-function Contacts({handleClose}) {
+function Contacts({handleClose, fetchContacts}) {
   const { t } = useTranslation();
   const [showDeleteDialog, setShowDeleteDialog] = React.useState({
     open: false,
     title: "",
   });
 
-  const handleOpenDialog = React.useCallback(name => {
+
+useEffect(() => {    
+    fetchContacts(); 
+    console.log(contacts);
+ });
+  
+
+  const onRemoveContact = React.useCallback(name => {
     let title = t("confirmation:contact_delete", { name: name });
     setShowDeleteDialog({ open: true, title: title })},[]);
   
@@ -74,7 +83,7 @@ function Contacts({handleClose}) {
           </Alert>
           {openContactDetail && 
           <>
-            <ContactDetail/>
+            <ContactDetail handleClose={handleClose} onRemoveContact={onRemoveContact}/>
           
             <Button
             style={{ width: "100%"}}
@@ -92,91 +101,58 @@ function Contacts({handleClose}) {
       <ContactListItem
         avatar={profilePicPlaceholder}
         alias="Don Ramon"
+        username="donramon"
         info=" Me gusta el polen..."
-        handleOpenDialog={handleOpenDialog}
+        onRemoveContact={onRemoveContact}
         handleClick={handleOpenContactDetail}
         handleClose={handleClose}
       />
       <ContactListItem
         avatar={profilePicPlaceholder}
-        alias="Don Miguel"
+        alias="Don Miguel"    
+        username="donmiguel"
         info="Apaisai lala"
-        handleOpenDialog={handleOpenDialog}
+        onRemoveContact={onRemoveContact}
         handleClick={handleOpenContactDetail}
         handleClose={handleClose}
       />
       <ContactListItem
         avatar={profilePicPlaceholder}
-        alias="Francisco Pepe"
+        alias="Francisco Pepe"c      
+        username="francisc"
         info=" Me gusta el polen..."
-        handleOpenDialog={handleOpenDialog}
-        handleClick={handleOpenContactDetail}
-        handleClose={handleClose}
-      />
-      <ContactListItem
-        avatar={profilePicPlaceholder}
-        alias="Don Ramon"
-        info=" Me gusta el polen..."
-        handleOpenDialog={handleOpenDialog}
+        onRemoveContact={onRemoveContact}
         handleClick={handleOpenContactDetail}
         handleClose={handleClose}
       />
       <ContactListItem
         avatar={profilePicPlaceholder}
         alias="Don Ramon"
+        username="donramon"
         info=" Me gusta el polen..."
-        handleOpenDialog={handleOpenDialog}
+        onRemoveContact={onRemoveContact}
         handleClick={handleOpenContactDetail}
         handleClose={handleClose}
       />
       <ContactListItem
         avatar={profilePicPlaceholder}
         alias="Don Ramon"
+        username="donramon"
         info=" Me gusta el polen..."
-        handleOpenDialog={handleOpenDialog}
+        onRemoveContact={onRemoveContact}
         handleClick={handleOpenContactDetail}
         handleClose={handleClose}
       />
       <ContactListItem
         avatar={profilePicPlaceholder}
         alias="Don Ramon"
+        username="donramon"
         info=" Me gusta el polen..."
-        handleOpenDialog={handleOpenDialog}
+        onRemoveContact={onRemoveContact}
         handleClick={handleOpenContactDetail}
         handleClose={handleClose}
       />
-      <ContactListItem
-        avatar={profilePicPlaceholder}
-        alias="Don Ramon"
-        info=" Me gusta el polen..."
-        handleOpenDialog={handleOpenDialog}
-        handleClick={handleOpenContactDetail}
-        handleClose={handleClose}
-      />
-      <ContactListItem
-        avatar={profilePicPlaceholder}
-        alias="Don Ramon"
-        info=" Me gusta el polen..."
-        handleOpenDialog={handleOpenDialog}
-        handleClick={handleOpenContactDetail}
-        handleClose={handleClose}
-      />
-      <ContactListItem
-        avatar={profilePicPlaceholder}
-        alias="Don Ramon"
-        info=" Me gusta el polen..."
-        handleOpenDialog={handleOpenDialog}
-        handleClick={handleOpenContactDetail}
-        handleClose={handleClose}
-      />
-      <ContactListItem
-        avatar={profilePicPlaceholder}
-        alias="Don Ramon"
-        info=" Me gusta el polen..."
-        handleOpenDialog={handleOpenDialog}
-        handleClick={handleOpenContactDetail}
-        handleClose={handleClose}
-      />
+     
       <ConfirmationDialog
         open={showDeleteDialog.open}
         handleCancel={() => setShowDeleteDialog({ open: false })}
@@ -205,7 +181,7 @@ const AddContact = () => {
           <TextField
             size="small"
             autoFocus="true"
-            placeholder={t("username or email")}
+            placeholder={t("search_username")}
             fullWidth
             InputProps={{
               endAdornment: (
@@ -223,5 +199,18 @@ const AddContact = () => {
   );
 };
 
-export default Contacts;
+const mapStateToProps = ({contact}) =>{
+  return{
+   // contacts: contact.contacts,
+  //  loading: contact.loading,
+   // isPopulated: contact.isPopulated,
+  }
+}
+
+const mapDispatchToProps = dispatch =>  {
+  return {
+    fetchContacts: () => dispatch(contacts())
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Contacts);
 

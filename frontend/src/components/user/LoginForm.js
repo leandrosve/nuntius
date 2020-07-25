@@ -5,19 +5,22 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { FormikTextField as TextField } from "formik-material-fields";
 import Button from "@material-ui/core/Button";
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
 
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 
-import { makeStyles } from '@material-ui/core/styles';
-import FormContainer from '../util/FormContainer';
+import { makeStyles } from "@material-ui/core/styles";
+import CircularProgress from '@material-ui/core/CircularProgress';
+import FormContainer from "../util/FormContainer";
 
-import Alert from '../util/Alert';
+import Alert from "../util/Alert";
+import { login } from "../../redux/user/userActions";
+import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   form: {
-    width: '100%', // Fix IE 11 issue.
+    width: "100%", // Fix IE 11 issue.
     marginTop: theme.spacing(1),
   },
   submit: {
@@ -25,19 +28,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
-const LoginForm = () => {
+const LoginForm = ( {error, login, loading} ) => {
   const { t } = useTranslation();
 
   const classes = useStyles();
 
   const [openAlert, setOpenAlert] = useState(false);
 
+
   const initialValues = {
     username: "",
     password: "",
   };
-
 
   return (
     <Formik
@@ -48,32 +50,31 @@ const LoginForm = () => {
         username: Yup.string().required(t("error:required_field")),
         password: Yup.string().required(t("error:required_field")),
       })}
-      onSubmit={(values, { setSubmitting }) => {
-        setTimeout(() => {
-          alert(JSON.stringify(values, null, 2));
+      onSubmit={(values, { setSubmitting }) => {   
+          login(values.username.trim(), values.password.trim());
           setOpenAlert(true);
           setSubmitting(false);
-        }, 400);
       }}
     >
       {({ isValid }) => (
+        <FormContainer title={t("login")} icon={<LockOutlinedIcon />}>
 
-        <FormContainer title={t('login')} icon={<LockOutlinedIcon/>}>
+          {loading && <CircularProgress color="secondary" />}
           <Alert
-            severity='error'
-            open={openAlert}
-            onClick={() => setOpenAlert(false)}  
+            severity="error"
+            open={openAlert && !loading && error !== ''}
+            onClick={() => setOpenAlert(false)}
           >
-            Username and password don't match
-            </Alert>
-          <Form className={classes.form} >
+            {error}
+          </Alert>
+          <Form className={classes.form}>
             <TextField
               variant="outlined"
               margin="normal"
-              size='small'
+              size="small"
               fullWidth
               id="username"
-              label={t('username')}
+              label={t("username")}
               name="username"
               autoFocus
             />
@@ -84,14 +85,14 @@ const LoginForm = () => {
               fullWidth
               size="small"
               name="password"
-              label={t('password')}
+              label={t("password")}
               type="password"
               id="password"
               autoComplete="current-password"
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
-              label={t('password_remember')}
+              label={t("password_remember")}
             />
             <Button
               type="submit"
@@ -101,7 +102,7 @@ const LoginForm = () => {
               className={classes.submit}
               disabled={!isValid}
             >
-              {t('login')}
+              {t("login")}
             </Button>
           </Form>
         </FormContainer>
@@ -109,4 +110,18 @@ const LoginForm = () => {
     </Formik>
   );
 };
-export default LoginForm;
+
+
+const mapStateToProps = state =>{
+  const session = state.user.session;
+  return {
+      error: session.error,
+      loading: session.loading
+  }
+}
+const mapDispatchToProps = dispatch =>  {
+  return {
+    login: (username, password) => dispatch(login(username, password))
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(LoginForm);

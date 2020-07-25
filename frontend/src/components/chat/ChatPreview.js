@@ -8,7 +8,7 @@ import {Link} from "react-router-dom";
 
 
 function ChatPreview({avatar, alias, lastMessage, unreadMessagesCount, lastMessageTime}) {
-  const [user, setUser] = useState({username:'@donramon'});
+  const [user] = useState({username:'@donramon'});
   return (
     <ListItem  button component={Link} to={`/browse/chat/${user.username}`}
     

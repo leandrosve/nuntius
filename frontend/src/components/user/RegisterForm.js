@@ -12,6 +12,11 @@ import AccountBoxIcon from "@material-ui/icons/AccountBox";
 import { makeStyles } from "@material-ui/core/styles";
 import Alert from '../util/Alert';
 
+import { signUp } from "../../redux/user/userActions";
+import { connect } from "react-redux";
+
+import CircularProgress from '@material-ui/core/CircularProgress';
+
 const useStyles = makeStyles((theme) => ({
   form: {
     width: "100%", // Fix IE 11 issue.
@@ -22,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function RegisterForm() {
+function RegisterForm({signUp, success, error, loading}) {
   const { t } = useTranslation();
 
   const classes = useStyles();
@@ -62,22 +67,22 @@ function RegisterForm() {
             .oneOf([Yup.ref("password"), null], t("error:passwords_must_match"))
             .required(t("error:required_field")),
         })}
-        onSubmit={(values, { setSubmitting }) => {
-          setTimeout(() => {
-            alert(JSON.stringify(values, null, 2));
-            setSubmitting(false);
+        onSubmit={(values, { setSubmitting }) => {         
+            
+            signUp(values.username, values.password, values.name, values.email);
             setOpenAlert(true);
-          }, 400);
+            setSubmitting(false);
         }}
       >
         {({ isValid }) => (
           <Form className={classes.form}>
-              <Alert
+            {loading && <CircularProgress color="secondary" />}
+            <Alert
             severity='error'
-            open={openAlert}
+            open={openAlert && !loading && (error !== '' || success !== '')}
             onClick={() => setOpenAlert(false)}  
           >
-            Username and password don't match
+            {error || success}
             </Alert>
             <TextField
               variant="outlined"
@@ -151,4 +156,18 @@ function RegisterForm() {
   );
 }
 
-export default RegisterForm;
+const mapStateToProps = state =>{
+  const signUp = state.user.signUp;
+  return {
+      success: signUp.success,
+      error: signUp.error,
+      loading: signUp.loading
+  }
+}
+const mapDispatchToProps = dispatch =>  {
+  return {
+    signUp: (username, password, name, email) => dispatch(signUp(username, password, name, email))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(RegisterForm);

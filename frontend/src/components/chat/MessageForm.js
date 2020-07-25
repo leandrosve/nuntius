@@ -1,9 +1,8 @@
 import "./assets/Chat.css";
 import profilePicPlaceholder from "../assets/images/profile-pic-placeholder.jpg";
-import React, { useState , useRef} from "react";
+import React, { useRef} from "react";
 import InsertEmoticonIcon from "@material-ui/icons/InsertEmoticon";
 import OutlinedInput from "@material-ui/core/OutlinedInput";
-import InputAdornment from "@material-ui/core/InputAdornment";
 import IconButton from "@material-ui/core/IconButton";
 import FormControl from "@material-ui/core/FormControl";
 import SendIcon from "@material-ui/icons/Send";
@@ -11,7 +10,6 @@ import "emoji-mart/css/emoji-mart.css";
 import { Picker } from "emoji-mart";
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
-import FocusLock, { AutoFocusInside } from 'react-focus-lock';
 
 const useStyles = makeStyles((theme) => ({
   emojiPicker: {
@@ -37,17 +35,20 @@ function MessageForm({handleSubmit}) {
   const [openEmojiPicker, setOpenEmojiPicker] = React.useState(false);
   const handleToggleEmojiPicker = () => {
     setOpenEmojiPicker((prev) => !prev);
+    inputRef.current.focus();
   };
 
   const [text, setText] = React.useState("");
-  const handleChange = React.useCallback((e) => {setText(e.target.value)}, []);
+  const [selectionEnd, setSelectionEnd] = React.useState(1);
+  const handleChange = React.useCallback((e) => {
+    setText(e.target.value);setSelectionEnd(e.target.selectionEnd)}, []);
 
   const onSelectEmoji = React.useCallback((emoji) => {
     const input=inputRef.current;
       let newText= input.value;
       newText=(newText.substring(0,input.selectionStart)+ emoji.native + newText.substring(input.selectionEnd, newText.length))
-      const selectionStart= input.selectionStart;
       setText(newText);
+      input.focus();
           
   }, []);
 
@@ -82,7 +83,8 @@ function MessageForm({handleSubmit}) {
           fullWidth
           inputRef={inputRef}
           onChange={handleChange}
-          onKeyDown={(e)=>{if((e.key == 'Enter') && !e.shiftKey){submitMessage() } } }
+          onFocus={(e)=>{e.target.selectionStart= e.target.selectionEnd=selectionEnd}}
+          onKeyDown={(e)=>{if((e.key === 'Enter') && !e.shiftKey){submitMessage() } } }
           variants="filled"
         />
         

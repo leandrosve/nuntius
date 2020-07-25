@@ -10,12 +10,7 @@ import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from '@material-ui/icons/Search';
 import ListItem from "@material-ui/core/ListItem";
 import ContactDetail from "../contacts/ContactDetail";
-import Button from '@material-ui/core/Button';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
-import  DropdownMenu, { DropdownItem, } from "../util/DropdownMenu";
-import PersonIcon from '@material-ui/icons/Person';
+import  DropdownMenu from "../util/DropdownMenu";
 
 import { makeStyles } from '@material-ui/core/styles';
 

@@ -76,7 +76,6 @@ const Modal = ({ children, open, handleClose, header, hasCloseButton = true, con
           {hasCloseButton && (
             <IconButton
               color="primary"
-              size="large"
               className={classes.dismissButon}
               onClick={handleClick}
             >

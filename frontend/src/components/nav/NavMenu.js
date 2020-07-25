@@ -15,8 +15,6 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Profile from '../profile/Profile';
 import Settings from '../user/Settings';
 import { withRouter } from "react-router-dom";
-import PropTypes from "prop-types";
-
 
 function NavMenu(props) {
 

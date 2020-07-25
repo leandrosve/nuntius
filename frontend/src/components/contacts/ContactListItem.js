@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ContactListItem = ({ alias, info, avatar, handleOpenDialog, handleClick , handleClose}) => {
+const ContactListItem = ({ alias, username, info, avatar, onRemoveContact, handleClick , handleClose}) => {
     const classes = useStyles();
   
     return (
@@ -46,7 +46,7 @@ const ContactListItem = ({ alias, info, avatar, handleOpenDialog, handleClick , 
               }}
               className={classes.action}
               aria-label="start chat"
-              component={Link} to={`/browse/chat/@donmiguel`}
+              component={Link} to={`/browse/chat/@${username}`}
 
             >
               <ChatIcon />
@@ -55,7 +55,7 @@ const ContactListItem = ({ alias, info, avatar, handleOpenDialog, handleClick , 
             <IconButton
               onClick={(e) => {
                 e.stopPropagation();
-                handleOpenDialog(alias);
+                onRemoveContact(alias);
               }}
               className={classes.action}
               aria-label="delete contact"

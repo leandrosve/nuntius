@@ -18,19 +18,20 @@ import {Link}from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 
-const ContactDetail = ({handleStartChat}) => {
+const ContactDetail = ({handleClose,  onRemoveContact}) => {
     const {t} = useTranslation();
     const [openAliasForm, setOpenAliasForm] = useState(false);
     const alias='Don Ramon';
+    const username="donramon";
     const handleToggleAliasForm = useCallback(
         () => {   
             setOpenAliasForm((prev) => !prev);
         },[],);
     
     return(
-    <Spring from={{ opacity: 0 }} to={{ opacity: 1 }} duration={2500}>
+    <Spring from={{ opacity: 0 }} to={{ opacity: 1}} duration={2500}>
       {(props) => (
-        <div style={(props.style, {paddingTop:'10px'})}>
+        <div style={{...props, paddingTop:'10px'}}>
          < Box display='flex' flexDirection='row' alignItems='center' maxWidth='400px'>
          <Avatar src={profilePicPlaceholder} style={{width:'125px', height:'125px', marginBottom:'auto'}}/>
          <Box display='flex' flexDirection='column' style={{ marginLeft:'10px'}}>
@@ -39,14 +40,14 @@ const ContactDetail = ({handleStartChat}) => {
                 <React.Fragment>
                 <TextField label={t('alias')} defaultValue={alias} autoFocus />
                 <label>
-                    <IconButton size='small' aria-label="submit" 
+                    <IconButton aria-label="submit" 
                                 component="span" onClick={()=>handleToggleAliasForm()} 
                     > 
                         <DoneIcon/>
                     </IconButton> 
                 </label>
                 <label>
-                    <IconButton size='small' aria-label="cancel" 
+                    <IconButton aria-label="cancel" 
                                 component="span" onClick={()=>handleToggleAliasForm()}> <ClearIcon/></IconButton> 
                 </label>
                 </React.Fragment>
@@ -56,7 +57,7 @@ const ContactDetail = ({handleStartChat}) => {
                     {alias}
                 </Typography>
                 <label>
-                    <IconButton size='small' aria-label="open" 
+                    <IconButton aria-label="open" 
                                 component="span" onClick={()=>handleToggleAliasForm()}><EditIcon/></IconButton> 
                 </label>
                 </React.Fragment>
@@ -77,8 +78,11 @@ const ContactDetail = ({handleStartChat}) => {
           <IconButton           
                 alt='start chat'
                 aria-label="start chat"
-                onClick={()=>handleStartChat()}
-                component={Link} to={`/browse/chat/@donalfredo`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleClose();     
+                }}
+                component={Link} to={`/browse/chat/@${username}`}
               >
               <ChatIcon />
           </IconButton>
@@ -87,7 +91,7 @@ const ContactDetail = ({handleStartChat}) => {
           <IconButton           
                 alt='delete'
                 aria-label="delete contact"
-              
+                onClick={()=>onRemoveContact(alias)}
               >
               <DeleteOutlineIcon />
           </IconButton>

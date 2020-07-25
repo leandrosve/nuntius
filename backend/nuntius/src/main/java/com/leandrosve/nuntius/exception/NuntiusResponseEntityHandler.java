@@ -34,7 +34,7 @@ public class NuntiusResponseEntityHandler extends ResponseEntityExceptionHandler
 
         return new ResponseEntity<Object>(exceptionResponse,status);
     }
-
+    
     @ExceptionHandler(AccessDeniedException.class)
     public final ResponseEntity<Object> handleAllExceptions(AccessDeniedException ex)  {
         final HttpStatus status= HttpStatus.FORBIDDEN;
