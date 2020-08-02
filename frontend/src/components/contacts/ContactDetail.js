@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from "react";
+import React, { useState, useCallback } from "react";
 import profilePicPlaceholder from "../assets/images/profile-pic-placeholder.jpg";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import IconButton from "@material-ui/core/IconButton";
@@ -8,103 +8,199 @@ import Typography from "@material-ui/core/Typography";
 import Avatar from "@material-ui/core/Avatar";
 import TextField from "@material-ui/core/TextField";
 import { Spring } from "react-spring/renderprops";
-import EditIcon from '@material-ui/icons/Edit';
-import DoneIcon from '@material-ui/icons/Done';
-import ClearIcon from '@material-ui/icons/Clear';
+import EditIcon from "@material-ui/icons/Edit";
+import DoneIcon from "@material-ui/icons/Done";
+import ClearIcon from "@material-ui/icons/Clear";
+
+import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import AcUnitIcon from "@material-ui/icons/AcUnit";
-import {Link}from "react-router-dom";
-
-
+import { Link } from "react-router-dom";
+            
 import { useTranslation } from "react-i18next";
 
+const ContactDetail = ({
+  handleClose,
+  onRemoveContact,
+  editContact,
+  addContact,
+  username,
+  alias,
+  biography,
+  id,
+  userId,
+  name,
+  isContact=true,
+}) => {
+  const [openAliasForm, setOpenAliasForm] = useState(false);
+  const handleToggleAliasForm = useCallback(() => {
+    setOpenAliasForm((prev) => !prev);
+  }, []);
 
-const ContactDetail = ({handleClose,  onRemoveContact}) => {
-    const {t} = useTranslation();
-    const [openAliasForm, setOpenAliasForm] = useState(false);
-    const alias='Don Ramon';
-    const username="donramon";
-    const handleToggleAliasForm = useCallback(
-        () => {   
-            setOpenAliasForm((prev) => !prev);
-        },[],);
-    
-    return(
-    <Spring from={{ opacity: 0 }} to={{ opacity: 1}} duration={2500}>
-      {(props) => (
-        <div style={{...props, paddingTop:'10px'}}>
-         < Box display='flex' flexDirection='row' alignItems='center' maxWidth='400px'>
-         <Avatar src={profilePicPlaceholder} style={{width:'125px', height:'125px', marginBottom:'auto'}}/>
-         <Box display='flex' flexDirection='column' style={{ marginLeft:'10px'}}>
-           <Box display='flex' flexDirection='row' alignItems='center' flexGrow='1' flexShrink='1' >
-            {openAliasForm ?
-                <React.Fragment>
-                <TextField label={t('alias')} defaultValue={alias} autoFocus />
-                <label>
-                    <IconButton aria-label="submit" 
-                                component="span" onClick={()=>handleToggleAliasForm()} 
-                    > 
-                        <DoneIcon/>
-                    </IconButton> 
-                </label>
-                <label>
-                    <IconButton aria-label="cancel" 
-                                component="span" onClick={()=>handleToggleAliasForm()}> <ClearIcon/></IconButton> 
-                </label>
-                </React.Fragment>
-            :
-                <React.Fragment>
-                <Typography display='inline'  variant="h5">                  
-                    {alias}
-                </Typography>
-                <label>
-                    <IconButton aria-label="open" 
-                                component="span" onClick={()=>handleToggleAliasForm()}><EditIcon/></IconButton> 
-                </label>
-                </React.Fragment>
-            }
-          </Box >
-          <Typography variant="subtitle1">         
-            @donramon
+  const renderAliasForm = () =>{
+    if(isContact){
+      return(
+      openAliasForm ? (
+        <AliasForm
+          alias={alias}
+          id={id}
+          editContact={editContact}
+          handleToggleAliasForm={handleToggleAliasForm}
+        />
+      ) : (
+        <React.Fragment>
+          <Typography display="inline" variant="h5">
+            {alias}
           </Typography>
-          <Typography  variant="subtitle1">         
-            Don Ramon Cornelio del Rancho.
-          </Typography>
-          <Typography  variant="overline text">         
-          <AcUnitIcon fontSize='small' style={{marginBottom:'-3px'}}/> Mirando a la nada pensando en todo ese es mi lema.
-          </Typography>
-          <div>
-              <Box display='flex' justifyContent='flex-end'>
           <label>
-          <IconButton           
-                alt='start chat'
-                aria-label="start chat"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleClose();     
-                }}
-                component={Link} to={`/browse/chat/@${username}`}
-              >
-              <ChatIcon />
-          </IconButton>
+            <IconButton
+              aria-label="open"
+              component="span"
+              size="small"
+              onClick={() => handleToggleAliasForm()}
+            >
+              <EditIcon />
+            </IconButton>
           </label>
-          <label>
-          <IconButton           
-                alt='delete'
-                aria-label="delete contact"
-                onClick={()=>onRemoveContact(alias)}
+        </React.Fragment>
+      )
+      );
+    }
+  }
+
+  return (
+    <Spring from={{ opacity: 0 }} to={{ opacity: 1 }} duration={2500}>
+      {(props) => (
+        <div style={{ ...props, paddingTop: "10px" }}>
+          <Box
+            display="flex"
+            flexDirection="row"
+            alignItems="center"
+            maxWidth="400px"
+          >
+            <Avatar
+              src={profilePicPlaceholder}
+              style={{ width: "125px", height: "125px", marginBottom: "auto" }}
+            >
+              {name}
+            </Avatar>
+            <Box
+              display="flex"
+              flexDirection="column"
+              style={{ marginLeft: "10px", flexGrow: "1", flexShrink: "1" }}
+            >
+              <Box
+                display="flex"
+                flexDirection="row"
+                alignItems="center"
+                flexGrow="1"
+                flexShrink="1"
               >
-              <DeleteOutlineIcon />
-          </IconButton>
-          </label>   
-          </Box>    
-          </div>
+                
+              {renderAliasForm()}
+              </Box>
+              <Typography gutterbottom variant={isContact ? "overline" : "h6"} >
+                <p style={{ lineHeight: 1, margin: "0px 2px"}}>@{username}</p>
+              </Typography>
+              <Typography variant="subtitle1">{name}</Typography>
+              {biography && (
+                <Typography variant="overline text">
+                  <AcUnitIcon
+                    fontSize="small"
+                    style={{ marginBottom: "-3px" }}
+                  />{" "}
+                  {biography}
+                </Typography>
+              )}
+              <div>
+                <Box display="flex" justifyContent="flex-end">
+                  <label>
+                    <IconButton
+                      alt="start chat"
+                      aria-label="start chat"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleClose();
+                      }}
+                      component={Link}
+                      to={`/browse/chat/@${username}`}
+                    >
+                      <ChatIcon />
+                    </IconButton>
+                  </label>
+                {!isContact ? 
+                  <label>
+                    <IconButton
+                      alt="add"
+                      aria-label="add contact"  
+                      onClick={()=>addContact(id)}                  
+                    >
+                      <PersonAddIcon />
+                    </IconButton>
+                  </label>
+                  :
+                  <label>
+                    <IconButton
+                      alt="delete"
+                      aria-label="delete contact"
+                      onClick={()=>onRemoveContact({id:id, userId: userId, alias: alias})}
+                    >
+                      <DeleteOutlineIcon />
+                    </IconButton>
+                  </label>
+                }
+
+                </Box>
+              </div>
+            </Box>
           </Box>
-          </ Box>
-        
         </div>
       )}
     </Spring>
-    )
-  };
+  );
+};
 
-  export default ContactDetail;
+const AliasForm = ({ alias, id, handleToggleAliasForm, editContact }) => {
+  const { t } = useTranslation();
+  const [newAlias, setNewAlias] = React.useState(alias);
+  return (
+    <React.Fragment>
+      <form
+        onSubmit={(e) => {
+          if (newAlias !== alias) editContact({ id: id, alias: newAlias });
+          handleToggleAliasForm();
+          e.preventDefault();
+        }}
+      >
+        <TextField
+          label={t("alias")}
+          value={newAlias}
+          autoFocus
+          onChange={(e) => setNewAlias(e.target.value)}
+        />
+        <label>
+          <IconButton
+            aria-label="submit"
+            component="button"
+            type="submit"
+            size="small"
+            value="Submit"
+          >
+            <DoneIcon />
+          </IconButton>
+        </label>
+        <label>
+          <IconButton
+            aria-label="cancel"
+            size="small"
+            component="span"
+            onClick={() => handleToggleAliasForm()}
+          >
+            <ClearIcon />
+          </IconButton>
+        </label>
+      </form>
+    </React.Fragment>
+  );
+};
+
+export default ContactDetail;

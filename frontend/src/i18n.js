@@ -49,7 +49,8 @@ i18n
         },
         success: {
           saved: 'Saved!',
-          contact_removed: 'Contact removed!',
+          contact_removed: 'Contact removed!',        
+          contact_saved: 'Contact saved!',
         },
         confirmation:{
           "accept":'Accept',
@@ -100,6 +101,7 @@ i18n
         success: {
           saved: 'Guardado!',
           contact_removed: 'Contacto eliminado!',
+          contact_saved: 'Contacto guardado!',
         },
         confirmation:{
           "accept":'Aceptar',

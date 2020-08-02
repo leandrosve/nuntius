@@ -1,5 +1,4 @@
 import * as actionTypes from './userActionTypes';
-import axios from "axios";
 import ApiService from "../../ApiService";
 
 export const loginRequest= () =>{
@@ -47,6 +46,28 @@ export const signupFailure= (error) =>{
     }
 }
 
+export const searchUsersRequest= () =>{
+    return{      
+        type: actionTypes.SEARCH_USERS_REQUEST
+    }
+}
+
+export const searchUsersSuccess= (users) =>{
+    return {
+        type: actionTypes.SEARCH_USERS_SUCCESS,
+        payload:users
+    }
+}
+
+export const searchUsersFailure= (error) =>{
+    return {
+        type: actionTypes.SEARCH_USERS_FAILURE,
+        payload:error
+    }
+}
+
+
+
 export const login= (username, password) =>{
     return (dispatch) => {
         dispatch(loginRequest());
@@ -56,14 +77,9 @@ export const login= (username, password) =>{
                 dispatch(loginSuccess(user));
             })
             .catch(
-                errorMsg => {
-                    let error;
-                    if(errorMsg.response){
-                       error = errorMsg.response.data.message
-                    }else{
-                      error = errorMsg.message;                 
-                    }
-                    dispatch(loginFailure(error))
+                error => {
+             
+                    dispatch(loginFailure(error.message))
                 }
             )
                 
@@ -78,17 +94,26 @@ export const signUp= (username, password, name, email) =>{
                 dispatch(signupSuccess());
             })
             .catch(
-                errorMsg => {
-                    let error;
-                    if(errorMsg.response){
-                       error = errorMsg.response.data.message
-                    }else{
-                      error = errorMsg.message;                 
-                    }
-                    dispatch(signupFailure(error))
+                error => {              
+                    dispatch(signupFailure(error.message))
                 }
             )
                 
     }
 }
 
+export const searchUsers= (someString) =>{
+    return (dispatch) => {
+        dispatch(searchUsersRequest());
+        ApiService.get(`/users/search?q=${someString}`)
+            .then((response) => {
+                dispatch(searchUsersSuccess(response.data));
+            })
+            .catch(
+                error => {              
+                    dispatch(searchUsersFailure(error.message))
+                }
+            )
+                
+    }
+}

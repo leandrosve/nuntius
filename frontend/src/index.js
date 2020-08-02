@@ -5,7 +5,6 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import WebFont from 'webfontloader';
 import "./i18n";
-import axios from "axios";
 
 WebFont.load({
   google: {

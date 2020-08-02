@@ -1,50 +1,80 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 
-import profilePicPlaceholder from "../assets/images/profile-pic-placeholder.jpg";
 import GroupIcon from "@material-ui/icons/Group";
 import AddIcon from "@material-ui/icons/Add";
 import IconButton from "@material-ui/core/IconButton";
 import ConfirmationDialog from "../util/ConfirmationDialog";
-import TitledContainer from "../util/TitledContainer";
-import Typography from "@material-ui/core/Typography";
-import TextField from "@material-ui/core/TextField";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import SearchIcon from "@material-ui/icons/Search";
-import ExpandLessIcon from "@material-ui/icons/ExpandLess";
-import { useTranslation } from "react-i18next";
-import { Spring } from "react-spring/renderprops";
-import Alert from "../util/Alert";
-import Button from "@material-ui/core/Button";
-import ContactListItem from "./ContactListItem";
-import ContactDetail from "./ContactDetail";
-import {connect} from "react-redux";
-import {contacts} from "../../redux/contacts/contactActions";
 
-function Contacts({handleClose, fetchContacts}) {
+import WideCloseButton from "../util/WideCloseButton";
+import TitledContainer from "../util/TitledContainer";
+import { useTranslation } from "react-i18next";
+import Alert from "../util/Alert";
+import ContactList from "./ContactList";
+import AddContact from "./AddContact";
+
+import CircularProgress from "@material-ui/core/CircularProgress";
+import UserDetailContainer from "../user/UserDetailContainer";
+
+function Contacts({
+  handleClose,
+  contacts = [],
+  loading,
+  error,
+  editContact,
+  getContactByUserId,
+  addContact,
+  deleteContact,
+  success,
+}) {
   const { t } = useTranslation();
-  const [showDeleteDialog, setShowDeleteDialog] = React.useState({
+
+  const [deleteDialog, setDeleteDialog] = React.useState({
     open: false,
+    contact: null,
     title: "",
   });
 
-
-useEffect(() => {    
-    fetchContacts(); 
-    console.log(contacts);
- });
-  
-
-  const onRemoveContact = React.useCallback(name => {
-    let title = t("confirmation:contact_delete", { name: name });
-    setShowDeleteDialog({ open: true, title: title })},[]);
-  
-  const handleOpenContactDetail= React.useCallback(()=>setOpenContactDetail(true),[])
-  const [openSuccessAlert, setOpenSuccesAlert] = React.useState(false);
+  const [openAlert, setOpenAlert] = React.useState(true);
 
   const [openAddContact, setOpenAddContact] = React.useState(false);
 
-  const [openContactDetail, setOpenContactDetail] = React.useState(false);
+  const [userDetail, setContactDetail] = React.useState({
+    open: false,
+    user: null,
+  });
 
+  const handleOpenContactDetail = React.useCallback(
+    (contact) => {
+      setContactDetail({ open: true, user: {id:contact.userId}});
+    },
+    []
+  );
+  
+  const onRemoveContact = React.useCallback(
+    (contact) => {
+      let title = t("confirmation:contact_delete", { name: contact.alias });
+      setDeleteDialog({ open: true, title: title, contact: contact });
+    },
+    [t]
+  );
+
+  const confirmDeleteContact = () =>{
+    if (userDetail.open && (deleteDialog.contact.id === userDetail.user.id)) {
+      setContactDetail({ open: false, user:null });
+    }
+    deleteContact(deleteDialog.contact);
+  };
+
+  
+  const handleUserSearchClick = React.useCallback((user)=>{
+  
+  
+      setContactDetail({open:true, user: user })
+    
+  },
+  [setContactDetail])
+
+  useEffect(()=> setOpenAlert(true),[setOpenAlert,error, success, contacts]);
   return (
     <TitledContainer
       title={t("contacts")}
@@ -61,156 +91,54 @@ useEffect(() => {
       }
       fixedContent={
         <React.Fragment>
-          {openAddContact && 
+          {(openAddContact || (!loading && contacts.length === 0)) && (
             <>
-            <AddContact/>
-            <Button
-            style={{ width: "100%", marginTop: "10px" }}
-            color="primary"
-            size="large"
-            aria-label="close"
-            onClick={()=> setOpenAddContact(false)}
-          >
-            <ExpandLessIcon square />
-          </Button>
-          </>
-          }
+              <AddContact handleUserSearchClick={handleUserSearchClick}/>             
+              <WideCloseButton onClick={() => setOpenAddContact(false)}/>
+            </>
+          )}
           <Alert
-            open={openSuccessAlert}
-            onClick={() => setOpenSuccesAlert(false)}
+            open={openAlert && !loading && (error !== "" || success !== "" )}
+            severity={error !== "" ? "error" : "success"}
+            onClick={() => setOpenAlert(false)}
           >
-            {t("success:contact_removed")}
+            {error || success}
           </Alert>
-          {openContactDetail && 
-          <>
-            <ContactDetail handleClose={handleClose} onRemoveContact={onRemoveContact}/>
-          
-            <Button
-            style={{ width: "100%"}}
-            color="primary"
-            size="large"
-            aria-label="close"
-            onClick={()=>setOpenContactDetail(false)}
-           >
-          <ExpandLessIcon square />
-        </Button>
-        </>}
+
+          {userDetail.open && userDetail.user && (
+            <>                
+              <UserDetailContainer 
+              user={userDetail.user}
+              handleClose={handleClose}
+                {...userDetail.user}
+                editContact={editContact}
+                addContact={addContact}
+              onRemoveContact={onRemoveContact}
+                
+              />       
+              <WideCloseButton onClick={() => setContactDetail({ open: false })}/>
+            </>
+          )}
         </React.Fragment>
       }
     >
-      <ContactListItem
-        avatar={profilePicPlaceholder}
-        alias="Don Ramon"
-        username="donramon"
-        info=" Me gusta el polen..."
-        onRemoveContact={onRemoveContact}
-        handleClick={handleOpenContactDetail}
+      {loading && <CircularProgress color="secondary" />}
+      <ContactList
+        contacts={contacts}
         handleClose={handleClose}
-      />
-      <ContactListItem
-        avatar={profilePicPlaceholder}
-        alias="Don Miguel"    
-        username="donmiguel"
-        info="Apaisai lala"
         onRemoveContact={onRemoveContact}
-        handleClick={handleOpenContactDetail}
-        handleClose={handleClose}
+        onClickContact={handleOpenContactDetail}
       />
-      <ContactListItem
-        avatar={profilePicPlaceholder}
-        alias="Francisco Pepe"c      
-        username="francisc"
-        info=" Me gusta el polen..."
-        onRemoveContact={onRemoveContact}
-        handleClick={handleOpenContactDetail}
-        handleClose={handleClose}
-      />
-      <ContactListItem
-        avatar={profilePicPlaceholder}
-        alias="Don Ramon"
-        username="donramon"
-        info=" Me gusta el polen..."
-        onRemoveContact={onRemoveContact}
-        handleClick={handleOpenContactDetail}
-        handleClose={handleClose}
-      />
-      <ContactListItem
-        avatar={profilePicPlaceholder}
-        alias="Don Ramon"
-        username="donramon"
-        info=" Me gusta el polen..."
-        onRemoveContact={onRemoveContact}
-        handleClick={handleOpenContactDetail}
-        handleClose={handleClose}
-      />
-      <ContactListItem
-        avatar={profilePicPlaceholder}
-        alias="Don Ramon"
-        username="donramon"
-        info=" Me gusta el polen..."
-        onRemoveContact={onRemoveContact}
-        handleClick={handleOpenContactDetail}
-        handleClose={handleClose}
-      />
-     
+
       <ConfirmationDialog
-        open={showDeleteDialog.open}
-        handleCancel={() => setShowDeleteDialog({ open: false })}
-        handleAccept={() => setOpenSuccesAlert(true)}
-        title={showDeleteDialog.title}
+        open={deleteDialog.open}
+        handleCancel={() => setDeleteDialog({ open: false })}
+        handleAccept={confirmDeleteContact}
+        title={deleteDialog.title}
         handleClose={() => handleClose()}
       />
     </TitledContainer>
   );
 }
 
-const AddContact = () => {
-  const { t } = useTranslation();
-  return (
-    <Spring
-      from={{ opacity: 0, height: "0px" }}
-      to={{ opacity: 1, height: "77px" }}
-      duration={2500}
-    >
-      {(props) => (
-        <div style={props}>
-          <Typography style={{ margin: "5px" }} variant="h5">
-            {t("contact_add")}
-          </Typography>
-
-          <TextField
-            size="small"
-            autoFocus="true"
-            placeholder={t("search_username")}
-            fullWidth
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <SearchIcon />
-                </InputAdornment>
-              ),
-            }}
-            variant="outlined"
-          />
-         
-        </div>
-      )}
-    </Spring>
-  );
-};
-
-const mapStateToProps = ({contact}) =>{
-  return{
-   // contacts: contact.contacts,
-  //  loading: contact.loading,
-   // isPopulated: contact.isPopulated,
-  }
-}
-
-const mapDispatchToProps = dispatch =>  {
-  return {
-    fetchContacts: () => dispatch(contacts())
-  }
-}
-export default connect(mapStateToProps, mapDispatchToProps)(Contacts);
-
+export default Contacts;

@@ -10,11 +10,11 @@ import ListItemText from "@material-ui/core/ListItemText";
 import GroupIcon from '@material-ui/icons/Group';
 import SettingsIcon from '@material-ui/icons/Settings';
 import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
-import Contacts from '../contacts/Contacts';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Profile from '../profile/Profile';
 import Settings from '../user/Settings';
 import { withRouter } from "react-router-dom";
+import ContactsContainer from '../contacts/ContactsContainer';
 
 function NavMenu(props) {
 
@@ -22,7 +22,7 @@ function NavMenu(props) {
 
   const [open, setOpenMenu] = useState(false);
   const [showModal, setShowModal] = useState({open:false, content:'', confirmClose:false});
-  const handleCloseModal= React.useCallback(()=>setShowModal({open:false}))
+  const handleCloseModal= React.useCallback(()=>setShowModal({open:false}), [])
   const openMenu = () => {
     setOpenMenu(!open);
   };
@@ -42,7 +42,7 @@ function NavMenu(props) {
       {open && (
         <ClickAwayListener onClickAway={()=>setShowModal({open:false})}>
         <DropdownMenu style={{width:'300px'}}>
-          <ListItem button  onClick={()=>{setOpenMenu(false);setShowModal({open:true, content:<Contacts handleClose={()=>setShowModal({open:false})}/>})}}>
+          <ListItem button  onClick={()=>{setOpenMenu(false);setShowModal({open:true, content:<ContactsContainer handleClose={()=>setShowModal({open:false})}/>})}}>
             <ListItemIcon>
             <GroupIcon style={{ color: 'white'}}/>
             </ListItemIcon>

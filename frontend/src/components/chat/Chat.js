@@ -107,7 +107,7 @@ const ChatContent = () => {
     setTimeout(() => {
       chatEndRef.current.scrollIntoView({ behavior: "smooth" });
     }, 200);
-  }, (null, [messages]));
+  },  [messages, chatEndRef]);
 
   const sortByDate = (a, b) => (a.sendTime > b.sendTime ? 1 : -1);
   return (

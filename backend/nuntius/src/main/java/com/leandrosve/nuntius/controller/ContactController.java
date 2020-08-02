@@ -53,7 +53,7 @@ public class ContactController {
     }
 
     @PatchMapping("/contacts/{id}")
-    public ContactDTO updateContact(@PathVariable Long id, @Valid @RequestBody ContactDTO contact){   
+    public ContactDTO updateContact(@PathVariable Long id, @RequestBody ContactDTO contact){   
       return contactService.updateContact(id, contact);
     }
 

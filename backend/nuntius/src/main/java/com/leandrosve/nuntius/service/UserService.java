@@ -1,10 +1,13 @@
 package com.leandrosve.nuntius.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.leandrosve.nuntius.beans.UserDTO;
 import com.leandrosve.nuntius.exception.BadRequestException;
 import com.leandrosve.nuntius.model.User;
 import com.leandrosve.nuntius.repository.IUserRepository;
+import com.leandrosve.nuntius.specification.UserSpecification;
 import com.leandrosve.nuntius.util.AuthUtil;
 import com.leandrosve.nuntius.util.LangUtil;
 
@@ -67,5 +70,12 @@ public class UserService implements UserDetailsService {
         return usersRepository.findByUsername(username);
 
     }
+
+	public List<UserDTO> searchUsers(UserSpecification userSpecification) {
+        final List<User> users = usersRepository.findAll(userSpecification);
+        List<UserDTO> userDTOs = new ArrayList<UserDTO>();
+        users.forEach((u) -> userDTOs.add( new UserDTO(u.getId(), u.getUsername(), u.getBiography(), u.getName())));
+        return userDTOs;
+	}
 
 }

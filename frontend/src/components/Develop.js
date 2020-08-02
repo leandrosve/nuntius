@@ -2,6 +2,8 @@ import React, {useState} from 'react';
 import Modal from './util/Modal';
 
 import Contacts from './contacts/Contacts';
+import UserDetailContainer from './user/UserDetailContainer';
+
 
 
 function Develop() {
@@ -18,6 +20,8 @@ function Develop() {
       const handleClose = () => {
         setShowModal({open:false});
       };
+    
+      
   return (
     
     <div>
@@ -31,7 +35,7 @@ function Develop() {
       hasCloseButton={true} 
       confirmClose={true}
       >
-        <Contacts/>  
+        <UserDetailContainer user={{id:8, username:"asd", name:"asd"}}/>  
       </Modal>
       
     </div>

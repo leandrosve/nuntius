@@ -92,6 +92,7 @@ const EmbededYoutube = ({ text, handleOpenVideoPlayer }) => {
   const handleClick = () => {
     handleOpenVideoPlayer(
       <iframe
+        title="Youtube video"
         width="480"
         height="270"
         src={"https://www.youtube.com/embed/" + matches[1] + "?autoplay=1"}
@@ -137,7 +138,6 @@ function Message({
 }) {
   const classes = useStyles();
 
-  const [] = React.useState(false);
   return (
     <div className={classes.messageContainer}>
       <div
@@ -196,8 +196,9 @@ function Message({
 
 const Media = ({ media, handleOpenMedia }) => {
   return (
-    <div onClick={() => handleOpenMedia(<img src={media} />)}>
+    <div onClick={() => handleOpenMedia(<img src={media} alt="message" />)}>
       <img
+        alt="message"
         src={media}
         style={{
           width: "100px",

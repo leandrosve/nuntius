@@ -17,7 +17,8 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     backgroundColor: theme.palette.background.paper,
     borderRadius: "10px",
-    minHeight: "100px",
+    minHeight: "400px", 
+    minWidth: "400px",
     display: "flex",
     flexDirection: "column",
     boxShadow: theme.shadows[5],
@@ -26,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
 
   },
   content: {
+    minHeight: "400px",
     overflow: "hidden",
     display:"flex"
   },

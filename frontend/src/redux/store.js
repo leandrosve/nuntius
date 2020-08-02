@@ -1,5 +1,4 @@
 import {createStore, applyMiddleware, combineReducers} from 'redux';
-import {logger} from 'redux-logger';
 import userReducer from './user/userReducer';
 import contactReducer from './contacts/contactReducer';
 import {composeWithDevTools} from 'redux-devtools-extension';

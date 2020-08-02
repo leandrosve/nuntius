@@ -12,8 +12,6 @@ export const DropdownItem = (props) => {
 
 function DropdownMenu(props) {
 
-  const [] = React.useState(null);
-
   return (
     <div className="DropdownMenu" {...props}>
       <ul style={{display:"inline-block", width:"100%"}}>{props.children}</ul>

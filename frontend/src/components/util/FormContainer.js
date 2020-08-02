@@ -11,6 +11,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
+    
   },
   avatar: {
     margin: theme.spacing(1),
@@ -23,7 +24,7 @@ const FormContainer = (props) => {
   const classes = useStyles();
 
   return (
-    <Container  maxWidth="xs">
+    <Container style={{overflow:"scroll"}} maxWidth="xs">
       <div className={classes.paper}>
         {props.icon && (
           <Avatar className={classes.avatar}>{props.icon}</Avatar>
