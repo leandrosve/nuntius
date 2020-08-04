@@ -80,7 +80,7 @@ const ImageEditor = ({ image, handleCancel, editorRef , handleAccept}) => {
   );
 };
 
-const Profile = () => {
+const Profile = ({username, name, email, biography}) => {
   const { t } = useTranslation();
   const [uneditedImage, setUneditedImage] = useState();
   const [editedImage, setEditedImage] = useState();
@@ -115,7 +115,7 @@ const Profile = () => {
           size="small"
           variant="outlined"
           margin="normal"
-          value="Juan perez"
+          value={name}
           fullWidth
           id="name"
         />
@@ -135,7 +135,7 @@ const Profile = () => {
             />
           ) : (
             <img
-              alt="juan perez"
+              alt={name}
               src={editedImage || profilePicPlaceholder}
               style={{ borderRadius: "50%", width: "250px", height: "250px" }}
             />
@@ -158,15 +158,15 @@ const Profile = () => {
         </div>
 
         <TextField
-          label={t("info")}
+          label={t("bio")}
           name="info"
           size="small"
           type="text"
           variant="outlined"
           margin="normal"
-          value="mirando a la nada, pensando en todo..."
+          value={biography}
           fullWidth
-          id="info"
+          id="bio"
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -183,7 +183,7 @@ const Profile = () => {
           id="username"
           label={t("username")}
           name="username"
-          value="juan perez"
+          value={username}
           disabled
           size="small"
         />
@@ -195,7 +195,7 @@ const Profile = () => {
           type="text"
           variant="outlined"
           margin="normal"
-          value="juanperez@gmail.com"
+          value={email}
           disabled
           fullWidth
           id="email"

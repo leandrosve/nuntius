@@ -1,7 +1,6 @@
 import React from "react";
 
 import {connect} from "react-redux";
-import {editContact, deleteContact, addContact} from "../../redux/contacts/contactActions";
             
 import {getContactByUserId} from "../../redux/contacts/contactReducer";
 import ContactDetail from "../contacts/ContactDetail";
@@ -17,13 +16,11 @@ const UserDetailContainer = (props) => {
 
 const mapStateToProps = ({ contact }, {user}) => {
     const c = getContactByUserId(contact, user.id)
-    let isContact = false;
-    if(c){
-      isContact = true;
-      return {...c}
+    if(c){    
+      return {...c, isContact :true}
     }
     else{
-      return {...user, isContact}
+      return {...user, isContact: false}
     }
   
 };

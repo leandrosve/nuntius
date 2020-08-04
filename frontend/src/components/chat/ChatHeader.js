@@ -58,7 +58,7 @@ function ChatHeader() {
     </Toolbar>
 
     <Modal open={openUserDetail} handleClose={()=>setOpenUserDetail(false)}>
-      <ContactDetail/>
+      {openUserDetail ? <ContactDetail/> : null}
     </Modal>
 
     </div>

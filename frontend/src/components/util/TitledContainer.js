@@ -38,8 +38,8 @@ const TitledContainer = ({ title, icon, children, actions, fixedContent }) => {
   const classes = useStyles();
   return (
     <Container className={classes.container}>
-      <div class={classes.header}>
-        <Avatar circle className={classes.avatar}>
+      <div className={classes.header}>
+        <Avatar className={classes.avatar}>
           {icon}
         </Avatar>
         <Typography component="h1" variant="h5">

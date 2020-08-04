@@ -18,6 +18,8 @@ import { Link } from "react-router-dom";
             
 import { useTranslation } from "react-i18next";
 
+import PropTypes from 'prop-types';
+
 const ContactDetail = ({
   handleClose,
   onRemoveContact,
@@ -98,7 +100,7 @@ const ContactDetail = ({
                 
               {renderAliasForm()}
               </Box>
-              <Typography gutterbottom variant={isContact ? "overline" : "h6"} >
+              <Typography gutterbottom="true" variant={isContact ? "overline" : "h6"} >
                 <p style={{ lineHeight: 1, margin: "0px 2px"}}>@{username}</p>
               </Typography>
               <Typography variant="subtitle1">{name}</Typography>
@@ -201,6 +203,14 @@ const AliasForm = ({ alias, id, handleToggleAliasForm, editContact }) => {
       </form>
     </React.Fragment>
   );
+};
+
+ContactDetail.propTypes = {
+  id: PropTypes.number.isRequired,
+  handleClose: PropTypes.func.isRequired,
+  onRemoveContact: PropTypes.func.isRequired,
+  editContact: PropTypes.func.isRequired,
+  addContact: PropTypes.func.isRequired,
 };
 
 export default ContactDetail;

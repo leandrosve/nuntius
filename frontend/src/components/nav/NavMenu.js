@@ -11,10 +11,10 @@ import GroupIcon from '@material-ui/icons/Group';
 import SettingsIcon from '@material-ui/icons/Settings';
 import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-import Profile from '../profile/Profile';
 import Settings from '../user/Settings';
 import { withRouter } from "react-router-dom";
 import ContactsContainer from '../contacts/ContactsContainer';
+import ProfileContainer from "../profile/ProfileContainer";
 
 function NavMenu(props) {
 
@@ -41,6 +41,7 @@ function NavMenu(props) {
         
       {open && (
         <ClickAwayListener onClickAway={()=>setShowModal({open:false})}>
+          <React.Fragment>
         <DropdownMenu style={{width:'300px'}}>
           <ListItem button  onClick={()=>{setOpenMenu(false);setShowModal({open:true, content:<ContactsContainer handleClose={()=>setShowModal({open:false})}/>})}}>
             <ListItemIcon>
@@ -48,7 +49,7 @@ function NavMenu(props) {
             </ListItemIcon>
             <ListItemText primary={t("contacts")} />
           </ListItem>
-          <ListItem button   onClick={()=>{setOpenMenu(false);setShowModal({open:true, confirmClose:true, content:<Profile/>})}}>
+          <ListItem button   onClick={()=>{setOpenMenu(false);setShowModal({open:true, confirmClose:true, content:<ProfileContainer/>})}}>
             <ListItemIcon>
             <AssignmentIndIcon style={{ color: 'white'}}/>
             </ListItemIcon>
@@ -61,6 +62,7 @@ function NavMenu(props) {
             <ListItemText primary={t("settings")} />
           </ListItem>
         </DropdownMenu>
+        </React.Fragment>
         </ClickAwayListener>
       )}
  

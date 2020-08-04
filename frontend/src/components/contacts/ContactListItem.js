@@ -31,7 +31,7 @@ const ContactListItem = ({ alias, username, biography, avatar, onRemoveContact, 
         center={
           <>
             <h3 style={{margin:"0px 2px"}}>{alias}</h3>
-            <Typography gutterbottom  variant="overline">
+            <Typography gutterbottom="true"  variant="overline">
               <p style={{lineHeight: 1,margin:"0px 2px"}}>            
               @{username}
              </p>

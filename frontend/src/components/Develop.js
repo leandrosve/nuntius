@@ -28,6 +28,7 @@ function Develop() {
       <button type="button" onClick={()=>setShowModal({open:true, content:<Contacts/>})}>
         react-transition-group
       </button>
+      
       <Modal
       open={true}
       handleClose={handleClose}

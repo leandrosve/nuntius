@@ -44,14 +44,14 @@ const AddContact = ({ searchUsers, users , handleUserSearchClick}) => {
               <TextField
                 {...params}
                 size="small"
-                autoFocus="true"
+                autoFocus={true}
                 placeholder={t("search_username")}
                 fullWidth
                 onChange={handleOnChange}
                 InputProps={{
                   ...params.InputProps,
 
-                  className: {},
+                  className: null,
                   endAdornment: (
                     <InputAdornment position="end">
                       <SearchIcon />

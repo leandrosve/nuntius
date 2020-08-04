@@ -21,7 +21,6 @@ function Contacts({
   loading,
   error,
   editContact,
-  getContactByUserId,
   addContact,
   deleteContact,
   success,
@@ -43,13 +42,10 @@ function Contacts({
     user: null,
   });
 
-  const handleOpenContactDetail = React.useCallback(
-    (contact) => {
-      setContactDetail({ open: true, user: {id:contact.userId}});
-    },
-    []
-  );
-  
+  const handleOpenContactDetail = React.useCallback((contact) => {
+    setContactDetail({ open: true, user: { id: contact.userId } });
+  }, []);
+
   const onRemoveContact = React.useCallback(
     (contact) => {
       let title = t("confirmation:contact_delete", { name: contact.alias });
@@ -58,23 +54,21 @@ function Contacts({
     [t]
   );
 
-  const confirmDeleteContact = () =>{
-    if (userDetail.open && (deleteDialog.contact.id === userDetail.user.id)) {
-      setContactDetail({ open: false, user:null });
+  const confirmDeleteContact = () => {
+    if (userDetail.open && deleteDialog.contact.id === userDetail.user.id) {
+      setContactDetail({ open: false, user: null });
     }
     deleteContact(deleteDialog.contact);
   };
 
-  
-  const handleUserSearchClick = React.useCallback((user)=>{
-  
-  
-      setContactDetail({open:true, user: user })
-    
-  },
-  [setContactDetail])
+  const handleUserSearchClick = React.useCallback(
+    (user) => {
+      setContactDetail({ open: true, user: user });
+    },
+    [setContactDetail]
+  );
 
-  useEffect(()=> setOpenAlert(true),[setOpenAlert,error, success, contacts]);
+  useEffect(() => setOpenAlert(true), [setOpenAlert, error, success, contacts]);
   return (
     <TitledContainer
       title={t("contacts")}
@@ -82,7 +76,6 @@ function Contacts({
       actions={
         <IconButton
           color="primary"
-          size="large"
           aria-label="add"
           onClick={() => setOpenAddContact(true)}
         >
@@ -93,12 +86,12 @@ function Contacts({
         <React.Fragment>
           {(openAddContact || (!loading && contacts.length === 0)) && (
             <>
-              <AddContact handleUserSearchClick={handleUserSearchClick}/>             
-              <WideCloseButton onClick={() => setOpenAddContact(false)}/>
+              <AddContact handleUserSearchClick={handleUserSearchClick} />
+              <WideCloseButton onClick={() => setOpenAddContact(false)} />
             </>
           )}
           <Alert
-            open={openAlert && !loading && (error !== "" || success !== "" )}
+            open={openAlert && !loading && (error !== "" || success !== "")}
             severity={error !== "" ? "error" : "success"}
             onClick={() => setOpenAlert(false)}
           >
@@ -106,17 +99,18 @@ function Contacts({
           </Alert>
 
           {userDetail.open && userDetail.user && (
-            <>                
-              <UserDetailContainer 
-              user={userDetail.user}
-              handleClose={handleClose}
+            <>
+              <UserDetailContainer
+                user={userDetail.user}
+                handleClose={handleClose}
                 {...userDetail.user}
                 editContact={editContact}
                 addContact={addContact}
-              onRemoveContact={onRemoveContact}
-                
-              />       
-              <WideCloseButton onClick={() => setContactDetail({ open: false })}/>
+                onRemoveContact={onRemoveContact}
+              />
+              <WideCloseButton
+                onClick={() => setContactDetail({ open: false })}
+              />
             </>
           )}
         </React.Fragment>

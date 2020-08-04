@@ -7,17 +7,12 @@ import { useTranslation } from "react-i18next";
 import Modal from "./util/Modal";
 import LoginForm from "./user/LoginForm";
 import RegisterForm from "./user/RegisterForm";
-
-import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 
-const useStyles = makeStyles();
 
 function Welcome() {
   const { t } = useTranslation();
-
-  const classes = useStyles();
 
   const [showModal, setShowModal] = useState({
     open: false,
@@ -33,7 +28,6 @@ function Welcome() {
           <Button
             color="secondary"
             size="large"
-            className={classes.button}
             startIcon={
               <BsFillChatQuoteFill style={{ display: "inline-block" }} />
             }

@@ -11,7 +11,7 @@ const WideCloseButton = ({ onClick }) => {
       aria-label="close"
       onClick={onClick}
     >
-      <ExpandLessIcon square />
+      <ExpandLessIcon />
     </Button>
   );
 };
