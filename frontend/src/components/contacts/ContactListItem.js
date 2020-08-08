@@ -1,13 +1,11 @@
 import React from "react";
 
 import ListItem from "../util/ListItem";
-import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
-import IconButton from "@material-ui/core/IconButton";
-import ChatIcon from '@material-ui/icons/Chat';
 import { makeStyles } from "@material-ui/core/styles";
-import {Link} from "react-router-dom";
 import Avatar from "@material-ui/core/Avatar"
 import { Typography } from "@material-ui/core";
+import StartChatButton from "../chat/StartChatButton";
+import DeleteContactButton from "./DeleteContactButton";
 const useStyles = makeStyles((theme) => ({
   contact: {
     minWidth: "400px",
@@ -20,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ContactListItem = ({ alias, username, biography, avatar, onRemoveContact, onClick, handleClose}) => {
+const ContactListItem = ({ alias, username, biography, name, id, userId, avatar, onRemoveContact, onClick, handleClose}) => {
     const classes = useStyles();
   
     return (
@@ -41,33 +39,10 @@ const ContactListItem = ({ alias, username, biography, avatar, onRemoveContact, 
           </>
         }
         right={
-          <React.Fragment>
-            <IconButton
-              onClick={(e) => {
-                e.stopPropagation();
-                handleClose();
-                
-              }}
-              className={classes.action}
-              aria-label="start chat"
-              component={Link} to={`/browse/chat/@${username}`}
-
-            >
-              <ChatIcon />
-            </IconButton>
-  
-            <IconButton
-              onClick={(e) => {
-                e.stopPropagation();
-                onRemoveContact();
-              }}
-              className={classes.action}
-              aria-label="delete contact"
-              component="span"
-            >
-              <DeleteOutlineIcon />
-            </IconButton>
-          </React.Fragment>
+          <div className={classes.action} style={{display:"flex", direction:"row"}}>
+            <StartChatButton username={username}/>           
+            <DeleteContactButton contact={{username:username, alias:alias, id:id, userId:userId, name:name}}/>
+          </div>
         }
       />
     );

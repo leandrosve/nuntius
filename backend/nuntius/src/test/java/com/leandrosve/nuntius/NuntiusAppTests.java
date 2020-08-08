@@ -2,7 +2,6 @@ package com.leandrosve.nuntius;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -44,18 +43,15 @@ class NuntiusAppTests {
 		assertTrue(savedUser.getUsername().equals("leandro2"));
 	}
 
-	@BeforeEach
-    void setUpTestDataWithinTransaction() {
-		
-		Chat chat = new Chat(null, null, false, null);
-		chat.setId(420);
-		List<Message> messages = new ArrayList<Message>();
-		Message message = new Message(null, chat, "adasdasd");
-		messages.add(message);
-		chat.setMessages(messages);
-		chatRepository.save(chat);
+	@Test
+	void fetchPrivateChat() {
+		List<Chat> chats = chatRepository.findPrivateChat(4L, 1L);
+		if(chats != null){
+			chats.forEach((c) -> System.out.println(c.getId()));
+		}
+		assertTrue(chats != null && chats.size()>0);
 	}
-	
+
 	@Test
 	void getMessagesTest() {
 		List<Message> messages = messageRepository.findAllByChatIdAndSentTimeLessThan(420, new Date());

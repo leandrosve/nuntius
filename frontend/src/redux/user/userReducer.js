@@ -14,6 +14,11 @@ const initialState = {
     success: "",
     error: "",
   },
+  users: {
+    byIds: {},
+    allIds: [],
+    loading: false,
+  },
 };
 
 const session = (state = initialState.session, action) => {
@@ -68,7 +73,7 @@ const signUp = (state = initialState.signUp, action) => {
       return {
         ...state,
         loading: false,
-        sucess: action.payload,
+        sucess: "success:signup",
         error: "",
       };
 
@@ -93,9 +98,48 @@ const search = (state = [], action) => {
   }
 };
 
+const byIds = (state = {}, action) => {
+  switch (action.type) {
+    case actionTypes.FETCH_USER_SUCCESS:
+      return { ...state, [action.payload.id]: action.payload };
+    default:
+      return state;
+  }
+};
 
+const allIds = (state = [], action) => {
+  switch (action.type) {
+    case actionTypes.FETCH_USER_SUCCESS:
+      return [...state, action.payload.id];
+    default:
+      return state;
+  }
+};
 
+const loadingUsers = (state = false, action) => {
+  switch (action.type) {
+    case actionTypes.FETCH_USER_SUCCESS:
+    case actionTypes.FETCH_USER_FAILURE:
+      return false;
+    case actionTypes.FETCH_USER_REQUEST:
+      return true;
+    default:
+      return state;
+  }
+};
 
+const users = combineReducers({
+  byIds, allIds, loading:loadingUsers
+})
 
+export const getAllUsers = (state) => {
+  return state.allIds.map((id) => {
+    return state.byIds[id];
+  });
+};
 
-export default combineReducers({signUp, session, search});
+export const getUserByUsername = (state, username) => {
+  return getAllUsers(state).find((u) => u.username === username);
+};
+
+export default combineReducers({ signUp, session, search, users });

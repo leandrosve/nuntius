@@ -1,26 +1,20 @@
 import React, { useState } from "react";
 import "./assets/Chat.css";
-import ChatHeader from "./ChatHeader";
 import Message from "./Message";
 import MessageForm from "./MessageForm";
 import { withRouter } from "react-router-dom";
-import { Route, Switch } from "react-router-dom";
 import profilePicPlaceholder from "../assets/images/profile-pic-placeholder.jpg";
 import Modal from "../util/Modal";
 import DateMarker from "../util/DateMarker";
 import VideoPlayer from "../util/VideoPlayer";
-import ChatWelcome from "./ChatWelcome";
+import ChatHeader from "./ChatHeader";
 
 const Chat = (props) => {
-  const { match } = props;
   return (
-    <div className="Chat">
-      <Switch>
-        <Route path={`${match.path}/chat`} component={ChatContent} />
-        <ChatWelcome/>
-       
-      </Switch>
-    </div>
+      <>
+      <ChatHeader {...props} />
+      <ChatContent/>
+      </>
   );
 };
 
@@ -105,14 +99,13 @@ const ChatContent = () => {
 
   React.useEffect(() => {
     setTimeout(() => {
-      chatEndRef.current.scrollIntoView({ behavior: "smooth" });
+      if(chatEndRef.current) chatEndRef.current.scrollIntoView({ behavior: "smooth" })
     }, 200);
   },  [messages, chatEndRef]);
 
   const sortByDate = (a, b) => (a.sendTime > b.sendTime ? 1 : -1);
   return (
     <>
-      <ChatHeader />
       <div className="ChatMessages">
         {videoPlayer.open && (
           <VideoPlayer handleClose={() => setVideoPlayer({ open: false })}>

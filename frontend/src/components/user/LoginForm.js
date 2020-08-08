@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import { useTranslation } from "react-i18next";
 import { Formik, Form } from "formik";
@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const LoginForm = ( {error, login, loading} ) => {
+const LoginForm = ( {error="", login, loading, success=""} ) => {
   const { t } = useTranslation();
 
   const classes = useStyles();
@@ -41,6 +41,7 @@ const LoginForm = ( {error, login, loading} ) => {
     password: "",
   };
 
+  useEffect(()=>{setOpenAlert(true)},[loading, error, success, setOpenAlert])
   return (
     <Formik
       validateOnMount={true}
@@ -52,7 +53,7 @@ const LoginForm = ( {error, login, loading} ) => {
       })}
       onSubmit={(values, { setSubmitting }) => {   
           login(values.username.trim(), values.password.trim());
-          setOpenAlert(true);
+          
           setSubmitting(false);
       }}
     >
@@ -61,11 +62,11 @@ const LoginForm = ( {error, login, loading} ) => {
 
           {loading && <CircularProgress color="secondary" />}
           <Alert
-            severity="error"
-            open={openAlert && !loading && error !== ''}
+            severity={error ? "error" : "success"}
+            open={openAlert && !loading && (error !== '' || success !== '')}
             onClick={() => setOpenAlert(false)}
           >
-            {error}
+            {error || t(success)}
           </Alert>
           <Form className={classes.form}>
             <TextField
@@ -116,7 +117,7 @@ const mapStateToProps = state =>{
   const session = state.user.session;
   return {
       error: session.error,
-      loading: session.loading
+      loading: session.loading,
   }
 }
 const mapDispatchToProps = dispatch =>  {

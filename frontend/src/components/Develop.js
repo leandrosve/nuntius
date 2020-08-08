@@ -1,46 +1,26 @@
-import React, {useState} from 'react';
-import Modal from './util/Modal';
-
-import Contacts from './contacts/Contacts';
-import UserDetailContainer from './user/UserDetailContainer';
+import React, { useEffect } from 'react';
+import { openLogin } from '../redux/modal/modalActions';
+import {connect} from "react-redux";
 
 
+function Develop({openLogin}) {
 
-function Develop() {
-    
-
-    const [showModal, setShowModal] = useState({
-        open: false,
-        content: "",
-      });
-
-     
-
-    
-      const handleClose = () => {
-        setShowModal({open:false});
-      };
-    
-      
+  useEffect(()=>{openLogin()},[openLogin]);     
   return (
     
     <div>
-      <button type="button" onClick={()=>setShowModal({open:true, content:<Contacts/>})}>
-        react-transition-group
-      </button>
       
-      <Modal
-      open={true}
-      handleClose={handleClose}
-      content={showModal.content}
-      hasCloseButton={true} 
-      confirmClose={true}
-      >
-        <UserDetailContainer user={{id:8, username:"asd", name:"asd"}}/>  
-      </Modal>
       
     </div>
   );
 }
 
-export default Develop;
+const mapDispatchToProps = dispatch =>{
+  return{
+  openLogin: ()=>dispatch(openLogin({success:"success:signup"}))
+  }
+}
+
+
+
+export default connect(null, mapDispatchToProps)(Develop);

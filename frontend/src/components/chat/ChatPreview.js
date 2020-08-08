@@ -5,12 +5,15 @@ import ListItem from "../util/ListItem";
 import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
 import Badge from "@material-ui/core/Badge";
 import {Link} from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 
-function ChatPreview({avatar, alias, lastMessage, unreadMessagesCount, lastMessageTime}) {
+function ChatPreview({avatar, title, lastMessage, unreadMessagesCount=10, id, groupal = false, lastMessageTime="4:20"}) {
   const [user] = useState({username:'@donramon'});
+  const { t } = useTranslation();
+  const link= groupal ? `/chat/group/${id}` : `/chat/${user.username}`;
   return (
-    <ListItem  button component={Link} to={`/browse/chat/${user.username}`}
+    <ListItem  button component={Link} to={link}
     
     style={{ background: '#1f1f23', borderBottom:'1px solid #303035'}}
       left={
@@ -23,25 +26,31 @@ function ChatPreview({avatar, alias, lastMessage, unreadMessagesCount, lastMessa
       }
       center={
         <React.Fragment>
-          <h3>{alias}</h3>
+          <h3>{title? title : t("group_untitled")}</h3>
+          
           <div>
             <p style={{whiteSpace:'nowrap',  overflow:'hidden', textOverflow: 'ellipsis'}}>
+            {lastMessage &&
               <span style={{position:'relative',top:'3px', paddingRight:'5px',display:'inline-block',margin:'0'}}>
               <BsCheckAll />
               </span>
-              {lastMessage}
+            }
+            
+            {lastMessage ? lastMessage.text : t("no_messages")}
               
             </p>
           </div>
+      
         </React.Fragment>
       }
       right={
+        lastMessage &&
         <React.Fragment>
           <div className="ChatPreview-time">
             <BsClock />
             <p>{lastMessageTime}</p>
           </div>
-          <div>
+          <div style={{marginRight:"10px"}}>
             {unreadMessagesCount > 0 && (
               <Badge
                 className="ChatPreview-messageCount"
@@ -56,4 +65,4 @@ function ChatPreview({avatar, alias, lastMessage, unreadMessagesCount, lastMessa
     />
   );
 }
-export default ChatPreview;
+export default React.memo(ChatPreview);

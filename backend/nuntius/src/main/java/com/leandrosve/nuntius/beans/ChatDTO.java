@@ -5,7 +5,7 @@ import java.util.List;
 public class ChatDTO {
     private long id;
     private List<Long> userIds;
-    private boolean groupal = false;
+    private boolean groupal = true;
     private String title;
     private MessageDTO lastMessage;
 
@@ -39,6 +39,11 @@ public class ChatDTO {
         this.groupal = groupal;
         this.title = title;
     }
+
+    public ChatDTO() {
+        super();
+    }
+
 
     public long getId() {
         return id;

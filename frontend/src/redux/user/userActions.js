@@ -1,5 +1,6 @@
 import * as actionTypes from './userActionTypes';
 import ApiService from "../../ApiService";
+import { hideModal, openLogin } from '../modal/modalActions';
 
 export const loginRequest= () =>{
     return{      
@@ -66,6 +67,26 @@ export const searchUsersFailure= (error) =>{
     }
 }
 
+export const fetchUserRequest= () =>{
+    return {
+        type: actionTypes.FETCH_USER_REQUEST,
+    }
+}
+
+export const fetchUserSuccess= (user) =>{
+    return {
+        type: actionTypes.FETCH_USER_SUCCESS,
+        payload:user
+    }
+}
+
+export const fetchUserFailure= (error) =>{
+    return {
+        type: actionTypes.FETCH_USER_FAILURE,
+        payload:error
+    }
+}
+
 
 
 export const login= (username, password) =>{
@@ -74,6 +95,7 @@ export const login= (username, password) =>{
         ApiService.post("/authenticate", {username, password })
             .then(response => {
                 const user = response.data;
+                dispatch(hideModal());
                 dispatch(loginSuccess(user));
             })
             .catch(
@@ -91,7 +113,8 @@ export const signUp= (username, password, name, email) =>{
         dispatch(signupRequest());
         ApiService.post("/signup", {username, password,  name ,email})
             .then(() => {
-                dispatch(signupSuccess());
+                dispatch(signupSuccess());               
+                dispatch(openLogin({success:"success:signUp"}));
             })
             .catch(
                 error => {              
@@ -112,6 +135,22 @@ export const searchUsers= (someString) =>{
             .catch(
                 error => {              
                     dispatch(searchUsersFailure(error.message))
+                }
+            )
+                
+    }
+}
+
+export const fetchUserByUsername= (username) =>{
+    return (dispatch) => {
+        dispatch(fetchUserRequest());
+        ApiService.get(`/user?username=${username}`)
+            .then((response) => {
+                dispatch(fetchUserSuccess(response.data));
+            })
+            .catch(
+                error => {              
+                    dispatch(fetchUserFailure(error.message))
                 }
             )
                 

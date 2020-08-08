@@ -46,9 +46,10 @@ public class ChatService {
         }
         List<User> users = userRepository.findByUserIds(userIds);
 
-        Chat chat = new Chat(users, null, true, chatDTO.getTitle());
+        Chat chat = new Chat(users, null, chatDTO.getGroupal(), chatDTO.getTitle());
         return mapToDTOV2(chatV2Repository.save(chat));
     }
+
 
     public ChatDTO addMember(long chatId, long userId) {
         final Chat chat = retrieveChat(chatId);

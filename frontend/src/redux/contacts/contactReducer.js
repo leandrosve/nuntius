@@ -115,6 +115,10 @@ export const getContactByUserId = (state, userId) => {
   return state.byUserIds[userId];
 };
 
+export const getContactByUsername = (state, username) => {
+  return getAllContacts(state).find((c)=> c.username === username)
+};
+
 const contactReducer = combineReducers({
   byUserIds,
   allIds,

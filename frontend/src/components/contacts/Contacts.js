@@ -3,7 +3,6 @@ import React, { useEffect } from "react";
 import GroupIcon from "@material-ui/icons/Group";
 import AddIcon from "@material-ui/icons/Add";
 import IconButton from "@material-ui/core/IconButton";
-import ConfirmationDialog from "../util/ConfirmationDialog";
 
 import WideCloseButton from "../util/WideCloseButton";
 import TitledContainer from "../util/TitledContainer";
@@ -20,18 +19,9 @@ function Contacts({
   contacts = [],
   loading,
   error,
-  editContact,
-  addContact,
-  deleteContact,
   success,
 }) {
   const { t } = useTranslation();
-
-  const [deleteDialog, setDeleteDialog] = React.useState({
-    open: false,
-    contact: null,
-    title: "",
-  });
 
   const [openAlert, setOpenAlert] = React.useState(true);
 
@@ -43,23 +33,8 @@ function Contacts({
   });
 
   const handleOpenContactDetail = React.useCallback((contact) => {
-    setContactDetail({ open: true, user: { id: contact.userId } });
+    setContactDetail({ open: true, user: { id: contact.userId, username: contact.username, name: contact.name } });
   }, []);
-
-  const onRemoveContact = React.useCallback(
-    (contact) => {
-      let title = t("confirmation:contact_delete", { name: contact.alias });
-      setDeleteDialog({ open: true, title: title, contact: contact });
-    },
-    [t]
-  );
-
-  const confirmDeleteContact = () => {
-    if (userDetail.open && deleteDialog.contact.id === userDetail.user.id) {
-      setContactDetail({ open: false, user: null });
-    }
-    deleteContact(deleteDialog.contact);
-  };
 
   const handleUserSearchClick = React.useCallback(
     (user) => {
@@ -103,10 +78,7 @@ function Contacts({
               <UserDetailContainer
                 user={userDetail.user}
                 handleClose={handleClose}
-                {...userDetail.user}
-                editContact={editContact}
-                addContact={addContact}
-                onRemoveContact={onRemoveContact}
+                {...userDetail.user}                        
               />
               <WideCloseButton
                 onClick={() => setContactDetail({ open: false })}
@@ -120,17 +92,10 @@ function Contacts({
       <ContactList
         contacts={contacts}
         handleClose={handleClose}
-        onRemoveContact={onRemoveContact}
         onClickContact={handleOpenContactDetail}
       />
 
-      <ConfirmationDialog
-        open={deleteDialog.open}
-        handleCancel={() => setDeleteDialog({ open: false })}
-        handleAccept={confirmDeleteContact}
-        title={deleteDialog.title}
-        handleClose={() => handleClose()}
-      />
+    
     </TitledContainer>
   );
 }

@@ -5,7 +5,9 @@ import java.util.List;
 import javax.validation.Valid;
 
 import com.leandrosve.nuntius.beans.MessageDTO;
+import com.leandrosve.nuntius.model.User;
 import com.leandrosve.nuntius.service.MessageService;
+import com.leandrosve.nuntius.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,6 +24,9 @@ public class MessageController {
 
     @Autowired
     MessageService messageService;
+
+    @Autowired
+    UserService userService;
     
 
     @PostMapping("/chats/{chatId}/messages")
@@ -29,6 +34,23 @@ public class MessageController {
       final MessageDTO createdMessage=messageService.createMessage(messageDTO, chatId);
       return new ResponseEntity<MessageDTO>(createdMessage, HttpStatus.CREATED);
     }
+
+    @PostMapping("/users/{userId}/messages")
+    public ResponseEntity<MessageDTO> createMessageForUser(@Valid @RequestBody MessageDTO messageDTO, @PathVariable long userId){  
+      User user =  userService.getUser(userId);
+      final MessageDTO createdMessage=messageService.createMessageForUser(messageDTO, user);
+      return new ResponseEntity<MessageDTO>(createdMessage, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/users/{userId}/messages")
+    public List<MessageDTO> getMessagesFromUser(@Valid @RequestBody MessageDTO messageDTO, @PathVariable long userId){  
+      User user =  userService.getUser(userId);
+      final List<MessageDTO> messages= messageService.getMessagesFromUser(user);
+      return messages;
+    }
+
+
+    
 
 
     @GetMapping("/chats/{chatId}/messages")

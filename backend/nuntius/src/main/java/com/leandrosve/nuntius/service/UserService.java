@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.leandrosve.nuntius.beans.UserDTO;
 import com.leandrosve.nuntius.exception.BadRequestException;
+import com.leandrosve.nuntius.exception.UserNotFoundException;
 import com.leandrosve.nuntius.model.User;
 import com.leandrosve.nuntius.repository.IUserRepository;
 import com.leandrosve.nuntius.specification.UserSpecification;
@@ -67,15 +68,23 @@ public class UserService implements UserDetailsService {
     }
 
     public User getUser(String username){
-        return usersRepository.findByUsername(username);
+        User user = usersRepository.findByUsername(username);
+        if(user == null){throw new UserNotFoundException();}
+        return user;
+    }
 
+    public UserDTO getUserByUsername(String username){
+        return mapToDTO(getUser(username));
     }
 
 	public List<UserDTO> searchUsers(UserSpecification userSpecification) {
         final List<User> users = usersRepository.findAll(userSpecification);
         List<UserDTO> userDTOs = new ArrayList<UserDTO>();
-        users.forEach((u) -> userDTOs.add( new UserDTO(u.getId(), u.getUsername(), u.getBiography(), u.getName())));
+        users.forEach((u) -> userDTOs.add( mapToDTO(u)));
         return userDTOs;
 	}
 
+    private UserDTO mapToDTO(User user){
+        return new UserDTO(user.getId(), user.getUsername(), user.getBiography(), user.getName());
+    }
 }

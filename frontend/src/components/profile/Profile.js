@@ -80,7 +80,7 @@ const ImageEditor = ({ image, handleCancel, editorRef , handleAccept}) => {
   );
 };
 
-const Profile = ({username, name, email, biography}) => {
+const Profile = ({username, name, email, biography = ""}) => {
   const { t } = useTranslation();
   const [uneditedImage, setUneditedImage] = useState();
   const [editedImage, setEditedImage] = useState();
@@ -164,7 +164,7 @@ const Profile = ({username, name, email, biography}) => {
           type="text"
           variant="outlined"
           margin="normal"
-          value={biography}
+          value={biography || ""}
           fullWidth
           id="bio"
           InputProps={{

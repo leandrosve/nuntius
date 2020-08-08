@@ -6,9 +6,11 @@ public class MessageDTO {
 
     private long id;
     private long userId;
+    private long chatId;
     private String text;
     private Date sentTime;
     private MessageDetailsDTO details;
+ 
 
 
     public long getId() {
@@ -42,12 +44,21 @@ public class MessageDTO {
     public void setSentTime(Date sentTime) {
         this.sentTime = sentTime;
     }
-
     
+    public long getChatId() {
+        return chatId;
+    }
 
-    public MessageDTO(long id, long userId, String text, Date sentTime) {
+    public void setChatId(long chatId) {
+        this.chatId = chatId;
+    }
+
+
+    public MessageDTO(long id, long userId, long chatId, String text, Date sentTime) {
+        super();
         this.id = id;
         this.userId = userId;
+        this.chatId = chatId;
         this.text = text;
         this.sentTime = sentTime;
     }

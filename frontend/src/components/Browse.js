@@ -1,19 +1,36 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "../App.css";
 import Nav from "./nav/Nav";
-import ChatList from "./chat/ChatList";
-import Chat from "./chat/Chat";
+import ChatContainer from "./chat/ChatContainer";
+import ChatListContainer from "./chat/ChatListContainer";
+import { contacts } from "../redux/contacts/contactActions";
+import { connect } from "react-redux";
+import ChatWelcome from "./chat/ChatWelcome";
 
-function Browse() {
+import { Route, Switch } from "react-router-dom";
+
+function Browse({ fetchContacts }) {
+  useEffect(() => fetchContacts(), [fetchContacts]);
+
   return (
     <div>
-      <Nav/>
+      <Nav />
       <div className="Browse-content">
-        <ChatList />
-        <Chat />
+        <ChatListContainer />
+        <div className="Chat" style={{position:"relative"}}>
+          <Switch>
+            <Route path={`/chat/@:username`} component={ChatContainer} />
+            <Route path={`/chat/group/:groupId`} component={ChatContainer} />
+            <ChatWelcome />
+          </Switch>
+        </div>
       </div>
     </div>
   );
 }
 
-export default Browse;
+const mapDispatchToProps = (dispatch) => ({
+  fetchContacts: () => dispatch(contacts()),
+});
+
+export default connect(null, mapDispatchToProps)(Browse);

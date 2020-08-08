@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,11 +31,8 @@ public class ChatController {
       return new ResponseEntity<ChatDTO>(createdChat, HttpStatus.CREATED);
     }
 
-
-    
-
-    @PostMapping("/chats/{chatId}/users/{userId}")
-    public ResponseEntity<ChatDTO> addMember(@PathVariable Long chatId, @PathVariable Long userId){   
+    @PutMapping("/chats/{chatId}/users")
+    public ResponseEntity<ChatDTO> addMember(@PathVariable Long chatId, @RequestBody Long userId){   
       final ChatDTO createdChat=chatService.addMember(chatId, userId);
       return new ResponseEntity<ChatDTO>(createdChat, HttpStatus.OK);
     }

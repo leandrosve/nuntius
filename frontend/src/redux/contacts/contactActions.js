@@ -66,9 +66,6 @@ export const contacts = () => {
       .then((response) => {
         const contacts = response.data;
         const normalized = normalize(contacts, schema.arrayOfContacts);
-        console.log(
-          normalized
-        );
         dispatch(fetchContactsSuccess(normalized));
       })
       .catch((error) => {

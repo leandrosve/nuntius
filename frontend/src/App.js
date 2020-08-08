@@ -7,6 +7,7 @@ import Develop from "./components/Develop";
 import { Provider } from "react-redux";
 import store from "./redux/store";
 import AuthRoute from "./components/util/AuthRoute";
+import ReduxModal from "./components/util/ReduxModal";
 
 function App() {
   return (
@@ -14,12 +15,14 @@ function App() {
       <Router>
         <div className="App">
           <Switch>
-            <AuthRoute path="/" exact component={Welcome} type="guest"/>
-            <AuthRoute path="/browse" component={Browse} type="private" />
+            <AuthRoute path="/home" exact component={Welcome} type="guest"/>
+            <AuthRoute path="/" component={Browse} type="private" />
             <Route path="/develop" exact component={Develop} />
           </Switch>
         </div>
+        <ReduxModal/>
       </Router>
+     
     </Provider>
   );
 }

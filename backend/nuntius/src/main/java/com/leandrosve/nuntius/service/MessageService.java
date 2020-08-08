@@ -1,8 +1,12 @@
 package com.leandrosve.nuntius.service;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import javax.validation.Valid;
 
 import com.leandrosve.nuntius.beans.MessageDTO;
 import com.leandrosve.nuntius.beans.MessageDetailsDTO;
@@ -88,13 +92,44 @@ public class MessageService {
     }
 
     public MessageDTO mapToDTO(Message message){
-        MessageDTO messageDTO = new MessageDTO(message.getId(), message.getSender().getId(), message.getText(), message.getSentTime());
-        List<MessageReceptionDTO> receptions = new ArrayList<MessageReceptionDTO>();
-        message.getReceivers().forEach((mr) -> receptions.add(new MessageReceptionDTO(mr.getUser().getId(), mr.getSeenTime(), mr.getReceivedTime())));
+        MessageDTO messageDTO = new MessageDTO(message.getId(), message.getSender().getId(), message.getChat().getId(), message.getText(), message.getSentTime());
         if(messageDTO.getUserId() == authUtil.getCurrentUser().getId()){
+            List<MessageReceptionDTO> receptions = new ArrayList<MessageReceptionDTO>();
+            message.getReceivers().forEach((mr) -> receptions.add(new MessageReceptionDTO(mr.getUser().getId(), mr.getSeenTime(), mr.getReceivedTime())));
             messageDTO.setDetails(new MessageDetailsDTO(receptions,message.isReceived(),message.isSeen()));
         }
         return messageDTO;
+    }
+
+    public List<MessageDTO> mapToDTO(List<Message> messages){
+        List<MessageDTO> messageDTOs = new ArrayList<MessageDTO>();
+        messages.forEach(m ->messageDTOs.add(mapToDTO(m)));
+        return messageDTOs;
+    }
+
+	public MessageDTO createMessageForUser(@Valid MessageDTO messageDTO, User user) {    
+        final User currentUser = authUtil.getCurrentUser(); 
+        List<Chat> chats = chatRepository.findPrivateChat(currentUser.getId(), user.getId());
+        Chat chat;
+        if(chats == null || chats.size() == 0){
+            List<User> userIds = new ArrayList<User>(Arrays.asList(currentUser, user));
+            chat = chatRepository.save(new Chat(userIds, null , false, ""));
+        }else{
+            chat= chats.get(0);
+        }
+        return createMessage(messageDTO, chat.getId());
+    }
+    
+    public List<MessageDTO> getMessagesFromUser(User user){
+        final User currentUser = authUtil.getCurrentUser(); 
+        List<Chat> chats = chatRepository.findPrivateChat(currentUser.getId(), user.getId());
+        
+        if(chats == null || chats.size() == 0){ throw new ChatNotFoundException();}
+        Chat chat = chats.get(0);
+        final List<Message> messages = messageRepository.findAllByChatIdAndSentTimeLessThan(chat.getId(), new Date());
+        return mapToDTO(messages);
+
+
     }
     
 }

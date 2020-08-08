@@ -1,8 +1,7 @@
 import React, { useState, useCallback } from "react";
 import profilePicPlaceholder from "../assets/images/profile-pic-placeholder.jpg";
-import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
+import DeleteContactButton from "./DeleteContactButton";
 import IconButton from "@material-ui/core/IconButton";
-import ChatIcon from "@material-ui/icons/Chat";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import Avatar from "@material-ui/core/Avatar";
@@ -14,15 +13,13 @@ import ClearIcon from "@material-ui/icons/Clear";
 
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import AcUnitIcon from "@material-ui/icons/AcUnit";
-import { Link } from "react-router-dom";
             
 import { useTranslation } from "react-i18next";
 
 import PropTypes from 'prop-types';
+import StartChatButton from "../chat/StartChatButton";
 
 const ContactDetail = ({
-  handleClose,
-  onRemoveContact,
   editContact,
   addContact,
   username,
@@ -116,18 +113,7 @@ const ContactDetail = ({
               <div>
                 <Box display="flex" justifyContent="flex-end">
                   <label>
-                    <IconButton
-                      alt="start chat"
-                      aria-label="start chat"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleClose();
-                      }}
-                      component={Link}
-                      to={`/browse/chat/@${username}`}
-                    >
-                      <ChatIcon />
-                    </IconButton>
+                  <StartChatButton username={username}/>
                   </label>
                 {!isContact ? 
                   <label>
@@ -141,13 +127,7 @@ const ContactDetail = ({
                   </label>
                   :
                   <label>
-                    <IconButton
-                      alt="delete"
-                      aria-label="delete contact"
-                      onClick={()=>onRemoveContact({id:id, userId: userId, alias: alias})}
-                    >
-                      <DeleteOutlineIcon />
-                    </IconButton>
+                    <DeleteContactButton contact={{username:username, alias:alias, id:id, userId:userId, name:name}}/>
                   </label>
                 }
 
@@ -207,8 +187,6 @@ const AliasForm = ({ alias, id, handleToggleAliasForm, editContact }) => {
 
 ContactDetail.propTypes = {
   id: PropTypes.number.isRequired,
-  handleClose: PropTypes.func.isRequired,
-  onRemoveContact: PropTypes.func.isRequired,
   editContact: PropTypes.func.isRequired,
   addContact: PropTypes.func.isRequired,
 };
