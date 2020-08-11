@@ -36,6 +36,11 @@ public class UserController {
         return userService.getUserByUsername(username);
     }
 
+    @GetMapping("/users/{id}")
+    public UserDTO getUserById(@PathVariable  Long id) {
+        return userService.getUserById(id);
+    }
+
     @GetMapping("/profile")
     public UserDetails profile() {
         return userService.profile();

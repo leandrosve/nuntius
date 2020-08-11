@@ -6,7 +6,8 @@ export const modalContentTypes = {
   SETTINGS: "SETTINGS",
   LOGIN: "LOGIN",
   SIGN_UP: "SIGN_UP",
-  USER_DETAILS: "USER_DETAILS"
+  USER_DETAILS: "USER_DETAILS",
+  MEDIA: "MEDIA",
 }
 
 export const openModal = (contentType, contentProps) => ({
@@ -41,4 +42,8 @@ export const openSettings = (props) =>{
 
 export const openUserDetail = (props) =>{
   return openModal(modalContentTypes.USER_DETAILS, props);
+};
+
+export const openMedia = (props) =>{
+  return openModal(modalContentTypes.MEDIA, props);
 };

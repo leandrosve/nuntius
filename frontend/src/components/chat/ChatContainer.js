@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { connect } from "react-redux";
 import Chat from "./Chat";
-import { openUserDetail } from "../../redux/modal/modalActions";
+import { openUserDetail, openMedia } from "../../redux/modal/modalActions";
 import { getContactByUsername } from "../../redux/contacts/contactReducer";
 
 import { getUserByUsername } from "../../redux/user/userReducer";
@@ -14,14 +14,8 @@ import {userType, contactType, chatType} from "../../types";
 import {bool, string, func} from "prop-types";
 
 const ChatContainer = ({
-  user,
-  contact,
-  group,
-  fetchUserByUsername,
-  openUserDetail,
-  loading = true,
-  shouldFetchUser = false,
-  username,
+  user, contact, group, fetchUserByUsername, openUserDetail, 
+  loading = true, shouldFetchUser = false, username, openMedia
 }) => {
   const [done, setDone] = useState(false);
   useEffect(() => {
@@ -36,6 +30,10 @@ const ChatContainer = ({
     else alert("not yet");
   }, [user, openUserDetail, contact]);
 
+  const handleOpenMedia = useCallback((src) => {
+    openMedia(src)
+  },[openMedia]);
+
   return (
     <>
       {loading && <LinearProgress color="secondary" />}
@@ -48,11 +46,12 @@ const ChatContainer = ({
               : contact
               ? contact.alias
               : user
-              ? user.username
+              ? user.name
               : null
           }
           type={group? "group" : contact ? "contact" : user ? "user" : null}
           handleOpenDetail={handleOpenDetail}
+          handleOpenMedia={handleOpenMedia}
         />
       ) : (
         !loading && done && <div>not found</div>
@@ -65,6 +64,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     openUserDetail: (props) => dispatch(openUserDetail(props)),
     fetchUserByUsername: (username) => dispatch(fetchUserByUsername(username)),
+    openMedia: (src) => dispatch(openMedia(src))
   };
 };
 

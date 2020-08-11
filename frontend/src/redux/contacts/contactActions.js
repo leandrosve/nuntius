@@ -2,6 +2,7 @@ import * as actionTypes from "./contactActionTypes";
 import ApiService from "../../ApiService";
 import { normalize } from "normalizr";
 import * as schema from "../schema";
+import { addUser } from "../user/userActions";
 
 export const fetchContactsRequest = () => ({
   type: actionTypes.FETCH_CONTACTS_REQUEST,
@@ -107,7 +108,9 @@ export const deleteContact = (contact) => {
     dispatch(deleteContactRequest());
     ApiService.delete(`/contacts/${contact.id}`)
       .then(() => {   
+        dispatch(addUser({id:contact.userId, name:contact.name, username:contact.username}));
         dispatch(deleteContactSuccess(contact));
+        
       })
       .catch((error) => {
         dispatch(deleteContactFailure(error.message));

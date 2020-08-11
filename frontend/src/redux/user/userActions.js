@@ -87,6 +87,13 @@ export const fetchUserFailure= (error) =>{
     }
 }
 
+export const addUser= (user) =>{
+    return {
+        type: actionTypes.ADD_USER,
+        payload:user
+    }
+}
+
 
 
 export const login= (username, password) =>{
@@ -103,8 +110,7 @@ export const login= (username, password) =>{
              
                     dispatch(loginFailure(error.message))
                 }
-            )
-                
+            )               
     }
 }
 
@@ -120,8 +126,7 @@ export const signUp= (username, password, name, email) =>{
                 error => {              
                     dispatch(signupFailure(error.message))
                 }
-            )
-                
+            )                
     }
 }
 
@@ -136,8 +141,7 @@ export const searchUsers= (someString) =>{
                 error => {              
                     dispatch(searchUsersFailure(error.message))
                 }
-            )
-                
+            )              
     }
 }
 
@@ -152,7 +156,22 @@ export const fetchUserByUsername= (username) =>{
                 error => {              
                     dispatch(fetchUserFailure(error.message))
                 }
-            )
-                
+            )             
     }
 }
+
+export const fetchUserById= (id) =>{
+    return (dispatch) => {
+        dispatch(fetchUserRequest());
+        ApiService.get(`/users/${id}`)
+            .then((response) => {
+                dispatch(fetchUserSuccess(response.data));
+            })
+            .catch(
+                error => {              
+                    dispatch(fetchUserFailure(error.message))
+                }
+            )               
+    }
+}
+

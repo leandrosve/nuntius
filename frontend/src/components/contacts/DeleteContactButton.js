@@ -23,7 +23,7 @@ const DeleteContactButton = ({ deleteContact, contact }) => {
             handleClose={() => setOpenConfirmDialog(false)}
       />
       <IconButton
-        onClick={() => setOpenConfirmDialog(true)}
+        onClick={(e) => {setOpenConfirmDialog(true); e.stopPropagation()}}
         aria-label="delete contact"
         component="span"
         >

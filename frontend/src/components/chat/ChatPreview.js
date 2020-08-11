@@ -1,46 +1,32 @@
-import React, {useState} from "react";
+import React from "react";
 import "./assets/Chat.css";
-import { BsClock, BsCheckAll } from "react-icons/bs";
+import { BsClock} from "react-icons/bs";
 import ListItem from "../util/ListItem";
 import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
 import Badge from "@material-ui/core/Badge";
-import {Link} from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import MessageCheckMarker from "./message/MessageCheckMarker";
+import dateFormat from "dateformat";
 
 
-function ChatPreview({avatar, title, lastMessage, unreadMessagesCount=10, id, groupal = false, lastMessageTime="4:20"}) {
-  const [user] = useState({username:'@donramon'});
+const ellipsis = {
+  whiteSpace:'nowrap',  overflow:'hidden', textOverflow: 'ellipsis'
+}
+function ChatPreview({avatar, title, lastMessage, handleClick, unreadMessagesCount=10}) {
   const { t } = useTranslation();
-  const link= groupal ? `/chat/group/${id}` : `/chat/${user.username}`;
   return (
-    <ListItem  button component={Link} to={link}
-    
+    <ListItem  button onClick={handleClick}
     style={{ background: '#1f1f23', borderBottom:'1px solid #303035'}}
-      left={
-        <img
-          src={avatar}
-          className="ChatPreview-image"
-          alt="user"
-        />
-       
-      }
+      left={<img src={avatar} className="ChatPreview-image" alt="user"/>}
       center={
         <React.Fragment>
-          <h3>{title? title : t("group_untitled")}</h3>
-          
+          <h3 style={ellipsis}>{title}</h3>       
           <div>
-            <p style={{whiteSpace:'nowrap',  overflow:'hidden', textOverflow: 'ellipsis'}}>
-            {lastMessage &&
-              <span style={{position:'relative',top:'3px', paddingRight:'5px',display:'inline-block',margin:'0'}}>
-              <BsCheckAll />
-              </span>
-            }
-            
-            {lastMessage ? lastMessage.text : t("no_messages")}
-              
+            <p style={ellipsis}>
+              {lastMessage && <MessageCheckMarker {...lastMessage}/>}          
+              {lastMessage ? lastMessage.text : t("no_messages")}           
             </p>
-          </div>
-      
+          </div>  
         </React.Fragment>
       }
       right={
@@ -48,7 +34,7 @@ function ChatPreview({avatar, title, lastMessage, unreadMessagesCount=10, id, gr
         <React.Fragment>
           <div className="ChatPreview-time">
             <BsClock />
-            <p>{lastMessageTime}</p>
+            <p>{lastMessage && dateFormat(lastMessage.sentTime, "shortDate")}</p>
           </div>
           <div style={{marginRight:"10px"}}>
             {unreadMessagesCount > 0 && (
@@ -65,4 +51,5 @@ function ChatPreview({avatar, title, lastMessage, unreadMessagesCount=10, id, gr
     />
   );
 }
+
 export default React.memo(ChatPreview);

@@ -3,9 +3,17 @@ import "./Util.css";
 import CloseIcon from "@material-ui/icons/Close";
 import { makeStyles } from "@material-ui/core/styles";
 import MaterialModal from "@material-ui/core/Modal";
-import ConfirmationDialog from "./ConfirmationDialog";
-import { useTranslation } from "react-i18next";
 import IconButton from "@material-ui/core/IconButton";
+import { hideModal } from "../../redux/modal/modalActions";
+import { connect } from "react-redux";
+import ContactsContainer from "../contacts/ContactsContainer";
+import Settings from "../user/Settings";
+import ProfileContainer from "../profile/ProfileContainer";
+import LoginForm from "../user/LoginForm";
+import RegisterForm from "../user/RegisterForm";
+import {modalContentTypes} from "../../redux/modal/modalActions"
+import UserDetailContainer from "../user/UserDetailContainer";
+import Image from 'material-ui-image';
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -17,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     backgroundColor: theme.palette.background.paper,
     borderRadius: "10px",
-    minHeight: "400px",
+    
     minWidth: "400px",
     display: "flex",
     flexDirection: "column",
@@ -35,69 +43,56 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Modal = ({
-  children,
-  open,
-  handleClose,
-  header,
-  hasCloseButton = true,
-  confirmClose = false,
-}) => {
+const MODAL_COMPONENTS = {
+  [modalContentTypes.CONTACTS]: ContactsContainer,
+  [modalContentTypes.PROFILE]: ProfileContainer,
+  [modalContentTypes.SETTINGS]: Settings,
+  [modalContentTypes.LOGIN]: LoginForm,
+  [modalContentTypes.SIGN_UP] : RegisterForm,
+  [modalContentTypes.USER_DETAILS] : UserDetailContainer,
+  [modalContentTypes.MEDIA] : Image ,
+}
+
+const Modal = ({ open, hideModal, contentType, contentProps}) => {
   const classes = useStyles();
+  const Content = MODAL_COMPONENTS[contentType];
 
-  const [showCloseDialog, setShowCloseDialog] = React.useState({
-    open: false,
-    title: "",
-  });
-
-  const handleOpenDialog = () => {
-    let title = "Are you sure you want to exit?";
-    setShowCloseDialog({ open: true, title: title });
-  };
-
-  const handleClick = () => {
-    if (confirmClose) {
-      handleOpenDialog();
-    } else {
-      handleClose();
-    }
-  };
-  const { t } = useTranslation();
-  return (
-    <MaterialModal
-      className={classes.modal}
-      open={open}
-      onClose={handleClick}
-      closeAfterTransition={false}
-    >
-      <React.Fragment>
-        <div className={classes.paper}>
-          {header}
-          <div className={classes.content}>{children}</div>
-          {hasCloseButton && (
+  if (open)
+    return (
+      <MaterialModal
+        className={classes.modal}
+        open={open}
+        onClose={() => hideModal()}
+        closeAfterTransition={false}
+      >
+        <React.Fragment>
+          <div className={classes.paper}>
+           <Content {...contentProps} />
             <IconButton
               color="primary"
               className={classes.dismissButon}
-              onClick={handleClick}
+              onClick={() => hideModal()}
             >
               <CloseIcon />
             </IconButton>
-          )}
-        </div>
-        <ConfirmationDialog
-          open={showCloseDialog.open}
-          title={t("confirmation:exit_without_saving")}
-          handleAccept={() => {
-            setShowCloseDialog({ open: false });
-            handleClose();
-          }}
-          handleCancel={() => {
-            setShowCloseDialog({ open: false });
-          }}
-        />
-      </React.Fragment>
-    </MaterialModal>
-  );
+          </div>        
+        </React.Fragment>
+      </MaterialModal>
+    );
+  else return null;
+};
+const mapStateToProps = ({ modal }) => {
+  return {
+    open: modal.open,
+    contentType: modal.contentType,
+    contentProps: modal.contentProps
+  };
 };
 
-export default Modal;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    hideModal: () => dispatch(hideModal()),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Modal);

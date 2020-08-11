@@ -19,8 +19,7 @@ function Browse({ fetchContacts }) {
         <ChatListContainer />
         <div className="Chat" style={{position:"relative"}}>
           <Switch>
-            <Route path={`/chat/@:username`} component={ChatContainer} />
-            <Route path={`/chat/group/:groupId`} component={ChatContainer} />
+            <Route path={[`/chat/@:username`, `/chat/group/:groupId`]} component={ChatContainer} />
             <ChatWelcome />
           </Switch>
         </div>

@@ -77,6 +77,11 @@ public class UserService implements UserDetailsService {
         return mapToDTO(getUser(username));
     }
 
+    public UserDTO getUserById(Long id){
+        User user = usersRepository.findById(id).orElseThrow(()-> new UserNotFoundException());
+        return mapToDTO(user);
+    }
+
 	public List<UserDTO> searchUsers(UserSpecification userSpecification) {
         final List<User> users = usersRepository.findAll(userSpecification);
         List<UserDTO> userDTOs = new ArrayList<UserDTO>();

@@ -17,32 +17,39 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: theme.shadows[3],
     transform: "translateX(-50%)",
   },
-  
 }));
 
-const VideoPlayer = ({ children, handleClose }) => {
-    const classes = useStyles();
-    return (
-      <Spring
-        from={{ opacity: 0.5, height: "0px" }}
-        to={{ opacity: 1, height: "305px" }}
-        duration={2500}
-      >
-        {(props) => (
-          <Box
-            display="flex"
-            flexDirection="column"
-            style={props}
-            className={classes.videoPlayer}
-          >
-            {children}
-            <Button onClick={handleClose} style={{ width: "100%" }}>
-              <ExpandLessIcon />
-            </Button>
-          </Box>
-        )}
-      </Spring>
-    );
-  };
+const VideoPlayer = ({ handleClose, src }) => {
+  const classes = useStyles();
+  return (
+    <Spring
+      from={{ opacity: 0.5, height: "0px" }}
+      to={{ opacity: 1, height: "305px" }}
+      duration={2500}
+    >
+      {(props) => (
+        <Box
+          display="flex"
+          flexDirection="column"
+          style={props}
+          className={classes.videoPlayer}
+        >
+          <iframe
+            title="Youtube video"
+            width="480"
+            height="270"
+            src={src}
+            frameborder="0"
+            allow="accelerometer; autoplay; encrypted-media; gyroscope;"
+            pictureInPicture="false"
+          ></iframe>
+          <Button onClick={handleClose} style={{ width: "100%" }}>
+            <ExpandLessIcon />
+          </Button>
+        </Box>
+      )}
+    </Spring>
+  );
+};
 
-  export default VideoPlayer;
+export default VideoPlayer;

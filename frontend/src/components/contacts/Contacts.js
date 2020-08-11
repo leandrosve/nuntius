@@ -93,9 +93,7 @@ function Contacts({
         contacts={contacts}
         handleClose={handleClose}
         onClickContact={handleOpenContactDetail}
-      />
-
-    
+      />   
     </TitledContainer>
   );
 }

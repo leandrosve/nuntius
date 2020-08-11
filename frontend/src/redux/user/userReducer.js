@@ -101,6 +101,7 @@ const search = (state = [], action) => {
 const byIds = (state = {}, action) => {
   switch (action.type) {
     case actionTypes.FETCH_USER_SUCCESS:
+    case actionTypes.ADD_USER:
       return { ...state, [action.payload.id]: action.payload };
     default:
       return state;
@@ -111,6 +112,8 @@ const allIds = (state = [], action) => {
   switch (action.type) {
     case actionTypes.FETCH_USER_SUCCESS:
       return [...state, action.payload.id];
+    case actionTypes.ADD_USER:
+      return state.find(id=> id === action.payload.id) ? state : [...state,action.payload.id ];
     default:
       return state;
   }
@@ -129,8 +132,10 @@ const loadingUsers = (state = false, action) => {
 };
 
 const users = combineReducers({
-  byIds, allIds, loading:loadingUsers
-})
+  byIds,
+  allIds,
+  loading: loadingUsers,
+});
 
 export const getAllUsers = (state) => {
   return state.allIds.map((id) => {
@@ -140,6 +145,10 @@ export const getAllUsers = (state) => {
 
 export const getUserByUsername = (state, username) => {
   return getAllUsers(state).find((u) => u.username === username);
+};
+
+export const getUserById = (state, id) => {
+  return state.users.byIds[id];
 };
 
 export default combineReducers({ signUp, session, search, users });

@@ -1,5 +1,5 @@
-import "./assets/Chat.css";
-import profilePicPlaceholder from "../assets/images/profile-pic-placeholder.jpg";
+import "../assets/Chat.css";
+import profilePicPlaceholder from "../../assets/images/profile-pic-placeholder.jpg";
 import React, { useRef} from "react";
 import InsertEmoticonIcon from "@material-ui/icons/InsertEmoticon";
 import OutlinedInput from "@material-ui/core/OutlinedInput";

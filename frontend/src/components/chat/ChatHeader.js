@@ -86,7 +86,7 @@ const ChatHeaderMenu = ({ handleOpenDetail, type }) => {
             }}
           >
             {
-            {
+              {
                 'group': t("group_detail"),
                 'user': t("user_detail"),
                 'contact': t("contact_detail"),

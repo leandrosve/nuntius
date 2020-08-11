@@ -10,12 +10,9 @@ import { Spring } from "react-spring/renderprops";
 import EditIcon from "@material-ui/icons/Edit";
 import DoneIcon from "@material-ui/icons/Done";
 import ClearIcon from "@material-ui/icons/Clear";
-
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
-import AcUnitIcon from "@material-ui/icons/AcUnit";
-            
+import AcUnitIcon from "@material-ui/icons/AcUnit";       
 import { useTranslation } from "react-i18next";
-
 import PropTypes from 'prop-types';
 import StartChatButton from "../chat/StartChatButton";
 
