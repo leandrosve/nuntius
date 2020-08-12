@@ -92,7 +92,7 @@ public class Chat {
 
     public Message getLastMessage() {
         if (messages != null && !messages.isEmpty()) {
-            return messages.get(0);
+            return messages.get(messages.size()-1);
         } else {
             return null;
         }

@@ -10,6 +10,7 @@ import "emoji-mart/css/emoji-mart.css";
 import { Picker } from "emoji-mart";
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
+import { Avatar } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   emojiPicker: {
@@ -25,12 +26,12 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     alignItems: "center",
     background: "white",
-    padding:'0px 5px',
+   
     boxShadow:theme.shadows[5],
   }
 }));
 
-function MessageForm({handleSubmit}) {
+function MessageForm({handleSendMessage}) {
   const classes = useStyles();
   const [openEmojiPicker, setOpenEmojiPicker] = React.useState(false);
   const handleToggleEmojiPicker = () => {
@@ -55,7 +56,7 @@ function MessageForm({handleSubmit}) {
   const inputRef = useRef(null);
 
   const submitMessage = ()=>{
-    handleSubmit({text:text, sendTime:new Date(Date.now())});
+    handleSendMessage(text);
     setText('');
     inputRef.current.selectionEnd=inputRef.current.selectionStart=0;
   }
@@ -68,10 +69,10 @@ function MessageForm({handleSubmit}) {
       flexDirection="row"
       className={classes.root}
     >
-      <img
+      <Avatar
         src={profilePicPlaceholder}
-        className="MessageForm-profilePic"
         alt="user profile"
+        style={{margin:"5px"}}
       />
         
       <FormControl fullWidth variant="outlined">

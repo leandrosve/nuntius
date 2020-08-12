@@ -75,4 +75,4 @@ const DateMarker = ({date}) => {
       </div>
     );
   };
-export default DateMarker;
+export default React.memo(DateMarker);

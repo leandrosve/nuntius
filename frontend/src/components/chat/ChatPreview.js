@@ -23,7 +23,7 @@ function ChatPreview({avatar, title, lastMessage, handleClick, unreadMessagesCou
           <h3 style={ellipsis}>{title}</h3>       
           <div>
             <p style={ellipsis}>
-              {lastMessage && <MessageCheckMarker {...lastMessage}/>}          
+              {lastMessage && lastMessage.details && <MessageCheckMarker {...lastMessage}/>}          
               {lastMessage ? lastMessage.text : t("no_messages")}           
             </p>
           </div>  

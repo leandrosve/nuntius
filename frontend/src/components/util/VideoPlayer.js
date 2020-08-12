@@ -39,10 +39,10 @@ const VideoPlayer = ({ handleClose, src }) => {
             width="480"
             height="270"
             src={src}
-            frameborder="0"
-            allow="accelerometer; autoplay; encrypted-media; gyroscope;"
-            pictureInPicture="false"
+            frameBorder="0"
+            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
           ></iframe>
+          
           <Button onClick={handleClose} style={{ width: "100%" }}>
             <ExpandLessIcon />
           </Button>

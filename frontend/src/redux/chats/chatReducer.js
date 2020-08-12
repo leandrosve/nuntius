@@ -1,5 +1,6 @@
 import * as actionTypes from "./chatActionTypes";
 import { combineReducers } from "redux";
+import currentChatReducer from "./currentChatReducer";
 
 const isFetching = (state = false, action) => {
   switch (action.type) {
@@ -61,6 +62,7 @@ const chatReducer = combineReducers({
   allIds,
   isFetching,
   error,
+  currentChat:currentChatReducer
 });
 
 export default chatReducer;

@@ -58,13 +58,12 @@ const useStyles = makeStyles(() => ({
 
 function Message({
   text,
-  profilePicture,
+  avatar,
   media,
   handleOpenMedia,
   handleOpenVideoPlayer,
-  userId = 1,
   sendTime = new Date(Date.now()),
-  seenTime,
+  details,
 }) {
   const classes = useStyles();
 
@@ -72,13 +71,13 @@ function Message({
     <div className={classes.messageContainer}>
       <div
         className={classes.messageBox}
-        style={userId === 1 ? { float: "right" } : null}
+        style={details ? { float: "right" } : null}
       >
-        {profilePicture && (
+        {avatar && (
           <div
-            className={userId === 1 ? classes.avatarRight : classes.avatarLeft}
+            className={details ? classes.avatarRight : classes.avatarLeft}
           >
-            <Avatar src={profilePicture} alt="username" />
+            <Avatar src={avatar} alt="username" />
           </div>
         )}
 
@@ -100,8 +99,10 @@ function Message({
             display="block"
             gutterBottom
           >
-            <MessageCheckMarker fontSize="large" />
-            {dateFormat(sendTime, "shortTime")}
+            {details && 
+              <MessageCheckMarker fontSize="large" />         
+            }
+             {dateFormat(sendTime, "shortTime")}
           </Typography>
         </div>
       </div>

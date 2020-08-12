@@ -1,7 +1,7 @@
 package com.leandrosve.nuntius.model.authentication;
 
 public class AuthenticationRequest {
-
+    
     private String username;
     private String password;
 

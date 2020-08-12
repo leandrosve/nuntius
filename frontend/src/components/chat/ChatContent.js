@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import "./assets/Chat.css";
 import Message from "./message/Message";
-import MessageForm from "./message/MessageForm";
 import profilePicPlaceholder from "../assets/images/profile-pic-placeholder.jpg";
 import DateMarker from "../util/DateMarker";
 import VideoPlayer from "../util/VideoPlayer";
+import Chip from "@material-ui/core/Chip";
 
-const ChatContent = ({handleOpenMedia}) => {
- 
+import { useTranslation } from "react-i18next";
+const ChatContent = ({handleOpenMedia, messages}) => {
+  const { t } = useTranslation();
   const [videoPlayer, setVideoPlayer] = useState({
     open: false,
     src: null,
@@ -17,79 +18,8 @@ const ChatContent = ({handleOpenMedia}) => {
     setVideoPlayer({ open: true, src: src });
   }, []);
 
-  const [, setSendBottom] = useState(false);
-
-  const handleMessageSubmit = React.useCallback((message) => {
-    setMessages((prev) => prev.concat(message));
-    setSendBottom((prev) => !prev);
-  }, []);
 
   const chatEndRef = React.createRef();
-
-  const messagesData = [
-    {
-      text: "primero",
-      profilePicture: profilePicPlaceholder,
-      sendTime: new Date(2020, 5, 28, 14, 39, 7),
-      userId: 1,
-      id:1,
-    },
-    {
-      text: "https://www.youtube.com/watch?v=2JCN7pfiEWE ",
-      profilePicture: profilePicPlaceholder,
-      sendTime: new Date(2020, 5, 28, 14, 39, 7),
-      seenTime: new Date(2020, 5, 28, 14, 39, 7),
-      userId: 1,
-      id:2,
-    },
-    {
-      text: "holaa probando",
-      profilePicture: profilePicPlaceholder,
-      sendTime: new Date(2020, 5, 28, 14, 39, 7),
-      userId: 1,
-      id:3,
-    },
-    {
-      text: "holaa probando sdfsdfsd sdfsdfs sdfsdf sdfsdf sdfsdf sdfsdf ",
-      media: profilePicPlaceholder,
-      profilePicture: profilePicPlaceholder,
-      sendTime: new Date(2020, 5, 28, 14, 39, 7),
-      userId: 2,
-      id:4,
-    },
-    {
-      text: "https://www.youtube.com/watch?v=Rlh_hxjmSvc",
-      profilePicture: profilePicPlaceholder,
-      sendTime: new Date(2020, 5, 30, 14, 39, 7),
-      seenTime: new Date(2020, 5, 28, 14, 39, 7),
-      id:5,
-      userId: 2,
-    },
-    {
-      text: "https://www.youtube.com/watch?v=lCPwR7R4hlA",
-      profilePicture: profilePicPlaceholder,
-      sendTime: new Date(2020, 5, 28, 14, 39, 7),
-      seenTime: new Date(2020, 5, 28, 14, 39, 7),
-      userId: 2,
-      id:6,
-    },
-    {
-      text: "https://www.youtube.com/watch?v=n9PaAHqMNjI",
-      profilePicture: profilePicPlaceholder,
-      sendTime: new Date(2020, 5, 28, 14, 39, 7),
-      userId: 1,
-      id:7,
-    },
-    {
-      text: "ultimo",
-      profilePicture: profilePicPlaceholder,
-      media:"https://images.pexels.com/photos/2661176/pexels-photo-2661176.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-      sendTime: new Date(2020, 5, 29, 14, 39, 7),
-      userId: 1,
-      id:8,
-    },
-  ];
-  const [messages, setMessages] = useState(messagesData);
 
   React.useEffect(() => {
     setTimeout(() => {
@@ -105,18 +35,21 @@ const ChatContent = ({handleOpenMedia}) => {
         {videoPlayer.open && 
           <VideoPlayer src={ videoPlayer.src} handleClose={() => setVideoPlayer({ open: false, src:null })}/>   
         }
+        
+        {(!messages || (messages && messages.length === 0)) && <Chip label={t("no_messages")}/>}
         <div className="ChatMessages-content">
           {messages.sort(sortByDate).map((message, index) => {
             return (
               <div key={message.id}>
                 {index === 0 ||
-                !sameDay(message.sendTime, messages[index - 1].sendTime) ? (
-                  <DateMarker date={message.sendTime} />
+                !sameDay(message.sentTime, messages[index - 1].sentTime) ? (
+                  <DateMarker date={message.sentTime} />
                 ) : null}
                 <Message
                   handleOpenMedia={handleOpenMedia}
                   handleOpenVideoPlayer={handleOpenVideoPlayer}
                   {...message}
+                  avatar={(index === 0 || message.userId !== messages[index - 1].userId) ? profilePicPlaceholder : null }
                 />
               </div>
             );
@@ -125,16 +58,18 @@ const ChatContent = ({handleOpenMedia}) => {
         </div>
       </div>
 
-      <MessageForm handleSubmit={handleMessageSubmit} />
+      
     </>
   );
 };
 
 function sameDay(d1, d2) {
+  const d1f = new Date(d1);
+  const d2f = new Date(d2);
   return (
-    d1.getFullYear() === d2.getFullYear() &&
-    d1.getMonth() === d2.getMonth() &&
-    d1.getDate() === d2.getDate()
+    d1f.getFullYear() === d2f.getFullYear() &&
+    d1f.getMonth() === d2f.getMonth() &&
+    d1f.getDate() === d2f.getDate()
   );
 }
 

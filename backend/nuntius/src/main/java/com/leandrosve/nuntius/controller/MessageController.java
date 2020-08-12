@@ -43,7 +43,7 @@ public class MessageController {
     }
 
     @GetMapping("/users/{userId}/messages")
-    public List<MessageDTO> getMessagesFromUser(@Valid @RequestBody MessageDTO messageDTO, @PathVariable long userId){  
+    public List<MessageDTO> getMessagesFromUser(@PathVariable long userId){  
       User user =  userService.getUser(userId);
       final List<MessageDTO> messages= messageService.getMessagesFromUser(user);
       return messages;
