@@ -9,9 +9,16 @@ const initialState = {
 
 const currentChatReducer = (state = initialState, action)=>{
   switch (action.type) {
+    case actionTypes.FETCH_CHAT_SUCCESS:
+      const chat= action.payload;
+      if(state.userId){
+        if(!chat.groupal && chat.userIds.find((c)=> c === state.userId) !== null)
+          return{...state, messages:[], id: chat.id, userId:null}
+      }
+      return {...state, id:action.payload.id}
     case actionTypes.SET_CURRENT_CHAT:
       return{
-        messages:[],
+        messages:state.messages,
         id:action.payload.id,
         userId:action.payload.userId,
         loading:false,

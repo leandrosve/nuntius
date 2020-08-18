@@ -13,8 +13,6 @@ import SupervisedUserCircleIcon from "@material-ui/icons/SupervisedUserCircle";
 import { withRouter } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import { string, func } from "prop-types";
-
-import Typography from "@material-ui/core/Typography";
 import Username from "../user/Username";
 
 const useStyles = makeStyles((theme) => ({

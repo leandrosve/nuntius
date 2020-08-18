@@ -2,7 +2,7 @@ import * as actionTypes from "./chatActionTypes";
 import ApiService from "../../ApiService";
 import { normalize } from "normalizr";
 import * as schema from "../schema";
-import { getChatById, getPrivateChatByUserId } from "./chatReducer";
+import { getChatById} from "./chatReducer";
 
 const fetchChatsRequest = () => ({
   type: actionTypes.FETCH_CHATS_REQUEST,
@@ -36,16 +36,14 @@ const sendMessageRequest = () => ({
   type: actionTypes.SEND_MESSAGE_REQUEST,
 });
 
-const sendMessageSuccess = (message) => ({
-  type: actionTypes.SEND_MESSAGE_SUCCESS,
-  payload: message,
-});
 
 export const addMessage = (message) => (
 {
   type: actionTypes.ADD_MESSAGE,
   payload: message,
 });
+
+const sendMessageSuccess = addMessage;
 
 const sendMessageFailure = (error) => ({
   type: actionTypes.SEND_MESSAGE_FAILURE,
@@ -126,7 +124,7 @@ export const sendMessageToUser = ({ userId, text }) => {
       .then((response) => {  
         const chat=getChatById(getState().chat,response.data.chatId);
         if (!chat) { dispatch(fetchChatById(response.data.chatId));}
-        dispatch(addMessage(response.data));
+        dispatch(sendMessageSuccess(response.data));
       })
       .catch((error) => {
         dispatch(sendMessageFailure(error.message));
@@ -151,13 +149,10 @@ export const receiveMessage = (message) => {
   return (dispatch, getState) => { 
     const chats = getState().chat;
     if(!getChatById(chats, message.chatId)){
-      dispatch(fetchChatById(message.chatId))
-      const chat = getChatById(chats, message.chatId)
-      if(chat && !chat.groupal && chat.userIds.includes(message.userId) ){
-        dispatch(setCurrentChat({id:chat.id, userId:message.userId}));
-      }         
-    } 
-    dispatch(addMessage(message)) ; 
+      dispatch(fetchChatById(message.chatId))     
+    } else{
+      dispatch(addMessage(message)); 
+    }
   } 
 };
 

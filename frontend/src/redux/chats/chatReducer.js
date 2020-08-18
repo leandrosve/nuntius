@@ -69,7 +69,8 @@ export const getChatById = (state, id) => {
 };
 
 export const getPrivateChatByUserId = (state, userId) => {
-  getAllChats(state).find((c)=> !c.groupal &&  c.userIds.includes(userId));
+  const result = getAllChats(state).find((c)=> !c.groupal &&  c.userIds.includes(userId));
+ return result
 };
 
 const chatReducer = combineReducers({
