@@ -6,8 +6,7 @@ const initialState = {
     loading: false,
     currentUser: JSON.parse(localStorage.getItem("user")),
     error: "",
-    authenticated: !!localStorage.getItem("user"),
-    jwtToken: JSON.parse(localStorage.getItem("jwtToken")),
+    authenticated: !!localStorage.getItem("user")
   },
   signUp: {
     loading: false,

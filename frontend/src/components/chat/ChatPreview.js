@@ -7,12 +7,12 @@ import Badge from "@material-ui/core/Badge";
 import { useTranslation } from "react-i18next";
 import MessageCheckMarker from "./message/MessageCheckMarker";
 import dateFormat from "dateformat";
-
+import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle';
 
 const ellipsis = {
   whiteSpace:'nowrap',  overflow:'hidden', textOverflow: 'ellipsis'
 }
-function ChatPreview({avatar, title, lastMessage, handleClick, unreadMessagesCount=10}) {
+function ChatPreview({avatar, title, lastMessage, type, handleClick, unreadMessagesCount=10}) {
   const { t } = useTranslation();
   return (
     <ListItem  button onClick={handleClick}
@@ -20,7 +20,9 @@ function ChatPreview({avatar, title, lastMessage, handleClick, unreadMessagesCou
       left={<img src={avatar} className="ChatPreview-image" alt="user"/>}
       center={
         <React.Fragment>
-          <h3 style={ellipsis}>{title}</h3>       
+          <h3 style={ellipsis}>
+            {type === "group" && <SupervisedUserCircleIcon style={{verticalAlign:"middle"}}/> }
+            {title}</h3>       
           <div>
             <p style={ellipsis}>
               {lastMessage && lastMessage.details && <MessageCheckMarker {...lastMessage}/>}          

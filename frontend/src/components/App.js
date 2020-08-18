@@ -5,14 +5,18 @@ import Welcome from "./Welcome";
 import Browse from "./Browse";
 import Develop from "./Develop";
 import { Provider } from "react-redux";
-import store from "../redux/store";
 import AuthRoute from "./util/AuthRoute";
 import Modal from "./util/Modal";
+import configureStore from "../redux/configureStore";
+import MessageSource from "./chat/message/MessageSource";
+import store from "../redux/store";
 
 function App() {
+
   return (
     <Provider store={store}>
       <div className="App">
+        
         <Router>
           <Switch>
             <AuthRoute path="/home" exact component={Welcome} type="guest" />

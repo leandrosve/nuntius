@@ -6,14 +6,19 @@ import ChatListContainer from "./chat/ChatListContainer";
 import { contacts } from "../redux/contacts/contactActions";
 import { connect } from "react-redux";
 import ChatWelcome from "./chat/ChatWelcome";
-
 import { Route, Switch } from "react-router-dom";
+import MessageSource from "./chat/message/MessageSource";
+
+
 
 function Browse({ fetchContacts }) {
   useEffect(() => fetchContacts(), [fetchContacts]);
 
+
   return (
     <div>
+      
+      
       <Nav />
       <div className="Browse-content">
         <ChatListContainer />

@@ -9,10 +9,13 @@ import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from "@material-ui/icons/Search";
 import ListItem from "@material-ui/core/ListItem";
 import DropdownMenu from "../util/DropdownMenu";
-
+import SupervisedUserCircleIcon from "@material-ui/icons/SupervisedUserCircle";
 import { withRouter } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
-import { string, func} from "prop-types";
+import { string, func } from "prop-types";
+
+import Typography from "@material-ui/core/Typography";
+import Username from "../user/Username";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -27,7 +30,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function ChatHeader({ handleOpenDetail, online = false, title, type }) {
+function ChatHeader({
+  handleOpenDetail,
+  online = false,
+  title,
+  username,
+  type,
+}) {
   const { t } = useTranslation();
   const classes = useStyles();
 
@@ -47,8 +56,14 @@ function ChatHeader({ handleOpenDetail, online = false, title, type }) {
           />
 
           <div style={{ display: "flex", alignItems: "baseline" }}>
-            <h1>{title || t("group_untitled")}</h1>
+            <h1>
+              {type === "group" && (
+                <SupervisedUserCircleIcon style={{ verticalAlign: "middle" }} />
+              )}
+              {title || t("group_untitled")}
+            </h1>
             {online && <p>{t("online")}</p>}
+            {username && <Username>{username}</Username>}
           </div>
         </ListItem>
         <div className="ChatHeader-options">
@@ -87,9 +102,9 @@ const ChatHeaderMenu = ({ handleOpenDetail, type }) => {
           >
             {
               {
-                'group': t("group_detail"),
-                'user': t("user_detail"),
-                'contact': t("contact_detail"),
+                group: t("group_detail"),
+                user: t("user_detail"),
+                contact: t("contact_detail"),
               }[type]
             }
           </ListItem>
@@ -102,12 +117,12 @@ const ChatHeaderMenu = ({ handleOpenDetail, type }) => {
 ChatHeader.propTypes = {
   title: string,
   type: string.isRequired,
-  handleOpenDetail: func.isRequired
-}
+  handleOpenDetail: func.isRequired,
+};
 
 ChatHeaderMenu.propTypes = {
   type: string.isRequired,
-  handleOpenDetail: func.isRequired
-}
+  handleOpenDetail: func.isRequired,
+};
 
 export default withRouter(ChatHeader);

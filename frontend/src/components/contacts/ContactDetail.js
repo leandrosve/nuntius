@@ -15,6 +15,7 @@ import AcUnitIcon from "@material-ui/icons/AcUnit";
 import { useTranslation } from "react-i18next";
 import PropTypes from 'prop-types';
 import StartChatButton from "../chat/StartChatButton";
+import Username from "../user/Username";
 
 const ContactDetail = ({
   editContact,
@@ -94,9 +95,7 @@ const ContactDetail = ({
                 
               {renderAliasForm()}
               </Box>
-              <Typography gutterbottom="true" variant={isContact ? "overline" : "h6"} >
-                <p style={{ lineHeight: 1, margin: "0px 2px"}}>@{username}</p>
-              </Typography>
+              {<Username variant={!isContact && "h6"}>{username}</Username>}
               <Typography variant="subtitle1">{name}</Typography>
               {biography && (
                 <Typography variant="overline text">

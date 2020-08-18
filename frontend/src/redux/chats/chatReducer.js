@@ -31,7 +31,12 @@ const byIds = (state = {}, action) => {
     case actionTypes.FETCH_CHATS_SUCCESS:
       const contacts = action.payload.entities.chats;
       return contacts ? contacts : state;
-
+    case actionTypes.FETCH_CHAT_SUCCESS:
+      return {...state, [action.payload.id]:action.payload}
+    
+      case actionTypes.ADD_MESSAGE:
+        const chat = state[action.payload.chatId];
+        return chat ? {...state, [action.payload.chatId]:{...chat, lastMessage:action.payload}} : state
     default:
       return state;
   }
@@ -41,6 +46,8 @@ const allIds = (state = [], action) => {
   switch (action.type) {
     case actionTypes.FETCH_CHATS_SUCCESS:
       return action.payload.result;
+    case actionTypes.FETCH_CHAT_SUCCESS:
+      return [...state, action.payload.id]
     default:
       return state;
   }
@@ -55,6 +62,14 @@ export const getAllChats = (state) => {
 export const getChatGroupById = (state, id) => {
   const chat = state.byIds[id];
   return ( chat && chat.groupal) ? chat : null;
+};
+
+export const getChatById = (state, id) => {
+  return state.byIds[id];;
+};
+
+export const getPrivateChatByUserId = (state, userId) => {
+  getAllChats(state).find((c)=> !c.groupal &&  c.userIds.includes(userId));
 };
 
 const chatReducer = combineReducers({

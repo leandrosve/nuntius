@@ -66,7 +66,7 @@ public class Chat {
     }
 
     public boolean isUserMember(Long userId) {
-        return memberships.stream().anyMatch(o -> o.getUser().getId() == userId);
+        return getMemberships().stream().anyMatch(o -> o.getUser().getId() == userId);
     }
 
     public Chat(List<User> users, List<Message> messages, Boolean groupal, String title) {

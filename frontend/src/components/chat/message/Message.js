@@ -62,7 +62,7 @@ function Message({
   media,
   handleOpenMedia,
   handleOpenVideoPlayer,
-  sendTime = new Date(Date.now()),
+  sentTime,
   details,
 }) {
   const classes = useStyles();
@@ -102,7 +102,7 @@ function Message({
             {details && 
               <MessageCheckMarker fontSize="large" />         
             }
-             {dateFormat(sendTime, "shortTime")}
+             {dateFormat(sentTime, "shortTime")}
           </Typography>
         </div>
       </div>

@@ -34,6 +34,7 @@ const ChatPreviewContainer = ({ chat, userId, user, fetchUserById }) => {
     <ChatPreview
       title={getTitle()}
       lastMessage={chat.lastMessage}
+      type={chat.groupal ? "group" : "user"}
       unreadMessagesCount="30"
       avatar={profilePicPlaceholder}
       lastMessageTime="20:00"

@@ -44,16 +44,16 @@ public class MessageService {
     IMessageRepository messageRepository;
 
 
-    public MessageDTO createMessage(MessageDTO messageDTO, Long chatId){
-        final User currentUser = authUtil.getCurrentUser(); 
+    public Message createMessage(User sender, MessageDTO messageDTO, Long chatId){
+
         final Chat chat = chatRepository.findById(chatId).orElseThrow(()-> new ChatNotFoundException());
-        if(!chat.isUserMember(currentUser.getId())){throw new AccessDeniedException();}
-        Message message= new Message(currentUser, chat, messageDTO.getText());
+        if(!chat.isUserMember(sender.getId())){throw new AccessDeniedException();}
+        Message message= new Message(sender, chat, messageDTO.getText());
         List<User> users =chat.getMembers();
-        users.remove(currentUser);
+        users.remove(sender);
         message.setReceiverUsers(users);
         messageRepository.save(message);
-        return mapToDTO(message);
+        return message;
     }
 
     public MessageDTO getMessage(Long id){
@@ -63,12 +63,14 @@ public class MessageService {
         return mapToDTO(message);
     }
 
-    public List<MessageDTO> getMessages(Long chatId){
-        final User currentUser = authUtil.getCurrentUser(); 
-        final Chat chat = chatRepository.findById(chatId).orElseThrow(() -> new ChatNotFoundException());
-        if(!chat.isUserMember(currentUser.getId())){throw new AccessDeniedException();};
 
-        ChatMembership membership = chat.getMembership(currentUser);      
+
+    public List<MessageDTO> getMessages(User user, Long chatId){
+        final User currentUser = authUtil.getCurrentUser();
+        final Chat chat = chatRepository.findById(chatId).orElseThrow(() -> new ChatNotFoundException());
+        if(!chat.isUserMember(user.getId())){throw new AccessDeniedException();};
+
+        ChatMembership membership = chat.getMembership(user);
 
         membership.setLastFetchTime(new Date());
         chatMembershipRepository.save(membership);
@@ -76,9 +78,7 @@ public class MessageService {
        // final List<Message> messages = chat.getMessages();
        final List<Message> messages = messageRepository.findAllByChatIdAndSentTimeLessThan(chatId, new Date());
         List<MessageDTO> messageDTOs = new ArrayList<MessageDTO>();
-        if(messages != null && messages.size() > 0){
-            messages.forEach((m) -> messageDTOs.add(mapToDTO(m)));
-        }
+        messageDTOs = prepareMessages(messages, currentUser);
         return messageDTOs;
     }
 
@@ -93,11 +93,6 @@ public class MessageService {
 
     public MessageDTO mapToDTO(Message message){
         MessageDTO messageDTO = new MessageDTO(message.getId(), message.getSender().getId(), message.getChat().getId(), message.getText(), message.getSentTime());
-        if(messageDTO.getUserId() == authUtil.getCurrentUser().getId()){
-            List<MessageReceptionDTO> receptions = new ArrayList<MessageReceptionDTO>();
-            message.getReceivers().forEach((mr) -> receptions.add(new MessageReceptionDTO(mr.getUser().getId(), mr.getSeenTime(), mr.getReceivedTime())));
-            messageDTO.setDetails(new MessageDetailsDTO(receptions,message.isReceived(),message.isSeen()));
-        }
         return messageDTO;
     }
 
@@ -106,30 +101,49 @@ public class MessageService {
         messages.forEach(m ->messageDTOs.add(mapToDTO(m)));
         return messageDTOs;
     }
+    
 
-	public MessageDTO createMessageForUser(@Valid MessageDTO messageDTO, User user) {    
-        final User currentUser = authUtil.getCurrentUser(); 
-        List<Chat> chats = chatRepository.findPrivateChat(currentUser.getId(), user.getId());
+	public Message createMessageForUser(User sender, User receiver, @Valid MessageDTO messageDTO) {
+
+        List<Chat> chats = chatRepository.findPrivateChat(sender.getId(), receiver.getId());
         Chat chat;
         if(chats == null || chats.size() == 0){
-            List<User> userIds = new ArrayList<User>(Arrays.asList(currentUser, user));
+            List<User> userIds = new ArrayList<User>(Arrays.asList(sender, receiver));
             chat = chatRepository.save(new Chat(userIds, null , false, ""));
         }else{
             chat= chats.get(0);
         }
-        return createMessage(messageDTO, chat.getId());
+        return createMessage(sender, messageDTO, chat.getId());
     }
     
     public List<MessageDTO> getMessagesFromUser(User user){
         final User currentUser = authUtil.getCurrentUser(); 
         List<Chat> chats = chatRepository.findPrivateChat(currentUser.getId(), user.getId());
-        
         if(chats == null || chats.size() == 0){ throw new ChatNotFoundException();}
         Chat chat = chats.get(0);
         final List<Message> messages = messageRepository.findAllByChatIdAndSentTimeLessThan(chat.getId(), new Date());
-        return mapToDTO(messages);
+        return prepareMessages(messages, currentUser);
+    }
 
+    public List<MessageDTO> prepareMessages(List<Message> messages, User sender){
+        final Long senderId = sender.getId();
+        List<MessageDTO> messageDTOs = new ArrayList<MessageDTO>();
+        messages.forEach((m) -> {
+            if(m.getSender().getId() == senderId ){
+                messageDTOs.add(prepareMessageForSender(m));
+            }else{
+                messageDTOs.add(mapToDTO(m));
+            }
+        });
+        return messageDTOs;
+    }
 
+    public MessageDTO prepareMessageForSender(Message message){
+        MessageDTO messageDTO = mapToDTO(message);
+        List<MessageReceptionDTO> receptions = new ArrayList<MessageReceptionDTO>();
+        message.getReceivers().forEach((mr) -> receptions.add(new MessageReceptionDTO(mr.getUser().getId(), mr.getSeenTime(), mr.getReceivedTime())));
+        messageDTO.setDetails(new MessageDetailsDTO(receptions,message.isReceived(),message.isSeen()));
+        return messageDTO;
     }
     
 }

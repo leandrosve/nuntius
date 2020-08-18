@@ -10,19 +10,38 @@ import { LinearProgress } from "@material-ui/core";
 import { getChatGroupById } from "../../redux/chats/chatReducer";
 import {userType, contactType, chatType} from "../../types";
 import {bool, string, func} from "prop-types";
-import { fetchMessagesFromUser, fetchMessagesFromChat, sendMessageToUser, sendMessageToChat} from "../../redux/chats/chatActions";
+import { fetchMessagesFromUser, fetchMessagesFromChat, sendMessageToUser, sendMessageToChat, setCurrentChat} from "../../redux/chats/chatActions";
+import MessageSource from "./message/MessageSource";
 
 const ChatContainer = ({
   user, contact, group, fetchUserByUsername, openUserDetail, 
-  loading = true, shouldFetchUser = false, username, openMedia,
-  fetchMessagesFromUser, messages, fetchMessagesFromChat, sendMessageToUser, sendMessageToChat
+  loading = true, username, openMedia,
+  fetchMessagesFromUser, messages, fetchMessagesFromChat, sendMessageToUser, sendMessageToChat, groupId,
+  setCurrentChat
 }) => {
   const [done, setDone] = useState(false);
+
+  const getUserId= useCallback(() =>{
+    return contact ? contact.userId : user ? user.id : null
+  }
+  ,[contact,user]);
+
+  useEffect(()=>{
+    if (group|| user || contact ){
+    setCurrentChat({id:group ? group.id : null, userId:getUserId()});
+  }
+  },[groupId, user, contact, getUserId, setCurrentChat]);
+
   useEffect(() => {
-    if (shouldFetchUser)
-      fetchUserByUsername(username);
-    setDone(true);
-  }, [fetchUserByUsername, shouldFetchUser, username, setDone]);
+    if(group)
+      fetchMessagesFromChat(group.id);
+    else if (username && !contact && !user ){
+      fetchUserByUsername(username); 
+    }else{
+      const userId = getUserId();
+      if(userId) fetchMessagesFromUser(userId);
+    }
+  }, [fetchUserByUsername, fetchMessagesFromChat, fetchMessagesFromUser, username, getUserId, groupId, setDone, user]);
 
   const handleOpenDetail = useCallback(() => {
     if(contact) openUserDetail({user:{ ...contact, id:contact.userId }}) 
@@ -34,21 +53,13 @@ const ChatContainer = ({
     openMedia(src)
   },[openMedia]);
  
-  const getUserId= useCallback(() =>{return contact ? contact.userId : user ? user.id : null},[contact,user]);
-  useEffect(() => {
-      if(group){
-        fetchMessagesFromChat(group.id);
-      }
-      const userId= getUserId();
-      if(userId){fetchMessagesFromUser(userId)}
-  }, [fetchMessagesFromUser, getUserId, group, fetchMessagesFromChat]);
-
   const handleSendMessage = useCallback((text) => {
     group ? sendMessageToChat({chatId:group.id,text:text }) : sendMessageToUser({userId: getUserId(), text:text});
   },[getUserId, group, sendMessageToUser, sendMessageToChat]);
  
   return (
     <>
+      <MessageSource/>
       {loading && <LinearProgress color="secondary" />}
 
       {!loading && (contact || user || group) ? (
@@ -62,6 +73,7 @@ const ChatContainer = ({
               ? user.name
               : null
           }
+          username={contact ? contact.username : user ? user.username : null}
           messages={messages}
           type={group? "group" : contact ? "contact" : user ? "user" : null}
           handleOpenDetail={handleOpenDetail}
@@ -84,6 +96,8 @@ const mapDispatchToProps = (dispatch) => {
     openMedia: (src) => dispatch(openMedia(src)),
     sendMessageToUser: (userId) => dispatch(sendMessageToUser(userId)),
     sendMessageToChat: (chatId) => dispatch(sendMessageToChat(chatId)),
+    
+    setCurrentChat: (id, userId) => dispatch(setCurrentChat(id, userId)),
   };
 };
 
@@ -96,6 +110,7 @@ const mapStateToProps = ({ contact, user, chat }, { match }) => {
     contact: c,
     user: u,
     group: groupId ? getChatGroupById(chat, groupId) : null,
+    groupId :match.params.groupId,
     loading: user.users.loading,
     shouldFetchUser: (username && !c && !u ),
     username: username,
@@ -108,7 +123,6 @@ ChatContainer.propTypes = {
   contact: contactType,
   group: chatType,
   loading: bool.isRequired,
-  shouldFetchUser: bool,
   username: string,
   openUserDetail: func.isRequired,
   fetchUserByUsername: func.isRequired,

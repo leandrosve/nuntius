@@ -9,7 +9,20 @@ import ChatPreviewContainer from "./ChatPreviewContainer";
 
 function ChatList({ loading, chats = [], openContacts }) {
   const { t } = useTranslation();
-  const sort = (a, b) => (a.id > b.id ? 1 : -1); 
+  const sort = (a, b) => {
+    if(a.lastMessage && b.lastMessage){
+      return (a.lastMessage.sentTime > b.lastMessage.sentTime) ? -1 : 1
+    }
+    else if (a.lastMessage){
+      return -1
+    }
+    else if (b.lastMessage){
+      return 1
+    }
+    else{
+      return (a.id > b.id) ? -1 : 1
+    }
+  }
   return (
     <div className="ChatList">
       {loading && (

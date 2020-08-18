@@ -2,6 +2,7 @@ import * as actionTypes from "./chatActionTypes";
 import ApiService from "../../ApiService";
 import { normalize } from "normalizr";
 import * as schema from "../schema";
+import { getChatById, getPrivateChatByUserId } from "./chatReducer";
 
 const fetchChatsRequest = () => ({
   type: actionTypes.FETCH_CHATS_REQUEST,
@@ -40,9 +41,30 @@ const sendMessageSuccess = (message) => ({
   payload: message,
 });
 
+export const addMessage = (message) => (
+{
+  type: actionTypes.ADD_MESSAGE,
+  payload: message,
+});
+
 const sendMessageFailure = (error) => ({
   type: actionTypes.SEND_MESSAGE_FAILURE,
   payload: error,
+});
+
+const fetchChatSuccess = (message) => ({
+  type: actionTypes.FETCH_CHAT_SUCCESS,
+  payload: message,
+});
+
+const fetchChatFailure = (error) => ({
+  type: actionTypes.FETCH_CHAT_FAILURE,
+  payload: error,
+});
+
+export const setCurrentChat = ({id, userId}) => ({
+  type: actionTypes.SET_CURRENT_CHAT,
+  payload: {id:id, userId:userId},
 });
 
 export const chats = () => {
@@ -55,6 +77,18 @@ export const chats = () => {
       })
       .catch((error) => {
         dispatch(fetchChatsFailure(error.message));
+      });
+  };
+};
+
+export const fetchChatById = (chatId) => {
+  return (dispatch) => {
+    ApiService.get(`/chats/${chatId}`)
+      .then((response) => {
+        dispatch(fetchChatSuccess(response.data));
+      })
+      .catch((error) => {
+        dispatch(fetchChatFailure(error.message));
       });
   };
 };
@@ -86,11 +120,13 @@ export const fetchMessagesFromChat = (chatId) => {
 };
 
 export const sendMessageToUser = ({ userId, text }) => {
-  return (dispatch) => {
+  return (dispatch, getState) => {
     dispatch(sendMessageRequest());
     ApiService.post(`/users/${userId}/messages`, { text })
-      .then((response) => {
-        dispatch(sendMessageSuccess(response.data));
+      .then((response) => {  
+        const chat=getChatById(getState().chat,response.data.chatId);
+        if (!chat) { dispatch(fetchChatById(response.data.chatId));}
+        dispatch(addMessage(response.data));
       })
       .catch((error) => {
         dispatch(sendMessageFailure(error.message));
@@ -103,10 +139,25 @@ export const sendMessageToChat = ({ chatId, text }) => {
     dispatch(sendMessageRequest());
     ApiService.post(`/chats/${chatId}/messages`, { text })
       .then((response) => {
-        dispatch(sendMessageSuccess(response.data));
+        dispatch(addMessage(response.data));
       })
       .catch((error) => {
         dispatch(sendMessageFailure(error.message));
       });
   };
 };
+
+export const receiveMessage = (message) => {
+  return (dispatch, getState) => { 
+    const chats = getState().chat;
+    if(!getChatById(chats, message.chatId)){
+      dispatch(fetchChatById(message.chatId))
+      const chat = getChatById(chats, message.chatId)
+      if(chat && !chat.groupal && chat.userIds.includes(message.userId) ){
+        dispatch(setCurrentChat({id:chat.id, userId:message.userId}));
+      }         
+    } 
+    dispatch(addMessage(message)) ; 
+  } 
+};
+

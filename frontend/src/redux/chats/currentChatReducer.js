@@ -1,34 +1,40 @@
 import * as actionTypes from "./chatActionTypes";
-import { combineReducers } from "redux";
 
-const messages = (state = [], action) => {
+const initialState = {
+  messages:[],
+  id:null,
+  userId:null,
+  loading:false,
+}
+
+const currentChatReducer = (state = initialState, action)=>{
   switch (action.type) {
+    case actionTypes.SET_CURRENT_CHAT:
+      return{
+        messages:[],
+        id:action.payload.id,
+        userId:action.payload.userId,
+        loading:false,
+      }
     case actionTypes.FETCH_MESSAGES_SUCCESS:
-      return action.payload;
+      const messages=action.payload;
+      return {
+        id:messages[0]? messages[0].chatId : null ,
+         loading:false,
+          messages:action.payload
+        };
     case actionTypes.FETCH_MESSAGES_FAILURE:
-      return [];
+      return initialState;
     case actionTypes.SEND_MESSAGE_SUCCESS:
-      return [...state, action.payload];
+      return {...state, id: action.payload.chatId, messages:[...state.messages, action.payload]};
+    case actionTypes.ADD_MESSAGE:
+      return state.id === action.payload.chatId ? 
+        {...state, messages:[...state.messages, action.payload]}
+        : state;
     default:
       return state;
   }
-};
+}
 
-const loading = (state = false, action) => {
-  switch (action.type) {
-    case actionTypes.FETCH_MESSAGES_REQUEST:
-      return true;
-    case actionTypes.FETCH_MESSAGES_SUCCESS:
-    case actionTypes.FETCH_MESSAGES_FAILURE:
-      return false;
-    default:
-      return state;
-  }
-};
-
-const currentChatReducer = combineReducers({
-  messages,
-  loading,
-});
 
 export default currentChatReducer;
