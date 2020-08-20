@@ -9,6 +9,8 @@ const initialState = {
 
 const currentChatReducer = (state = initialState, action)=>{
   switch (action.type) {
+    case actionTypes.LEAVE_CHAT_SUCCESS:
+      return action.payload.id === state.id ?  initialState : state; 
     case actionTypes.FETCH_CHAT_SUCCESS:
       const chat= action.payload;
       if(state.userId){
@@ -18,7 +20,7 @@ const currentChatReducer = (state = initialState, action)=>{
       return {...state, id:action.payload.id}
     case actionTypes.SET_CURRENT_CHAT:
       return{
-        messages:state.messages,
+        messages:[],
         id:action.payload.id,
         userId:action.payload.userId,
         loading:false,

@@ -14,10 +14,7 @@ import com.leandrosve.nuntius.beans.MessageReceptionDTO;
 import com.leandrosve.nuntius.exception.AccessDeniedException;
 import com.leandrosve.nuntius.exception.chat.ChatNotFoundException;
 import com.leandrosve.nuntius.exception.message.MessageNotFoundException;
-import com.leandrosve.nuntius.model.Chat;
-import com.leandrosve.nuntius.model.ChatMembership;
-import com.leandrosve.nuntius.model.Message;
-import com.leandrosve.nuntius.model.User;
+import com.leandrosve.nuntius.model.*;
 import com.leandrosve.nuntius.repository.IChatMembershipRepository;
 import com.leandrosve.nuntius.repository.IChatRepository;
 import com.leandrosve.nuntius.repository.IMessageRepository;
@@ -82,6 +79,11 @@ public class MessageService {
         return messageDTOs;
     }
 
+    private void markReceptionsForChat(Chat chat, User user) {
+
+
+    }
+
     
     public MessageDTO deleteMessage(Long id){
         final User currentUser = authUtil.getCurrentUser(); 
@@ -143,6 +145,16 @@ public class MessageService {
         List<MessageReceptionDTO> receptions = new ArrayList<MessageReceptionDTO>();
         message.getReceivers().forEach((mr) -> receptions.add(new MessageReceptionDTO(mr.getUser().getId(), mr.getSeenTime(), mr.getReceivedTime())));
         messageDTO.setDetails(new MessageDetailsDTO(receptions,message.isReceived(),message.isSeen()));
+        return messageDTO;
+    }
+
+    public MessageDTO prepareMessageForUser(Message message, User user){
+        MessageDTO messageDTO = mapToDTO(message);
+        if(message.getSender() == user) {
+            List<MessageReceptionDTO> receptions = new ArrayList<MessageReceptionDTO>();
+            message.getReceivers().forEach((mr) -> receptions.add(new MessageReceptionDTO(mr.getUser().getId(), mr.getSeenTime(), mr.getReceivedTime())));
+            messageDTO.setDetails(new MessageDetailsDTO(receptions, message.isReceived(), message.isSeen()));
+        }
         return messageDTO;
     }
     

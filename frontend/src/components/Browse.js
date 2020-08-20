@@ -7,6 +7,7 @@ import { contacts } from "../redux/contacts/contactActions";
 import { connect } from "react-redux";
 import ChatWelcome from "./chat/ChatWelcome";
 import { Route, Switch } from "react-router-dom";
+import MessageSource from "./chat/message/MessageSource";
 
 function Browse({ fetchContacts }) {
   useEffect(() => fetchContacts(), [fetchContacts]);
@@ -15,6 +16,9 @@ function Browse({ fetchContacts }) {
     <div>
       <Nav />
       <div className="Browse-content">
+      
+        <MessageSource/>
+
         <ChatListContainer />
         <div className="Chat" style={{ position: "relative" }}>
           <Switch>

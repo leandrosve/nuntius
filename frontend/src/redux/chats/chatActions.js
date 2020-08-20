@@ -60,6 +60,17 @@ const fetchChatFailure = (error) => ({
   payload: error,
 });
 
+export const leaveChatSuccess = (chat) => ({
+  type: actionTypes.LEAVE_CHAT_SUCCESS,
+  payload: chat,
+});
+
+const leaveChatFailure = (error) => ({
+  type: actionTypes.LEAVE_CHAT_FAILURE,
+  payload: error,
+});
+
+
 export const setCurrentChat = ({id, userId}) => ({
   type: actionTypes.SET_CURRENT_CHAT,
   payload: {id:id, userId:userId},
@@ -155,4 +166,17 @@ export const receiveMessage = (message) => {
     }
   } 
 };
+
+export const leaveChat = (chatId) => {
+  return (dispatch) => {
+    ApiService.delete(`/chats/${chatId}`)
+      .then((response) => {
+        dispatch(leaveChatSuccess(response.data));
+      })
+      .catch((error) => {
+        dispatch(leaveChatFailure(error.message));
+      });
+  };
+};
+
 

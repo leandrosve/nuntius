@@ -36,8 +36,13 @@ const ChatContent = ({handleOpenMedia, messages}) => {
           <VideoPlayer src={ videoPlayer.src} handleClose={() => setVideoPlayer({ open: false, src:null })}/>   
         }
         
-        {(!messages || (messages && messages.length === 0)) && <Chip label={t("no_messages")}/>}
+        
         <div className="ChatMessages-content">
+        {(!messages || (messages && messages.length === 0)) && 
+          <div style={{display:"flex", justifyContent:"center", marginTop:"10px"}}>
+            <Chip label={t("no_messages")}/>
+          </div>
+        }
           {messages.sort(sortByDate).map((message, index) => {
             return (
               <div key={message.id}>

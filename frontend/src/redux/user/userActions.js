@@ -94,6 +94,12 @@ export const addUser= (user) =>{
     }
 }
 
+export const clearLoginErrors= () =>{
+    return {
+        type: actionTypes.CLEAN_LOGIN_ERRORS,
+    }
+}
+
 
 
 export const login= (username, password) =>{
@@ -120,7 +126,7 @@ export const signUp= (username, password, name, email) =>{
         ApiService.post("/signup", {username, password,  name ,email})
             .then(() => {
                 dispatch(signupSuccess());               
-                dispatch(openLogin({success:"success:signUp"}));
+                dispatch(openLogin({success:"success:signup"}));
             })
             .catch(
                 error => {              

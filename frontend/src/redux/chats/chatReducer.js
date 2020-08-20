@@ -28,6 +28,9 @@ const error = (state = "", action) => {
 
 const byIds = (state = {}, action) => {
   switch (action.type) {
+    case actionTypes.LEAVE_CHAT_SUCCESS:
+      const {[action.payload.id]: removed, ...rest} = state;
+      return rest;
     case actionTypes.FETCH_CHATS_SUCCESS:
       const contacts = action.payload.entities.chats;
       return contacts ? contacts : state;
@@ -44,10 +47,12 @@ const byIds = (state = {}, action) => {
 
 const allIds = (state = [], action) => {
   switch (action.type) {
+    case actionTypes.LEAVE_CHAT_SUCCESS:
+      return state.filter(id=>id !== action.payload.id)
     case actionTypes.FETCH_CHATS_SUCCESS:
       return action.payload.result;
     case actionTypes.FETCH_CHAT_SUCCESS:
-      return [...state, action.payload.id]
+      return state.includes(action.payload.id) ? state : [...state, action.payload.id]
     default:
       return state;
   }

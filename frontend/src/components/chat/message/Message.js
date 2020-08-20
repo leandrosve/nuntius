@@ -90,7 +90,7 @@ function Message({
           />
         )}
         <p style={{ wordWrap: "break-word", textOverflow: "string", margin: "0px" }}>
-          <Linkify>{text}</Linkify>
+          <Linkify target="_blank">{text}</Linkify>
         </p>
         <div style={{ alignSelf: "flex-end" }}>
           <Typography

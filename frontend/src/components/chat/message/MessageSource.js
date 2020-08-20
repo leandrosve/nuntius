@@ -2,18 +2,11 @@ import React from "react";
 import {connect} from "react-redux";
 import {Client} from "@stomp/stompjs";
 import SockJS from "sockjs-client";
-import { receiveMessage } from "../../../redux/chats/chatActions";
+import { receiveMessage, leaveChatSuccess } from "../../../redux/chats/chatActions";
 
 
-const MessageSource = ({user, receiveMessage}) => {
-  const callback = function(message) {
-    // called when the client receives a STOMP message from the server
-    if (message.body) {
-      receiveMessage(JSON.parse(message.body))
-    } else {
-      alert("got empty message");
-    }
-  };
+const MessageSource = ({user, receiveMessage, deleteChat}) => {
+  
   const client = new Client({
     webSocketFactory:()=> {return new SockJS('http://localhost:8080/ws')},
     connectHeaders: {
@@ -28,13 +21,33 @@ const MessageSource = ({user, receiveMessage}) => {
     heartbeatOutgoing: 4000
   });
 
-  
- 
   console.log(client.brokerURL);
   client.activate();
+
+  const handleReceiveMessage = function(message) {
+    // called when the client receives a STOMP message from the server
+    if (message.body) {
+      receiveMessage(JSON.parse(message.body))
+    } else {
+      alert("got empty message");
+    }
+  };
+
+  const handleDeleteChat = function(message) {
+    // called when the client receives a STOMP message from the server
+    if (message.body) {
+      deleteChat(JSON.parse(message.body));
+    } else {
+      alert("got empty message");
+    }
+  };
+
+ 
   client.onConnect = function(frame) {
     
-    client.subscribe("/user/queue/messages", callback);
+    client.subscribe("/user/queue/messages", handleReceiveMessage);
+    
+    client.subscribe("/user/queue/chats/delete", handleDeleteChat);
   };
 
 
@@ -47,7 +60,9 @@ const MessageSource = ({user, receiveMessage}) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-   receiveMessage: (msg) => dispatch(receiveMessage(msg))
+   receiveMessage: (msg) => dispatch(receiveMessage(msg)),
+   
+   deleteChat: (chat) => dispatch(leaveChatSuccess(chat))
   };
 };
 

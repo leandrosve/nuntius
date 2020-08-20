@@ -15,7 +15,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import FormContainer from "../util/FormContainer";
 
 import Alert from "../util/Alert";
-import { login } from "../../redux/user/userActions";
+import { login, clearLoginErrors } from "../../redux/user/userActions";
 import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const LoginForm = ( {error="", login, loading, success=""} ) => {
+const LoginForm = ( {error="", login, loading, success="", clearErrors} ) => {
   const { t } = useTranslation();
 
   const classes = useStyles();
@@ -41,7 +41,8 @@ const LoginForm = ( {error="", login, loading, success=""} ) => {
     password: "",
   };
 
-  useEffect(()=>{setOpenAlert(true)},[loading, error, success, setOpenAlert])
+  useEffect(()=>{setOpenAlert(true)},[loading, error, success, setOpenAlert]) 
+  useEffect(()=>{clearErrors()},[clearErrors]);
   return (
     <Formik
       validateOnMount={true}
@@ -62,11 +63,18 @@ const LoginForm = ( {error="", login, loading, success=""} ) => {
 
           {loading && <CircularProgress color="secondary" />}
           <Alert
-            severity={error ? "error" : "success"}
-            open={openAlert && !loading && (error !== '' || success !== '')}
+            severity="success"
+            open={openAlert && !loading && success !== ''}
             onClick={() => setOpenAlert(false)}
           >
-            {error || t(success)}
+            {t(success)}
+          </Alert>
+          <Alert
+            severity="error" 
+            open={openAlert && !loading && error !== '' }
+            onClick={() => setOpenAlert(false)}
+          >
+            {error }
           </Alert>
           <Form className={classes.form}>
             <TextField
@@ -122,6 +130,7 @@ const mapStateToProps = state =>{
 }
 const mapDispatchToProps = dispatch =>  {
   return {
+    clearErrors: () => dispatch(clearLoginErrors()),
     login: (username, password) => dispatch(login(username, password))
   }
 }

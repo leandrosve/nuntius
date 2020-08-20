@@ -5,6 +5,8 @@ export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 
 export const LOGIN_FAILURE = "LOGIN_FAILURE";
 
+export const CLEAN_LOGIN_ERRORS = "CLEAN_LOGIN_ERRORS";
+
 export const LOGOUT = "LOGOUT";
 
 export const SIGNUP = "SIGNUP";
@@ -22,10 +24,8 @@ export const SEARCH_USERS_SUCCESS = "SEARCH_USERS_SUCCESS";
 
 export const SEARCH_USERS_FAILURE = "SEARCH_USERS_FAILURE";
 
-
 export const FETCH_USER_REQUEST = "FETCH_USER_REQUEST";
 export const FETCH_USER_SUCCESS = "FETCH_USER_SUCCESS";
 export const FETCH_USER_FAILURE = "FETCH_USER_FAILURE";
-
 
 export const ADD_USER = "ADD_USER";

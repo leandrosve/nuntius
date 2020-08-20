@@ -30,6 +30,7 @@ const useStyles = makeStyles((theme) => ({
 
 function ChatHeader({
   handleOpenDetail,
+  handleLeaveChat,
   online = false,
   title,
   username,
@@ -71,14 +72,14 @@ function ChatHeader({
           <IconButton color="primary">
             <AttachFileIcon style={{ fontSize: "30px", color: "white" }} />
           </IconButton>
-          <ChatHeaderMenu handleOpenDetail={handleOpenDetail} type={type} />
+          <ChatHeaderMenu handleOpenDetail={handleOpenDetail} handleLeaveChat={handleLeaveChat} type={type} />
         </div>
       </Toolbar>
     </div>
   );
 }
 
-const ChatHeaderMenu = ({ handleOpenDetail, type }) => {
+const ChatHeaderMenu = ({ handleOpenDetail, handleLeaveChat, type }) => {
   const { t } = useTranslation();
   const [openMenu, setOpenMenu] = useState(false);
   const handleToggleMenu = () => {
@@ -105,6 +106,15 @@ const ChatHeaderMenu = ({ handleOpenDetail, type }) => {
                 contact: t("contact_detail"),
               }[type]
             }
+          </ListItem>
+          <ListItem
+            button
+            onClick={() => {
+              handleToggleMenu();
+              handleLeaveChat();
+            }}
+          >
+          {t("chat_delete")}
           </ListItem>
         </DropdownMenu>
       )}

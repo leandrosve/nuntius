@@ -39,7 +39,10 @@ i18n
           welcome_message:'Welcome {{name}}, please select chat to start messaging. Have a nice day!',
           watch:'Watch',
           no_messages: "No messages yet...",
-          group_untitled:"untitled group",
+          group_untitled:"untitled group",  
+          conversation_leave: "Leave conversation",
+          chat_delete: "Delete chat",
+          start_chatting: "Start chatting",
         },
         error: {
           "passwords_must_match" : "Passwords must match",
@@ -96,6 +99,9 @@ i18n
           watch:'Ver',     
           no_messages: "Aún no hay mensajes...",         
           group_untitled:"grupo sin nombre",
+          conversation_leave: "Abandonar conversación",
+          chat_delete: "Eliminar conversación",
+          start_chatting: "Empezar a conversar",
         },
         error: {
           "passwords_must_match" : "Las contraseñas no coinciden",

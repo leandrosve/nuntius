@@ -23,7 +23,7 @@ public class Chat {
     @OneToMany(mappedBy = "chat", cascade = {CascadeType.ALL},orphanRemoval = true)
     private List<ChatMembership> memberships;
 
-    @OneToMany(mappedBy = "chat")
+    @OneToMany(mappedBy = "chat", cascade = {CascadeType.ALL},orphanRemoval = true)
     private List<Message> messages;
 
     @Column(updatable = false, nullable = false)

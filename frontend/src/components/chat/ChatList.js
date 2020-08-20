@@ -6,6 +6,7 @@ import LinearProgress from "@material-ui/core/LinearProgress";
 import profilePicPlaceholder from "../assets/images/profile-pic-placeholder.jpg";
 import { useTranslation } from "react-i18next";
 import ChatPreviewContainer from "./ChatPreviewContainer";
+import AddCommentIcon from '@material-ui/icons/AddComment';
 
 function ChatList({ loading, chats = [], openContacts }) {
   const { t } = useTranslation();
@@ -34,9 +35,10 @@ function ChatList({ loading, chats = [], openContacts }) {
         <Button
           color="secondary"
           style={{ color: "white" }}
+          startIcon={<AddCommentIcon />}
           onClick={() => openContacts()}
         >
-          {t("contact_add")}
+          {t("start_chatting")}
         </Button>
       )}
       {chats.sort(sort).map((chat)=>{

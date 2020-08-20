@@ -83,9 +83,10 @@ public class UserService implements UserDetailsService {
     }
 
 	public List<UserDTO> searchUsers(UserSpecification userSpecification) {
+        final User currentUser = authUtil.getCurrentUser();
         final List<User> users = usersRepository.findAll(userSpecification);
         List<UserDTO> userDTOs = new ArrayList<UserDTO>();
-        users.forEach((u) -> userDTOs.add( mapToDTO(u)));
+        users.forEach((u) -> {if(u != currentUser){userDTOs.add( mapToDTO(u));}});
         return userDTOs;
 	}
 

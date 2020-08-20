@@ -18,24 +18,26 @@ import com.leandrosve.nuntius.repository.IUserRepository;
 import com.leandrosve.nuntius.util.AuthUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ChatService {
 
-    @Autowired
-    IUserRepository userRepository;
+    private IUserRepository userRepository;
+    private AuthUtil authUtil;
+    private IChatRepository chatV2Repository;
+    private MessageService messageService;
+    private SimpMessagingTemplate messagingTemplate;
 
     @Autowired
-    AuthUtil authUtil;
-
-    @Autowired
-    IChatRepository chatV2Repository;
-
-
-    @Autowired
-    MessageService messageService;
-
+    public ChatService(IUserRepository userRepository, AuthUtil authUtil, IChatRepository chatV2Repository, MessageService messageService, SimpMessagingTemplate messagingTemplate) {
+        this.userRepository = userRepository;
+        this.authUtil = authUtil;
+        this.chatV2Repository = chatV2Repository;
+        this.messageService = messageService;
+        this.messagingTemplate = messagingTemplate;
+    }
 
     public ChatDTO createChat(ChatDTO chatDTO) {
         final User currentUser = authUtil.getCurrentUser();
@@ -47,7 +49,7 @@ public class ChatService {
         List<User> users = userRepository.findByUserIds(userIds);
 
         Chat chat = new Chat(users, null, chatDTO.getGroupal(), chatDTO.getTitle());
-        return mapToDTOV2(chatV2Repository.save(chat));
+        return prepareChatForUser(chatV2Repository.save(chat), currentUser);
     }
 
 
@@ -57,20 +59,21 @@ public class ChatService {
         final User user = userRepository.findById(userId).orElseThrow( () -> new UserNotFoundException());
         chat.addMember(user);
         chatV2Repository.save(chat);
-        return mapToDTOV2(chat);
+        return mapToDTO(chat);
     }
 
     public List<ChatDTO> getChats() {
         final User currentUser = authUtil.getCurrentUser();
         List<ChatDTO> chatDTOs = new ArrayList<ChatDTO>();
         final Set<Chat> chats= currentUser.getChats();
-        chats.forEach((c) -> chatDTOs.add(mapToDTOV2(c)));
+        chats.forEach((c) -> chatDTOs.add(prepareChatForUser(c, currentUser)));
         return chatDTOs;
     }
 
     public ChatDTO getChat(Long id) {
+        final User currentUser = authUtil.getCurrentUser();
         Chat chat = retrieveChat(id);
-        return mapToDTOV2(chat);
+        return prepareChatForUser(chat, currentUser);
     }
 
     public ChatDTO deleteChat(Long id) {
@@ -79,25 +82,31 @@ public class ChatService {
         if (!chat.isUserMember(currentUser.getId())) {
             throw new AccessDeniedException();
         }
-        chat.removeMember(currentUser);
-        if(chat.getMemberships().isEmpty()){
-            chatV2Repository.delete(chat);
-            return null;
-        }
-        Chat savedChat= chatV2Repository.save(chat);
-        return mapToDTOV2(savedChat);
+        chatV2Repository.delete(chat);
+        ChatDTO chatDTO = mapToDTO(chat);
+        chat.getMembers().forEach( user ->{
+            if(user != currentUser){
+                messagingTemplate.convertAndSendToUser(user.getUsername(), "/queue/chats/delete", chatDTO);
+            }
+        });
+        return chatDTO;
     }
 
 
-    private ChatDTO mapToDTOV2(Chat chat) {
+    private ChatDTO mapToDTO(Chat chat) {
         List<Long> usersIds = new ArrayList<Long>();
         chat.getMemberships().forEach(u -> {
             usersIds.add(u.getUser().getId());
         });
         ChatDTO chatDTO = new ChatDTO(chat.getId(), usersIds, chat.getGroupal(), chat.getTitle());
-        final Message lastMessage = chat.getLastMessage();
-        if (lastMessage != null) {
-            chatDTO.setLastMessage(messageService.mapToDTO(lastMessage));
+        return chatDTO;
+    }
+
+    private ChatDTO prepareChatForUser(Chat chat, User user){
+        ChatDTO chatDTO = mapToDTO(chat);
+        Message lastMessage = chat.getLastMessage();
+        if(lastMessage != null){
+            chatDTO.setLastMessage(messageService.prepareMessageForUser(lastMessage, user));
         }
         return chatDTO;
     }

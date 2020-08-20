@@ -10,20 +10,22 @@ import { LinearProgress } from "@material-ui/core";
 import { getChatGroupById, getPrivateChatByUserId } from "../../redux/chats/chatReducer";
 import {userType, contactType, chatType} from "../../types";
 import {bool, string, func} from "prop-types";
-import { fetchMessagesFromUser, fetchMessagesFromChat, sendMessageToUser, sendMessageToChat, setCurrentChat} from "../../redux/chats/chatActions";
-import MessageSource from "./message/MessageSource";
+import { fetchMessagesFromUser, fetchMessagesFromChat, sendMessageToUser, sendMessageToChat, setCurrentChat, leaveChat} from "../../redux/chats/chatActions";
+import {Redirect} from "react-router-dom"
 
 const ChatContainer = ({
   user, contact, group, fetchUserByUsername, openUserDetail, 
   loading = true, username, openMedia,
-   messages, fetchMessagesFromChat, sendMessageToUser, sendMessageToChat, groupId,
-  setCurrentChat, chatId, privateChatId
+   messages, fetchMessagesFromChat, sendMessageToUser, sendMessageToChat, 
+  setCurrentChat, chatId, privateChatId, leaveChat, currentUser
 }) => {
 
   const getUserId= useCallback(() =>{
     return contact ? contact.userId : user ? user.id : null
   }
   ,[contact,user]);
+
+  
 
   useEffect(()=>{
     if (group|| user || contact ){
@@ -58,9 +60,16 @@ const ChatContainer = ({
     group ? sendMessageToChat({chatId:group.id,text:text }) : sendMessageToUser({userId: getUserId(), text:text});
   },[getUserId, group, sendMessageToUser, sendMessageToChat]);
  
+  const handleLeaveChat = useCallback(() => {
+    if(chatId)leaveChat(chatId);
+  },[chatId, leaveChat]);
+ 
+  if(currentUser.username === username){
+    return <Redirect to='/home' />
+  }
+
   return (
     <>
-      <MessageSource/>
       {loading && <LinearProgress color="secondary" />}
 
       {!loading && (contact || user || group) ? (
@@ -80,6 +89,7 @@ const ChatContainer = ({
           handleOpenDetail={handleOpenDetail}
           handleOpenMedia={handleOpenMedia}
           handleSendMessage={handleSendMessage}
+          handleLeaveChat={handleLeaveChat}
         />
       ) : (
         !loading && <div>not found</div>
@@ -97,8 +107,8 @@ const mapDispatchToProps = (dispatch) => {
     openMedia: (src) => dispatch(openMedia(src)),
     sendMessageToUser: (userId) => dispatch(sendMessageToUser(userId)),
     sendMessageToChat: (chatId) => dispatch(sendMessageToChat(chatId)),
-    
     setCurrentChat: (id, userId) => dispatch(setCurrentChat(id, userId)),
+    leaveChat: (chatId) => dispatch(leaveChat(chatId)),
   };
 };
 
@@ -118,7 +128,8 @@ const mapStateToProps = ({ contact, user, chat}, { match }) => {
     shouldFetchUser: (username && !c && !u ),
     username: username,
     messages: chat.currentChat.messages,
-    privateChatId: privateChat ? privateChat.id : null
+    privateChatId: privateChat ? privateChat.id : null,
+    currentUser: user.session.currentUser,
   };
 };
 

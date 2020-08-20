@@ -22,6 +22,12 @@ const initialState = {
 
 const session = (state = initialState.session, action) => {
   switch (action.type) {
+    case actionTypes.CLEAN_LOGIN_ERRORS:
+      return{
+        ...state,
+        loading:false,
+        error:"",
+      }
     case actionTypes.LOGIN_REQUEST:
       return {
         ...state,
