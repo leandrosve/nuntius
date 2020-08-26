@@ -2,9 +2,11 @@ package com.leandrosve.nuntius.util;
 
 import com.leandrosve.nuntius.exception.AccessDeniedException;
 import com.leandrosve.nuntius.model.User;
+import com.leandrosve.nuntius.repository.IUserRepository;
 import com.leandrosve.nuntius.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -13,17 +15,14 @@ import org.springframework.stereotype.Component;
 public class AuthUtil {
     
     @Autowired
-    UserService userService;
-
-    @Autowired
-    LangUtil langUtil;
+    IUserRepository userRepository;
 
     public Authentication getAuthentication() {
         return SecurityContextHolder.getContext().getAuthentication();
     }
 
     public User getCurrentUser() {
-        return userService.getUser(getAuthentication().getName());
+    return userRepository.findByUsername(getAuthentication().getName());
     }
 
     public Boolean isUserAuthenticated(Long id){

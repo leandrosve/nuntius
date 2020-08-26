@@ -64,8 +64,9 @@ public class MessageController {
 
       //send through web socket
       messagingTemplate.convertAndSendToUser(receiver.getUsername(), "/queue/messages", messageToSend);
+      messagingTemplate.convertAndSendToUser(currentUser.getUsername(), "/queue/messages", messageService.prepareMessageForSender(createdMessage));
 
-      return new ResponseEntity<MessageDTO>(messageService.prepareMessageForSender(createdMessage), HttpStatus.CREATED);
+      return new ResponseEntity(HttpStatus.CREATED);
     }
 
     @GetMapping("/users/{userId}/messages")

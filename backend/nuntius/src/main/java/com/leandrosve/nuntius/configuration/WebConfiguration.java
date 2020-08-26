@@ -20,7 +20,7 @@ import org.springframework.web.servlet.resource.PathResourceResolver;
 			registry
 			  .addResourceHandler("/resources/**")
 			  .addResourceLocations("/resources/","/other-resources/")
-			  .setCachePeriod(3600)
+			  .setCachePeriod(3600*24)
 			  .resourceChain(true)
 			  .addResolver(new PathResourceResolver());
 		}

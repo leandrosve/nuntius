@@ -85,9 +85,7 @@ public class ChatService {
         chatV2Repository.delete(chat);
         ChatDTO chatDTO = mapToDTO(chat);
         chat.getMembers().forEach( user ->{
-            if(user != currentUser){
                 messagingTemplate.convertAndSendToUser(user.getUsername(), "/queue/chats/delete", chatDTO);
-            }
         });
         return chatDTO;
     }

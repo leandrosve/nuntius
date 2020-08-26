@@ -50,7 +50,8 @@ public class ChatController {
     }
 
     @DeleteMapping("/chats/{id}")
-    public ChatDTO deleteChat(@PathVariable Long id){   
-      return chatService.deleteChat(id);
+    public ResponseEntity<?> deleteChat(@PathVariable Long id){
+        chatService.deleteChat(id);
+      return new ResponseEntity(HttpStatus.OK);
     }
 }

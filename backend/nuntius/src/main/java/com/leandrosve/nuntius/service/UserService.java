@@ -18,6 +18,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.*;
+import org.springframework.validation.annotation.Validated;
+
+import javax.validation.Valid;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -93,4 +97,17 @@ public class UserService implements UserDetailsService {
     private UserDTO mapToDTO(User user){
         return new UserDTO(user.getId(), user.getUsername(), user.getBiography(), user.getName());
     }
+
+    public UserDTO editProfile(User user) {
+        User currentUser = authUtil.getCurrentUser();
+        if(user.getBiography() != null)
+             currentUser.setBiography(user.getBiography());
+        if(user.getName() != null && !user.getName().isEmpty())
+             currentUser.setName(user.getName());
+        usersRepository.save(currentUser);
+        return mapToDTO(currentUser);
+
+    }
+
+
 }

@@ -7,7 +7,7 @@ public class ContactDTO {
     private Long id;
 	private String username;
     private String alias;
-    private String biograpgy;
+    private String biography;
 	private String name;
 	@NotNull(message = "{error}")
     private Long userId;
@@ -17,7 +17,7 @@ public class ContactDTO {
 	public ContactDTO(Long id, String username, String alias, String biograpgy, String name, Long userId) {
 		this.username = username;
 		this.alias = alias;
-		this.biograpgy = biograpgy;
+		this.biography = biograpgy;
 		this.name = name;
         this.userId = userId;
         this.id= id;
@@ -40,11 +40,11 @@ public class ContactDTO {
 	public void setAlias(String alias) {
 		this.alias = alias;
 	}
-	public String getBiograpgy() {
-		return biograpgy;
+	public String getBiography() {
+		return biography;
 	}
-	public void setBiograpgy(String biograpgy) {
-		this.biograpgy = biograpgy;
+	public void setBiography(String biography) {
+		this.biography = biography;
 	}
 	public String getName() {
 		return name;

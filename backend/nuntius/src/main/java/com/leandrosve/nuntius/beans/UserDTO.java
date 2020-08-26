@@ -6,7 +6,7 @@ public class UserDTO {
 
     private Long id;
 	private String username;
-    private String biograpgy;
+    private String biography;
 	private String name;
 	
 
@@ -14,7 +14,7 @@ public class UserDTO {
      
 	public UserDTO(Long id, String username, String biograpgy, String name) {
 		this.username = username;
-		this.biograpgy = biograpgy;
+		this.biography = biograpgy;
 		this.name = name;
         this.id= id;
         
@@ -31,12 +31,13 @@ public class UserDTO {
 		this.username = username;
 	}
 	
-	public String getBiograpgy() {
-		return biograpgy;
+	public String getBiography() {
+		return biography;
 	}
-	public void setBiograpgy(String biograpgy) {
-		this.biograpgy = biograpgy;
+	public void setBiography(String biography) {
+		this.biography = biography;
 	}
+
 	public String getName() {
 		return name;
 	}
