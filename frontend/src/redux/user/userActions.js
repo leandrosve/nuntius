@@ -94,11 +94,26 @@ export const addUser= (user) =>{
     }
 }
 
-export const clearLoginErrors= () =>{
+export const clearSessionErrors= () =>{
     return {
-        type: actionTypes.CLEAN_LOGIN_ERRORS,
+        type: actionTypes.CLEAN_SESSION_ERRORS,
     }
 }
+
+export const editProfileSuccess= (user) =>{
+    return {
+        type: actionTypes.EDIT_PROFILE_SUCCESS,
+        payload:user
+    }
+}
+
+export const editProfileFailure= (error) =>{
+    return {
+        type: actionTypes.EDIT_PROFILE_FAILURE,
+        payload:error
+    }
+}
+
 
 
 
@@ -131,6 +146,25 @@ export const signUp= (username, password, name, email) =>{
             .catch(
                 error => {              
                     dispatch(signupFailure(error.message))
+                }
+            )                
+    }
+}
+
+export const editProfile= (name, biography, avatar) =>{
+    console.log(avatar);
+    return (dispatch) => {
+        ApiService.patch("/profile", {name, biography})
+            .then((response) => {
+                if(avatar){
+                    ApiService.putProfileImage(avatar).then(()=>dispatch(editProfileSuccess(response.data)));
+                }else{
+                    dispatch(editProfileSuccess(response.data));   
+                }                      
+            })
+            .catch(
+                error => {              
+                    dispatch(editProfileFailure(error.message))
                 }
             )                
     }

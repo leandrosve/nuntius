@@ -3,9 +3,9 @@ import { BsCheckAll, BsCheck } from "react-icons/bs";
 
 const style = {
   position: "relative",
-  top: "3px",
   paddingRight: "5px",
   display: "inline-block",
+  verticalAlign: "middle",
   margin: "0",
 };
 const MessageCheckMarker = ({ seenTime, receivedTime, fontSize }) => {

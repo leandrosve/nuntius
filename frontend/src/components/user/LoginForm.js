@@ -15,7 +15,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import FormContainer from "../util/FormContainer";
 
 import Alert from "../util/Alert";
-import { login, clearLoginErrors } from "../../redux/user/userActions";
+import { login, clearSessionErrors } from "../../redux/user/userActions";
 import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
@@ -130,7 +130,7 @@ const mapStateToProps = state =>{
 }
 const mapDispatchToProps = dispatch =>  {
   return {
-    clearErrors: () => dispatch(clearLoginErrors()),
+    clearErrors: () => dispatch(clearSessionErrors()),
     login: (username, password) => dispatch(login(username, password))
   }
 }

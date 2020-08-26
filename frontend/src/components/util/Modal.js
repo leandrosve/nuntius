@@ -25,17 +25,16 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     backgroundColor: theme.palette.background.paper,
     borderRadius: "10px",
-    
+    display:"flex",
     minWidth: "400px",
-    display: "flex",
     flexDirection: "column",
     boxShadow: theme.shadows[5],
     padding: "10px",
     maxHeight: "80vh",
+    overflow:"hidden"
   },
   content: {
-    minHeight: "400px",
-    overflow: "hidden",
+    minHeight: "400px", 
     display: "flex",
   },
   dismissButon: {

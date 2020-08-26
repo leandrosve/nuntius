@@ -129,14 +129,9 @@ export const fetchMessagesFromChat = (chatId) => {
 };
 
 export const sendMessageToUser = ({ userId, text }) => {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     dispatch(sendMessageRequest());
-    ApiService.post(`/users/${userId}/messages`, { text })
-      .then((response) => {  
-        const chat=getChatById(getState().chat,response.data.chatId);
-        if (!chat) { dispatch(fetchChatById(response.data.chatId));}
-        dispatch(sendMessageSuccess(response.data));
-      })
+    ApiService.post(`/users/${userId}/messages`, { text })    
       .catch((error) => {
         dispatch(sendMessageFailure(error.message));
       });
@@ -147,9 +142,7 @@ export const sendMessageToChat = ({ chatId, text }) => {
   return (dispatch) => {
     dispatch(sendMessageRequest());
     ApiService.post(`/chats/${chatId}/messages`, { text })
-      .then((response) => {
-        dispatch(addMessage(response.data));
-      })
+      
       .catch((error) => {
         dispatch(sendMessageFailure(error.message));
       });

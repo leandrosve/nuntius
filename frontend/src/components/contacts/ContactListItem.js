@@ -6,6 +6,7 @@ import Avatar from "@material-ui/core/Avatar"
 import { Typography } from "@material-ui/core";
 import StartChatButton from "../chat/StartChatButton";
 import DeleteContactButton from "./DeleteContactButton";
+import useProfileImage from "../profile/useProfileImage";
 const useStyles = makeStyles((theme) => ({
   contact: {
     minWidth: "400px",
@@ -18,14 +19,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ContactListItem = ({ alias, username, biography, name, id, userId, avatar, onRemoveContact, onClick, handleClose}) => {
+const ContactListItem = ({ alias, username, biography, name, id, userId, onRemoveContact, onClick, handleClose}) => {
     const classes = useStyles();
-  
+    const avatar = useProfileImage(userId);
     return (
       <ListItem
         onClick={onClick}
         className={classes.contact}
-        left={<Avatar src={avatar} className="avatar" style={{height:"50px", width:"50px"}} alt="user">{alias}</Avatar>}
+        left={<Avatar src={avatar} className="avatar" style={{height:"50px", width:"50px"}} alt={username}/>}
         center={
           <>
             <h3 style={{margin:"0px 2px"}}>{alias}</h3>

@@ -1,110 +1,70 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useCallback , useEffect} from "react";
 import TitledContainer from "../util/TitledContainer";
 
 import { useTranslation } from "react-i18next";
 import TextField from "@material-ui/core/TextField";
 import Container from "@material-ui/core/Container";
-import ZoomInIcon from '@material-ui/icons/ZoomIn';
-import ZoomOutIcon from '@material-ui/icons/ZoomOut';
-import profilePicPlaceholder from "../assets/images/profile-pic-placeholder.jpg";
 import Button from "@material-ui/core/Button";
-import AvatarEditor from "react-avatar-editor";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import AcUnitIcon from "@material-ui/icons/AcUnit";
 import CameraAltIcon from "@material-ui/icons/CameraAlt";
-import Slider from "@material-ui/core/Slider";
-import Grid from '@material-ui/core/Grid';
 import Alert from '../util/Alert';
-import Typography from "@material-ui/core/Typography";
-import { Spring } from "react-spring/renderprops";
+import ImageEditor from "./ImageEditor";
+import { Avatar } from "@material-ui/core";
+import useProfileImage from "./useProfileImage";
 
-const ImageEditor = ({ image, handleCancel, editorRef , handleAccept}) => {
-
-  const [zoom, setZoom] = React.useState(1);
-
-  const handleChange = (event, newValue) => {
-    setZoom(newValue);
-  };
-
+const Profile = ({username, name, email, biography, id , handleSave, success, error}) => {
   const { t } = useTranslation();
 
-  return (
-    <Spring from={{ opacity: 0 }} to={{ opacity: 1}} duration="2500">
-      {(props) => (
-        <div style={props}>
-          <Typography style={{ margin: "5px" }} variant="h5">
-            {t('image_adjust')}
-          </Typography>
-          <AvatarEditor
-          style={{background:'black'}}
-            ref={editorRef}
-            image={image}
-            width={250}
-            height={250}
-            borderRadius={125}
-            border={50}
-            color={[255, 255, 255, 0.6]} // RGBA
-            scale={zoom}
-            rotate={0}
-          />
-          <Grid container spacing={2}>
-            <Grid item>
-              <ZoomOutIcon />
-            </Grid>
-            <Grid item xs>
-              <Slider
-              min={1}
-              step={0.05}
-              color='secondary'
-              max={3}
-                value={zoom}
-                onChange={handleChange}
-                aria-labelledby="continuous-slider"
-              />
-            </Grid>
-            <Grid item>
-              <ZoomInIcon/>
-            </Grid>
-          </Grid>
-          <div>
-            <Button variant="outlined" component="label" onClick={handleCancel}>
-              {t('confirmation:cancel')}
-            </Button>
-            <Button variant="outlined" component="label" onClick={handleAccept}>
-            {t('confirmation:accept')}
-            </Button>
-          </div>
-        </div>
-      )}
-    </Spring>
-  );
-};
+  let originalImage = useProfileImage(id);
 
-const Profile = ({username, name, email, biography = ""}) => {
-  const { t } = useTranslation();
   const [uneditedImage, setUneditedImage] = useState();
   const [editedImage, setEditedImage] = useState();
   const editorRef = useRef();
-  const [openSuccessAlert, setOpenSuccesAlert] = useState(false);
+  const [openAlert, setOpenAlert] = useState(false);
 
+
+  useEffect(()=>{setOpenAlert((success && success !== "") || (error && error !== "")  ? true : false)},[success, error])
   const getEditedImage = () =>{
-    setEditedImage(editorRef.current.getImage().toDataURL('image/png'));
+    const image = editorRef.current.getImage().toDataURL('image/png');
+    setEditedImage(image);
     setUneditedImage(null);
   }
+
+  const [newInfo, setNewInfo] = useState({name:name, biography:biography});
+
+  const [showSaveButton, setShowSaveButton]= useState(false);
+
+  useEffect(() =>{
+    setShowSaveButton(
+      newInfo.name !== "" && (!!editedImage || newInfo.name !== name || 
+        (!biography  ? newInfo.biography && newInfo.biography !=="" : newInfo.biography !== biography)));
+  },[newInfo, name, biography, editedImage])
+
+  const handleChangeName = useCallback((e)=>{
+    setNewInfo({...newInfo, name:e.target.value});
+  },[setNewInfo, newInfo])
+
+  const handleChangeBiography = useCallback((e)=>{
+    setNewInfo({...newInfo, biography:e.target.value});
+  },[setNewInfo, newInfo])
+
+  const save = useCallback(()=>{
+    handleSave(newInfo.name, newInfo.biography, editedImage)
+  },[handleSave, newInfo, editedImage]);
   
   return (
     <TitledContainer
       title={t("profile")}
-      actions={<Button onClick={()=>setOpenSuccesAlert(true)}>{t("save")}</Button>}
+      actions={showSaveButton && <Button onClick={()=>save()}>{t("save")}</Button>}
       fixedContent={
        <Alert
-        severity='success'
-        open={openSuccessAlert}
-        onClick={()=>setOpenSuccesAlert(false)}
+        severity={error ? "error" : 'success'}
+        open={openAlert}
+        onClick={()=>setOpenAlert(false)}
        > 
-         {t('success:saved')}
-       </Alert>
-       
+         { success ? t(success): error}
+       </Alert> 
       }
     >
       <Container maxWidth="xs">
@@ -113,9 +73,11 @@ const Profile = ({username, name, email, biography = ""}) => {
           name="name"
           type="text"
           size="small"
+          required
           variant="outlined"
           margin="normal"
-          value={name}
+          defaultValue={name}
+          onChange={handleChangeName}
           fullWidth
           id="name"
         />
@@ -134,14 +96,14 @@ const Profile = ({username, name, email, biography = ""}) => {
               handleAccept={getEditedImage}            
             />
           ) : (
-            <img
+            
+            <Avatar
               alt={name}
-              src={editedImage || profilePicPlaceholder}
-              style={{ borderRadius: "50%", width: "250px", height: "250px" }}
+              src={editedImage ||  originalImage}
+              style={{ borderRadius: "50%", width: "250px", height: "250px", margin:"auto" }}
             />
-          )}
-
-          <div style={{ position: "absolute", bottom: 0, right: 0 }}>
+          )}         
+          <div style={{ display:"flex",  justifyContent:"space-between", flexDirection:"row-reverse"}}>        
             <Button variant="contained" component="label">
               <CameraAltIcon />
               <input
@@ -154,6 +116,7 @@ const Profile = ({username, name, email, biography = ""}) => {
                 }}
               ></input>
             </Button>
+            {editedImage && (editedImage !== originalImage) && <Button variant="contained" onClick={()=>{setEditedImage(originalImage)}}>{t("undo")}</Button>}
           </div>
         </div>
 
@@ -164,8 +127,9 @@ const Profile = ({username, name, email, biography = ""}) => {
           type="text"
           variant="outlined"
           margin="normal"
-          value={biography || ""}
+          defaultValue={biography}
           fullWidth
+          onChange={handleChangeBiography}
           id="bio"
           InputProps={{
             startAdornment: (

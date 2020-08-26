@@ -1,6 +1,7 @@
 import i18n from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import { initReactI18next } from "react-i18next";
+import moment from "moment";
 
 i18n
   .use(LanguageDetector)
@@ -43,6 +44,7 @@ i18n
           conversation_leave: "Leave conversation",
           chat_delete: "Delete chat",
           start_chatting: "Start chatting",
+          undo:"Undo",
         },
         error: {
           "passwords_must_match" : "Passwords must match",
@@ -65,6 +67,10 @@ i18n
           "cancel":'Cancel',
           "contact_delete": 'Are you sure you want to remove {{name}} from your list of contacts?',
           "exit_without_saving": 'Exit without saving?',
+        },
+        date:{
+          today:"Today",
+          yesterday:"Yesterday"
         }
       },
       es: {
@@ -102,6 +108,7 @@ i18n
           conversation_leave: "Abandonar conversación",
           chat_delete: "Eliminar conversación",
           start_chatting: "Empezar a conversar",
+          undo:"Deshacer",
         },
         error: {
           "passwords_must_match" : "Las contraseñas no coinciden",
@@ -124,6 +131,10 @@ i18n
           "cancel":'Cancelar',
           "contact_delete": '¿Confirma que desea eliminar a {{name}} de su lista de contactos?',
           "exit_without_saving": '¿Desea salir sin guardar los cambios?',
+        },
+        date:{
+          today:"Hoy",
+          yesterday:"Ayer"
         }
       }
     },
@@ -139,6 +150,10 @@ i18n
     interpolation: {
       escapeValue: false
     }
+  }).then(()=>{ 
+    
+    moment.locale(i18n.language);
   });
 
+ 
 export default i18n;

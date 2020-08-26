@@ -11,6 +11,7 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import { connect } from "react-redux";
 import { logout } from "../../redux/user/userActions";
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
   toolBar: {
     padding: "0px",
     width: "80%",
+    ["@media (max-width:1200px)"]: { width:"100%" },
     margin: "auto",
     height: theme.mixins.toolbar,
     minHeight: theme.mixins.toolbar,
@@ -51,7 +53,7 @@ function Nav({ logout }) {
         </Typography>
         <div className="Nav-links">
           <Link to="/" onClick={logout}>
-            <Button color="inherit">{t("logout")}</Button>
+            <Button endIcon={<ExitToAppIcon/>} color="inherit">{t("logout")}</Button>
           </Link>
         </div>
       </Toolbar>

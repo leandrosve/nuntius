@@ -1,5 +1,4 @@
 import React, { useState, useCallback } from "react";
-import profilePicPlaceholder from "../assets/images/profile-pic-placeholder.jpg";
 import DeleteContactButton from "./DeleteContactButton";
 import IconButton from "@material-ui/core/IconButton";
 import Box from "@material-ui/core/Box";
@@ -16,6 +15,7 @@ import { useTranslation } from "react-i18next";
 import PropTypes from 'prop-types';
 import StartChatButton from "../chat/StartChatButton";
 import Username from "../user/Username";
+import useProfileImage from "../profile/useProfileImage";
 
 const ContactDetail = ({
   editContact,
@@ -32,6 +32,8 @@ const ContactDetail = ({
   const handleToggleAliasForm = useCallback(() => {
     setOpenAliasForm((prev) => !prev);
   }, []);
+
+  const avatar = useProfileImage(isContact ? userId : id);
 
   const renderAliasForm = () =>{
     if(isContact){
@@ -75,11 +77,10 @@ const ContactDetail = ({
             maxWidth="400px"
           >
             <Avatar
-              src={profilePicPlaceholder}
+              src={avatar}
               style={{ width: "125px", height: "125px", marginBottom: "auto" }}
-            >
-              {name}
-            </Avatar>
+              alt={username}
+            />          
             <Box
               display="flex"
               flexDirection="column"
@@ -95,14 +96,14 @@ const ContactDetail = ({
                 
               {renderAliasForm()}
               </Box>
-              {<Username variant={!isContact && "h6"}>{username}</Username>}
+              {<Username variant={!isContact ? "h6" : null}>{username}</Username>}
               <Typography variant="subtitle1">{name}</Typography>
               {biography && (
-                <Typography variant="overline text">
+                <Typography variant="overline">
                   <AcUnitIcon
                     fontSize="small"
                     style={{ marginBottom: "-3px" }}
-                  />{" "}
+                  />
                   {biography}
                 </Typography>
               )}

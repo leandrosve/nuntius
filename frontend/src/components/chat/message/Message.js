@@ -7,6 +7,7 @@ import dateFormat from "dateformat";
 import EmbededYoutube from "./EmbededYoutube";
 import MessageCheckMarker from "./MessageCheckMarker";
 import Media from "./Media";
+import useProfileImage from "../../profile/useProfileImage";
 
 const useStyles = makeStyles(() => ({
   messageContainer: {
@@ -58,15 +59,19 @@ const useStyles = makeStyles(() => ({
 
 function Message({
   text,
-  avatar,
   media,
   handleOpenMedia,
   handleOpenVideoPlayer,
   sentTime,
   details,
+  userId,
+  displayAvatar = false,
 }) {
   const classes = useStyles();
 
+  
+  const avatar=useProfileImage(displayAvatar ? userId : null);
+  
   return (
     <div className={classes.messageContainer}>
       <div
@@ -77,7 +82,7 @@ function Message({
           <div
             className={details ? classes.avatarRight : classes.avatarLeft}
           >
-            <Avatar src={avatar} alt="username" />
+            <Avatar src={avatar} alt="user" />
           </div>
         )}
 

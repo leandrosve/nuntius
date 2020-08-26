@@ -12,6 +12,7 @@ import {userType, contactType, chatType} from "../../types";
 import {bool, string, func} from "prop-types";
 import { fetchMessagesFromUser, fetchMessagesFromChat, sendMessageToUser, sendMessageToChat, setCurrentChat, leaveChat} from "../../redux/chats/chatActions";
 import {Redirect} from "react-router-dom"
+import useProfileImage from "../profile/useProfileImage";
 
 const ChatContainer = ({
   user, contact, group, fetchUserByUsername, openUserDetail, 
@@ -25,12 +26,11 @@ const ChatContainer = ({
   }
   ,[contact,user]);
 
+  const avatar = useProfileImage(!group ? getUserId() : null);
   
-
   useEffect(()=>{
     if (group|| user || contact ){
-      const id = group ? group.id : privateChatId;
-     
+      const id = group ? group.id : privateChatId;    
     setCurrentChat({id:id, userId:getUserId()});
   }
   },[user, contact, getUserId, setCurrentChat, privateChatId, group]);
@@ -83,6 +83,7 @@ const ChatContainer = ({
               ? user.name
               : null
           }
+          avatar={avatar}
           username={contact ? contact.username : user ? user.username : null}
           messages={messages}
           type={group? "group" : contact ? "contact" : user ? "user" : null}

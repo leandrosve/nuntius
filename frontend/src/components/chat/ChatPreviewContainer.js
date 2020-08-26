@@ -4,11 +4,9 @@ import { getUserById } from "../../redux/user/userReducer";
 import { getContactByUserId } from "../../redux/contacts/contactReducer";
 import { fetchUserById } from "../../redux/user/userActions";
 import { connect } from "react-redux";
-
 import { useHistory } from "react-router-dom";
-import profilePicPlaceholder from "../assets/images/profile-pic-placeholder.jpg";
-
 import { useTranslation } from "react-i18next";
+import useProfileImage from "../profile/useProfileImage";
 
 const ChatPreviewContainer = ({ chat, userId, user, fetchUserById }) => {
     
@@ -30,13 +28,15 @@ const ChatPreviewContainer = ({ chat, userId, user, fetchUserById }) => {
     }
   }, [userId,user,fetchUserById]);
 
+  const avatar = useProfileImage(userId);
+
   return (
     <ChatPreview
       title={getTitle()}
       lastMessage={chat.lastMessage}
       type={chat.groupal ? "group" : "user"}
       unreadMessagesCount="30"
-      avatar={profilePicPlaceholder}
+      avatar={avatar}
       lastMessageTime="20:00"
       handleClick={()=>handleClick(chat)}
     />

@@ -1,5 +1,4 @@
 import React from "react";
-import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
 import Avatar from "@material-ui/core/Avatar";
 import Divider from "@material-ui/core/Divider";
@@ -10,17 +9,15 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     flex: "1",
-    height: "inherit",
     padding: "0px",
   },
   content: {
-    overflowY: "scroll",
-    scrollbarWidth: "thin",
     marginTop: "10px",
     flex: "1",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
+    overflow:"auto"
   },
   header: {
     margin: theme.spacing(1),
@@ -37,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
 const TitledContainer = ({ title, icon, children, actions, fixedContent }) => {
   const classes = useStyles();
   return (
-    <Container className={classes.container}>
+    <React.Fragment>
       <div className={classes.header}>
         <Avatar className={classes.avatar}>
           {icon}
@@ -55,7 +52,7 @@ const TitledContainer = ({ title, icon, children, actions, fixedContent }) => {
       </div>
 
       <div className={classes.content}>{children}</div>
-    </Container>
+    </React.Fragment>
   );
 };
 export default TitledContainer;

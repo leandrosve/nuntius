@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import "./assets/Chat.css";
-import profilePicPlaceholder from "../assets/images/profile-pic-placeholder.jpg";
 import { useTranslation } from "react-i18next";
 import Toolbar from "@material-ui/core/Toolbar";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
@@ -14,6 +13,9 @@ import { withRouter } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import { string, func } from "prop-types";
 import Username from "../user/Username";
+import { Avatar } from "@material-ui/core";
+
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,6 +35,7 @@ function ChatHeader({
   handleLeaveChat,
   online = false,
   title,
+  avatar,
   username,
   type,
 }) {
@@ -48,8 +51,8 @@ function ChatHeader({
           className="ChatHeader-userInfo"
           onClick={handleOpenDetail}
         >
-          <img
-            src={profilePicPlaceholder}
+          <Avatar           
+            src={avatar}
             className="ChatHeader-profilePic"
             alt="user"
           />
@@ -133,4 +136,4 @@ ChatHeaderMenu.propTypes = {
   handleOpenDetail: func.isRequired,
 };
 
-export default withRouter(ChatHeader);
+export default  withRouter(ChatHeader);

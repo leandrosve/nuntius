@@ -48,6 +48,13 @@ const ApiService = {
       .catch((reason) => Promise.reject(reason));
   },
 
+  put(url, data) {
+    return instance
+      .put(url, data)
+      .then((res) => res)
+      .catch((reason) => Promise.reject(reason));
+  },
+
   patch(url, data) {
     return instance
       .patch(url, data)
@@ -61,6 +68,27 @@ const ApiService = {
       .then((res) => res)
       .catch((reason) => Promise.reject(reason));
   },
+
+  getProfileImage(userId) {
+    return instance
+      .get(`/users/${userId}/image`, { responseType: 'arraybuffer' })
+      .then(response => {
+        let blob = new Blob([response.data], 
+        { type: response.headers['content-type'] }
+      );
+      let image = URL.createObjectURL(blob)
+      return image}   
+      )
+      .catch((reason) => console.log(reason));   
+  },
+
+  putProfileImage(avatar) {
+    return instance
+      .put(`/profile/avatar`, avatar )
+      .then(res => res)
+      .catch((reason) => console.log(reason));   
+  },
+
 };
 
 export default ApiService;

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import "./assets/Chat.css";
 import Message from "./message/Message";
-import profilePicPlaceholder from "../assets/images/profile-pic-placeholder.jpg";
 import DateMarker from "../util/DateMarker";
 import VideoPlayer from "../util/VideoPlayer";
 import Chip from "@material-ui/core/Chip";
@@ -54,7 +53,7 @@ const ChatContent = ({handleOpenMedia, messages}) => {
                   handleOpenMedia={handleOpenMedia}
                   handleOpenVideoPlayer={handleOpenVideoPlayer}
                   {...message}
-                  avatar={(index === 0 || message.userId !== messages[index - 1].userId) ? profilePicPlaceholder : null }
+                  displayAvatar={(index === 0 || message.userId !== messages[index - 1].userId)}
                 />
               </div>
             );

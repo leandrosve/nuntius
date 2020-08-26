@@ -6,6 +6,7 @@ const initialState = {
     loading: false,
     currentUser: JSON.parse(localStorage.getItem("user")),
     error: "",
+    success: "",
     authenticated: !!localStorage.getItem("user")
   },
   signUp: {
@@ -22,11 +23,20 @@ const initialState = {
 
 const session = (state = initialState.session, action) => {
   switch (action.type) {
-    case actionTypes.CLEAN_LOGIN_ERRORS:
+
+    case actionTypes.EDIT_PROFILE_SUCCESS:
+      return {
+        ...state,
+        currentUser:{...state.currentUser, ...action.payload},
+        success:"success:saved"
+      };
+
+    case actionTypes.CLEAN_SESSION_ERRORS:
       return{
         ...state,
         loading:false,
         error:"",
+        success:"",
       }
     case actionTypes.LOGIN_REQUEST:
       return {

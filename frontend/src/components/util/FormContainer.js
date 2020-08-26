@@ -3,7 +3,6 @@ import Avatar from "@material-ui/core/Avatar";
 import "./Util.css";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import Container from "@material-ui/core/Container";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -11,7 +10,9 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    
+    height:"100%",
+    maxWidth:"400px",
+    overflow:"auto",
   },
   avatar: {
     margin: theme.spacing(1),
@@ -24,7 +25,7 @@ const FormContainer = (props) => {
   const classes = useStyles();
 
   return (
-    <Container style={{overflow:"scroll"}} maxWidth="xs">
+   
       <div className={classes.paper}>
         {props.icon && (
           <Avatar className={classes.avatar}>{props.icon}</Avatar>
@@ -36,7 +37,7 @@ const FormContainer = (props) => {
         )}
         {props.children}
       </div>
-    </Container>
+   
   );
 };
 
