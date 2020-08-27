@@ -1,19 +1,18 @@
 import React from "react";
 import "../App.css";
-import { AiFillAlipayCircle } from "react-icons/ai";
 import { useTranslation } from "react-i18next";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import {openLogin, openSignUp} from "../redux/modal/modalActions";
 import {connect} from "react-redux";
-
+import NuntiusLogo from "./util/NuntiusLogo";
 
 function Welcome({openLogin, openSignUp}) {
   const { t } = useTranslation();
 
   return (
     <header className="App-header">
-      <AiFillAlipayCircle className="App-logo" />
+      <NuntiusLogo className="App-logo" />
       <h1 className="App-link">NUNTIUS</h1>
       <Grid>
         <Button

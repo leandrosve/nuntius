@@ -65,7 +65,8 @@ i18n
         confirmation:{
           "accept":'Accept',
           "cancel":'Cancel',
-          "contact_delete": 'Are you sure you want to remove {{name}} from your list of contacts?',
+          "contact_delete": 'Are you sure you want to remove {{name}} from your list of contacts?',     
+          "chat_delete": 'Are you sure you want to delete this conversation? It will be gone for everyone.',
           "exit_without_saving": 'Exit without saving?',
         },
         date:{
@@ -129,7 +130,8 @@ i18n
         confirmation:{
           "accept":'Aceptar',
           "cancel":'Cancelar',
-          "contact_delete": '¿Confirma que desea eliminar a {{name}} de su lista de contactos?',
+          "contact_delete": '¿Confirma que desea eliminar a {{name}} de su lista de contactos?',   
+          "chat_delete": '¿Confirma que desea eliminar esta conversación? Se borrará para todos sus integrantes.',
           "exit_without_saving": '¿Desea salir sin guardar los cambios?',
         },
         date:{

@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-
+import React, { useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
@@ -8,15 +7,19 @@ import Button from "@material-ui/core/Button";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-
 import { makeStyles } from "@material-ui/core/styles";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import FormContainer from "../util/FormContainer";
 
 import Alert from "../util/Alert";
-import { login, clearSessionErrors } from "../../redux/user/userActions";
+import { login} from "../../redux/session/sessionActions";
 import { connect } from "react-redux";
+import {isRequestLoading} from "../../redux/notification/loadingReducer";
+import { LOGIN_REQUEST, SIGNUP_REQUEST } from "../../redux/user/userActionTypes";
+import { getRequestError } from "../../redux/notification/errorReducer";
+import { clearError, clearSuccess } from "../../redux/notification/notificationActions";
+import { getRequestSuccessMessage } from "../../redux/notification/successReducer";
+import NuntiusLogo from "../util/NuntiusLogo";
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -28,21 +31,23 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const LoginForm = ( {error="", login, loading, success="", clearErrors} ) => {
+const LoginForm = ( {error="", login, loading, success="", clearErrors, clearSuccessMessages} ) => {
   const { t } = useTranslation();
 
   const classes = useStyles();
-
-  const [openAlert, setOpenAlert] = useState(false);
-
 
   const initialValues = {
     username: "",
     password: "",
   };
 
-  useEffect(()=>{setOpenAlert(true)},[loading, error, success, setOpenAlert]) 
   useEffect(()=>{clearErrors()},[clearErrors]);
+
+  const handleCloseAlert = useCallback(()=>{
+    clearErrors();
+    clearSuccessMessages();
+  },[clearErrors, clearSuccessMessages])
+
   return (
     <Formik
       validateOnMount={true}
@@ -54,28 +59,22 @@ const LoginForm = ( {error="", login, loading, success="", clearErrors} ) => {
       })}
       onSubmit={(values, { setSubmitting }) => {   
           login(values.username.trim(), values.password.trim());
-          
+          handleCloseAlert();
           setSubmitting(false);
       }}
     >
       {({ isValid }) => (
-        <FormContainer title={t("login")} icon={<LockOutlinedIcon />}>
-
+        <FormContainer title={t("login")} icon={<NuntiusLogo/>}>
+        
           {loading && <CircularProgress color="secondary" />}
           <Alert
-            severity="success"
-            open={openAlert && !loading && success !== ''}
-            onClick={() => setOpenAlert(false)}
+            severity={success ? "success" : "error"}
+            open={!loading && (!!success || !!error)}
+            onClick={() => handleCloseAlert()}
           >
-            {t(success)}
+            {success ? t(success) : error}
           </Alert>
-          <Alert
-            severity="error" 
-            open={openAlert && !loading && error !== '' }
-            onClick={() => setOpenAlert(false)}
-          >
-            {error }
-          </Alert>
+       
           <Form className={classes.form}>
             <TextField
               variant="outlined"
@@ -121,17 +120,18 @@ const LoginForm = ( {error="", login, loading, success="", clearErrors} ) => {
 };
 
 
-const mapStateToProps = state =>{
-  const session = state.user.session;
+const mapStateToProps = ({loading, error, success}) =>{
   return {
-      error: session.error,
-      loading: session.loading,
+      error: getRequestError(error, [LOGIN_REQUEST]),     
+      success: getRequestSuccessMessage(success, [SIGNUP_REQUEST]),
+      loading: isRequestLoading(loading, [LOGIN_REQUEST]),
   }
 }
 const mapDispatchToProps = dispatch =>  {
   return {
-    clearErrors: () => dispatch(clearSessionErrors()),
-    login: (username, password) => dispatch(login(username, password))
+    clearErrors: () => {dispatch(clearError([LOGIN_REQUEST]));},
+    clearSuccessMessages: () => {dispatch(clearSuccess([SIGNUP_REQUEST]));},
+    login: (username, password) => dispatch(login(username, password)),
   }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(LoginForm);

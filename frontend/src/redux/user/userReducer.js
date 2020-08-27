@@ -1,108 +1,8 @@
 import * as actionTypes from "./userActionTypes";
 import { combineReducers } from "redux";
-
-const initialState = {
-  session: {
-    loading: false,
-    currentUser: JSON.parse(localStorage.getItem("user")),
-    error: "",
-    success: "",
-    authenticated: !!localStorage.getItem("user")
-  },
-  signUp: {
-    loading: false,
-    success: "",
-    error: "",
-  },
-  users: {
-    byIds: {},
-    allIds: [],
-    loading: false,
-  },
-};
-
-const session = (state = initialState.session, action) => {
-  switch (action.type) {
-
-    case actionTypes.EDIT_PROFILE_SUCCESS:
-      return {
-        ...state,
-        currentUser:{...state.currentUser, ...action.payload},
-        success:"success:saved"
-      };
-
-    case actionTypes.CLEAN_SESSION_ERRORS:
-      return{
-        ...state,
-        loading:false,
-        error:"",
-        success:"",
-      }
-    case actionTypes.LOGIN_REQUEST:
-      return {
-        ...state,
-        loading: true,
-      };
-    case actionTypes.LOGIN_SUCCESS:
-      localStorage.setItem("user", JSON.stringify(action.payload));
-      localStorage.setItem("jwtToken", JSON.stringify(action.payload.jwtToken));
-      return {
-        ...state,
-        currentUser: action.payload,
-        loading: false,
-        error: "",
-        authenticated: true,
-      };
-
-    case actionTypes.LOGIN_FAILURE:
-      localStorage.removeItem("user");
-      localStorage.removeItem("jwtToken");
-      return {
-        ...state,
-        error: action.payload,
-        loading: false,
-        currentUser: null,
-        authenticated: false,
-      };
-    case actionTypes.LOGOUT:
-      localStorage.removeItem("user");
-      localStorage.removeItem("jwtToken");
-      return {
-        ...state,
-        currentUser: {},
-        authenticated: false,
-      };
-    default:
-      return state;
-  }
-};
-
-const signUp = (state = initialState.signUp, action) => {
-  switch (action.type) {
-    case actionTypes.SIGNUP_REQUEST:
-      return {
-        ...state,
-        loading: true,
-      };
-    case actionTypes.SIGNUP_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        sucess: "success:signup",
-        error: "",
-      };
-
-    case actionTypes.SIGNUP_FAILURE:
-      return {
-        ...state,
-        error: action.payload,
-        loading: false,
-        success: "",
-      };
-    default:
-      return state;
-  }
-};
+import * as contactActionTypes from "../contacts/contactActionTypes";
+import union from "lodash/union";
+import contact from "../contacts/contactReducer";
 
 const search = (state = [], action) => {
   switch (action.type) {
@@ -118,6 +18,11 @@ const byIds = (state = {}, action) => {
     case actionTypes.FETCH_USER_SUCCESS:
     case actionTypes.ADD_USER:
       return { ...state, [action.payload.id]: action.payload };
+    case contactActionTypes.FETCH_CONTACTS_SUCCESS:
+    case contactActionTypes.ADD_CONTACT_SUCCESS:
+    case contactActionTypes.EDIT_CONTACT_SUCCESS:
+    case contactActionTypes.DELETE_CONTACT_SUCCESS:
+      return contact(state, action);
     default:
       return state;
   }
@@ -126,9 +31,14 @@ const byIds = (state = {}, action) => {
 const allIds = (state = [], action) => {
   switch (action.type) {
     case actionTypes.FETCH_USER_SUCCESS:
-      return [...state, action.payload.id];
+    case contactActionTypes.ADD_CONTACT_SUCCESS:
+      return union(state, [action.payload.id]);
+    case contactActionTypes.FETCH_CONTACTS_SUCCESS:
+      return union(state, action.payload.result);
     case actionTypes.ADD_USER:
-      return state.find(id=> id === action.payload.id) ? state : [...state,action.payload.id ];
+      return state.find((id) => id === action.payload.id)
+        ? state
+        : [...state, action.payload.id];
     default:
       return state;
   }
@@ -153,8 +63,9 @@ const users = combineReducers({
 });
 
 export const getAllUsers = (state) => {
-  return state.allIds.map((id) => {
-    return state.byIds[id];
+  console.log(JSON.stringify(state));
+  return state.users.allIds.map((id) => {
+    return state.users.byIds[id];
   });
 };
 
@@ -163,7 +74,12 @@ export const getUserByUsername = (state, username) => {
 };
 
 export const getUserById = (state, id) => {
-  return state.users.byIds[id];
+  const user = state.users.byIds[id]
+  return user ? user : state.search.find(u => u.id === id)
 };
 
-export default combineReducers({ signUp, session, search, users });
+export const getContacts = (state) => {
+  return getAllUsers(state).filter((u) => !!u.contactId);
+};
+
+export default combineReducers({ search, users });

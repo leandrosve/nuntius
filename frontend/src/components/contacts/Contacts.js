@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 import GroupIcon from "@material-ui/icons/Group";
 import AddIcon from "@material-ui/icons/Add";
@@ -18,12 +18,12 @@ function Contacts({
   handleClose,
   contacts = [],
   loading,
+  deleteContact,
   error,
   success,
+  clearNotifications,
 }) {
   const { t } = useTranslation();
-
-  const [openAlert, setOpenAlert] = React.useState(true);
 
   const [openAddContact, setOpenAddContact] = React.useState(false);
 
@@ -33,7 +33,7 @@ function Contacts({
   });
 
   const handleOpenContactDetail = React.useCallback((contact) => {
-    setContactDetail({ open: true, user: { id: contact.userId, username: contact.username, name: contact.name } });
+    setContactDetail({ open: true, user:contact });
   }, []);
 
   const handleUserSearchClick = React.useCallback(
@@ -43,7 +43,6 @@ function Contacts({
     [setContactDetail]
   );
 
-  useEffect(() => setOpenAlert(true), [setOpenAlert, error, success, contacts]);
   return (
     <TitledContainer
       title={t("contacts")}
@@ -66,9 +65,9 @@ function Contacts({
             </>
           )}
           <Alert
-            open={openAlert && !loading && (error !== "" || success !== "")}
-            severity={error !== "" ? "error" : "success"}
-            onClick={() => setOpenAlert(false)}
+            open={!loading && (!!error || !!success)}
+            severity={error? "error" : "success"}
+            onClick={() => clearNotifications()}
           >
             {error || success}
           </Alert>
@@ -92,6 +91,7 @@ function Contacts({
       <ContactList
         contacts={contacts}
         handleClose={handleClose}
+        deleteContact={deleteContact}
         onClickContact={handleOpenContactDetail}
       />   
     </TitledContainer>

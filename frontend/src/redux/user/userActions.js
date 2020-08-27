@@ -1,32 +1,7 @@
 import * as actionTypes from './userActionTypes';
 import ApiService from "../../ApiService";
-import { hideModal, openLogin } from '../modal/modalActions';
+import { openLogin } from '../modal/modalActions';
 
-export const loginRequest= () =>{
-    return{      
-        type: actionTypes.LOGIN_REQUEST
-    }
-}
-
-export const loginSuccess= user =>{
-    return {
-        type: actionTypes.LOGIN_SUCCESS,
-        payload: user
-    }
-}
-
-export const loginFailure= (error) =>{
-    return {
-        type: actionTypes.LOGIN_FAILURE,
-        payload:error
-    }
-}
-
-export const logout= () =>{
-    return {
-        type: actionTypes.LOGOUT
-    }
-}
 
 export const signupRequest= () =>{
     return{      
@@ -37,13 +12,14 @@ export const signupRequest= () =>{
 export const signupSuccess= () =>{
     return {
         type: actionTypes.SIGNUP_SUCCESS,
+        success:"success:signup"
     }
 }
 
 export const signupFailure= (error) =>{
     return {
         type: actionTypes.SIGNUP_FAILURE,
-        payload:error
+        error:error
     }
 }
 
@@ -63,7 +39,7 @@ export const searchUsersSuccess= (users) =>{
 export const searchUsersFailure= (error) =>{
     return {
         type: actionTypes.SEARCH_USERS_FAILURE,
-        payload:error
+        error:error
     }
 }
 
@@ -83,7 +59,8 @@ export const fetchUserSuccess= (user) =>{
 export const fetchUserFailure= (error) =>{
     return {
         type: actionTypes.FETCH_USER_FAILURE,
-        payload:error
+        error:error
+
     }
 }
 
@@ -91,12 +68,6 @@ export const addUser= (user) =>{
     return {
         type: actionTypes.ADD_USER,
         payload:user
-    }
-}
-
-export const clearSessionErrors= () =>{
-    return {
-        type: actionTypes.CLEAN_SESSION_ERRORS,
     }
 }
 
@@ -110,28 +81,7 @@ export const editProfileSuccess= (user) =>{
 export const editProfileFailure= (error) =>{
     return {
         type: actionTypes.EDIT_PROFILE_FAILURE,
-        payload:error
-    }
-}
-
-
-
-
-export const login= (username, password) =>{
-    return (dispatch) => {
-        dispatch(loginRequest());
-        ApiService.post("/authenticate", {username, password })
-            .then(response => {
-                const user = response.data;
-                dispatch(hideModal());
-                dispatch(loginSuccess(user));
-            })
-            .catch(
-                error => {
-             
-                    dispatch(loginFailure(error.message))
-                }
-            )               
+        error:error
     }
 }
 

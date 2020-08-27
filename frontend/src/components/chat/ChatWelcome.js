@@ -4,8 +4,8 @@ import EmojiPeopleIcon from "@material-ui/icons/EmojiPeople";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import { useTranslation } from "react-i18next";
-import { AiFillAlipayCircle } from "react-icons/ai";
 import {connect} from "react-redux";
+import NuntiusLogo from "../util/NuntiusLogo";
 
 const ChatWelcome = ({name}) => {
   const { t } = useTranslation();
@@ -17,7 +17,7 @@ const ChatWelcome = ({name}) => {
       alignItems="center"
       style={{ marginTop: "20%" }}
     >
-      <AiFillAlipayCircle style={{ width: "200px", height: "200px" }} />
+      <NuntiusLogo style={{ width: "200px", height: "200px" }} />
       <Box display="flex" flexDirection="row" css={{ maxWidth: "400px" }}>
         <div>
           <EmojiPeopleIcon style={{ width: "100px", height: "100px" }} />
@@ -39,9 +39,9 @@ function toTitleCase(str) {
     );
 }
 
-const mapStateToProps = ({user}) =>{ 
+const mapStateToProps = ({session}) =>{ 
     return {
-        name:user.session.currentUser.name
+        name:session.currentUser.name
     }
   }
 

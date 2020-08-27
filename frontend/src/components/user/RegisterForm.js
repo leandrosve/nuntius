@@ -1,21 +1,21 @@
-import React, {useState} from "react";
-
+import React, {useEffect} from "react";
 import { useTranslation } from "react-i18next";
-
 import { FormikTextField as TextField } from "formik-material-fields";
 import { Formik , Form} from "formik";
 import * as Yup from "yup";
 import FormContainer from "../util/FormContainer";
 import Button from "@material-ui/core/Button";
 import AccountBoxIcon from "@material-ui/icons/AccountBox";
-
 import { makeStyles } from "@material-ui/core/styles";
 import Alert from '../util/Alert';
-
 import { signUp } from "../../redux/user/userActions";
 import { connect } from "react-redux";
-
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { SIGNUP_REQUEST } from "../../redux/user/userActionTypes";
+import { getRequestError } from "../../redux/notification/errorReducer";
+import { isRequestLoading } from "../../redux/notification/loadingReducer";
+import { clearError } from "../../redux/notification/notificationActions";
+import NuntiusLogo from "../util/NuntiusLogo";
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -27,15 +27,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function RegisterForm({signUp, success, error, loading}) {
+function RegisterForm({signUp, error, loading, clearErrors}) {
   const { t } = useTranslation();
 
   const classes = useStyles();
 
-  const [openAlert, setOpenAlert] = useState(false);
+  useEffect(()=>{clearErrors()}, [clearErrors]);
 
   return (
-    <FormContainer title={t("register")} icon={<AccountBoxIcon />}>
+    <FormContainer title={t("register")} icon={<NuntiusLogo />}>
       <Formik
         validateOnMount={true}
         initialValues={{
@@ -68,21 +68,20 @@ function RegisterForm({signUp, success, error, loading}) {
             .required(t("error:required_field")),
         })}
         onSubmit={(values, { setSubmitting }) => {         
-            
             signUp(values.username, values.password, values.name, values.email);
-            setOpenAlert(true);
             setSubmitting(false);
         }}
       >
         {({ isValid }) => (
           <Form className={classes.form}>
             {loading && <CircularProgress color="secondary" />}
+
             <Alert
             severity='error'
-            open={openAlert && !loading && (error !== '' || success !== '')}
-            onClick={() => setOpenAlert(false)}  
+            open={!loading && !!error}
+            onClick={() => clearErrors()}  
           >
-            {error || success}
+            {error}
             </Alert>
             <TextField
               variant="outlined"
@@ -156,16 +155,15 @@ function RegisterForm({signUp, success, error, loading}) {
   );
 }
 
-const mapStateToProps = state =>{
-  const signUp = state.user.signUp;
+const mapStateToProps = ({loading, error}) =>{
   return {
-      success: signUp.success,
-      error: signUp.error,
-      loading: signUp.loading
+      error: getRequestError(error, [SIGNUP_REQUEST]),
+      loading: isRequestLoading(loading, [SIGNUP_REQUEST]),
   }
 }
 const mapDispatchToProps = dispatch =>  {
   return {
+    clearErrors: () => dispatch(clearError([SIGNUP_REQUEST])),
     signUp: (username, password, name, email) => dispatch(signUp(username, password, name, email))
   }
 }

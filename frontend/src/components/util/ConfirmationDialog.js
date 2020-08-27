@@ -42,7 +42,7 @@ export default function ConfirmationDialog({open, title, description, handleCanc
           <Button onClick={(e)=>{close(e)}}  color="primary" autoFocus>
             {t('confirmation:cancel')}
           </Button>
-          <Button  onClick={accept}  color="primary">
+          <Button  onClick={(e)=>{accept();e.stopPropagation()}}  color="primary">
             {t('confirmation:accept')}
           </Button>
         </DialogActions>

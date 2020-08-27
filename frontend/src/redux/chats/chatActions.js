@@ -43,7 +43,9 @@ export const addMessage = (message) => (
   payload: message,
 });
 
-const sendMessageSuccess = addMessage;
+const sendMessageSuccess = () => ({
+  type: actionTypes.SEND_MESSAGE_SUCCESS,
+});
 
 const sendMessageFailure = (error) => ({
   type: actionTypes.SEND_MESSAGE_FAILURE,
@@ -131,7 +133,8 @@ export const fetchMessagesFromChat = (chatId) => {
 export const sendMessageToUser = ({ userId, text }) => {
   return (dispatch) => {
     dispatch(sendMessageRequest());
-    ApiService.post(`/users/${userId}/messages`, { text })    
+    ApiService.post(`/users/${userId}/messages`, { text })
+      .then(dispatch(sendMessageSuccess()))
       .catch((error) => {
         dispatch(sendMessageFailure(error.message));
       });
@@ -141,8 +144,7 @@ export const sendMessageToUser = ({ userId, text }) => {
 export const sendMessageToChat = ({ chatId, text }) => {
   return (dispatch) => {
     dispatch(sendMessageRequest());
-    ApiService.post(`/chats/${chatId}/messages`, { text })
-      
+    ApiService.post(`/chats/${chatId}/messages`, { text }) 
       .catch((error) => {
         dispatch(sendMessageFailure(error.message));
       });
@@ -163,9 +165,6 @@ export const receiveMessage = (message) => {
 export const leaveChat = (chatId) => {
   return (dispatch) => {
     ApiService.delete(`/chats/${chatId}`)
-      .then((response) => {
-        dispatch(leaveChatSuccess(response.data));
-      })
       .catch((error) => {
         dispatch(leaveChatFailure(error.message));
       });

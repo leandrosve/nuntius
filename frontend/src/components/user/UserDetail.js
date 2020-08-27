@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import DeleteContactButton from "./DeleteContactButton";
+import DeleteContactButton from "../contacts/DeleteContactButton";
 import IconButton from "@material-ui/core/IconButton";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
@@ -14,34 +14,30 @@ import AcUnitIcon from "@material-ui/icons/AcUnit";
 import { useTranslation } from "react-i18next";
 import PropTypes from 'prop-types';
 import StartChatButton from "../chat/StartChatButton";
-import Username from "../user/Username";
+import Username from "./Username";
 import useProfileImage from "../profile/useProfileImage";
 
-const ContactDetail = ({
+const UserDetail = ({
   editContact,
   addContact,
-  username,
-  alias,
-  biography,
-  id,
-  userId,
-  name,
-  isContact=true,
+  deleteContact,
+  id, username, alias, biography, contactId, name
 }) => {
   const [openAliasForm, setOpenAliasForm] = useState(false);
   const handleToggleAliasForm = useCallback(() => {
     setOpenAliasForm((prev) => !prev);
   }, []);
 
-  const avatar = useProfileImage(isContact ? userId : id);
+  const avatar = useProfileImage(id);
+
 
   const renderAliasForm = () =>{
-    if(isContact){
+    if(contactId){
       return(
       openAliasForm ? (
         <AliasForm
           alias={alias}
-          id={id}
+          contactId={contactId}
           editContact={editContact}
           handleToggleAliasForm={handleToggleAliasForm}
         />
@@ -96,7 +92,7 @@ const ContactDetail = ({
                 
               {renderAliasForm()}
               </Box>
-              {<Username variant={!isContact ? "h6" : null}>{username}</Username>}
+              {<Username variant="overline" fontSize={!alias ? "20px" : null}>{username}</Username>}
               <Typography variant="subtitle1">{name}</Typography>
               {biography && (
                 <Typography variant="overline">
@@ -112,7 +108,7 @@ const ContactDetail = ({
                   <label>
                   <StartChatButton username={username}/>
                   </label>
-                {!isContact ? 
+                {!contactId ? 
                   <label>
                     <IconButton
                       alt="add"
@@ -124,7 +120,7 @@ const ContactDetail = ({
                   </label>
                   :
                   <label>
-                    <DeleteContactButton contact={{username:username, alias:alias, id:id, userId:userId, name:name}}/>
+                    <DeleteContactButton deleteContact={deleteContact} contact={{username:username, alias:alias, contactId:contactId, name:name}}/>
                   </label>
                 }
 
@@ -138,14 +134,14 @@ const ContactDetail = ({
   );
 };
 
-const AliasForm = ({ alias, id, handleToggleAliasForm, editContact }) => {
+const AliasForm = ({ alias, contactId, handleToggleAliasForm, editContact }) => {
   const { t } = useTranslation();
   const [newAlias, setNewAlias] = React.useState(alias);
   return (
     <React.Fragment>
       <form
         onSubmit={(e) => {
-          if (newAlias !== alias) editContact({ id: id, alias: newAlias });
+          if (newAlias !== alias) editContact({ contactId: contactId, alias: newAlias });
           handleToggleAliasForm();
           e.preventDefault();
         }}
@@ -182,10 +178,10 @@ const AliasForm = ({ alias, id, handleToggleAliasForm, editContact }) => {
   );
 };
 
-ContactDetail.propTypes = {
+UserDetail.propTypes = {
   id: PropTypes.number.isRequired,
   editContact: PropTypes.func.isRequired,
   addContact: PropTypes.func.isRequired,
 };
 
-export default ContactDetail;
+export default UserDetail;

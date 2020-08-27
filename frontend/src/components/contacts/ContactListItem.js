@@ -7,6 +7,7 @@ import { Typography } from "@material-ui/core";
 import StartChatButton from "../chat/StartChatButton";
 import DeleteContactButton from "./DeleteContactButton";
 import useProfileImage from "../profile/useProfileImage";
+import Username from "../user/Username";
 const useStyles = makeStyles((theme) => ({
   contact: {
     minWidth: "400px",
@@ -19,9 +20,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ContactListItem = ({ alias, username, biography, name, id, userId, onRemoveContact, onClick, handleClose}) => {
+const ContactListItem = ({ alias, username, name, id, contactId, deleteContact, onClick, handleClose}) => {
     const classes = useStyles();
-    const avatar = useProfileImage(userId);
+    const avatar = useProfileImage(id);
     return (
       <ListItem
         onClick={onClick}
@@ -30,19 +31,13 @@ const ContactListItem = ({ alias, username, biography, name, id, userId, onRemov
         center={
           <>
             <h3 style={{margin:"0px 2px"}}>{alias}</h3>
-            <Typography gutterbottom="true"  variant="overline">
-              <p style={{lineHeight: 1,margin:"0px 2px"}}>            
-              @{username}
-             </p>
-            </Typography>
-            <p style={{margin:"0px 2px"}}>{biography}</p>
-            
+            <Username>{username}</Username>                   
           </>
         }
         right={
           <div className={classes.action} style={{display:"flex", direction:"row"}}>
             <StartChatButton username={username}/>           
-            <DeleteContactButton contact={{username:username, alias:alias, id:id, userId:userId, name:name}}/>
+            <DeleteContactButton deleteContact={deleteContact} contact={{username:username, alias:alias, id:id, contactId:contactId, name:name}}/>
           </div>
         }
       />

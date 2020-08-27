@@ -1,18 +1,24 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import Contacts from './Contacts';
 import {connect} from "react-redux";
 import {editContact, deleteContact, addContact} from "../../redux/contacts/contactActions";
-import {getContactByUserId, getAllContacts} from "../../redux/contacts/contactReducer";
 import { useTranslation } from "react-i18next";
+import { getContacts, getUserById } from "../../redux/user/userReducer";
+import { isRequestLoading } from "../../redux/notification/loadingReducer";
+import { FETCH_CONTACTS_REQUEST, ADD_CONTACT_REQUEST, EDIT_CONTACT_REQUEST, DELETE_CONTACT_REQUEST } from "../../redux/contacts/contactActionTypes";
+import { getRequestError } from "../../redux/notification/errorReducer";
+import { getRequestSuccessMessage } from "../../redux/notification/successReducer";
+import { clearNotifications } from "../../redux/notification/notificationActions";
 
 const ContactsContainer = (props) =>{
-  const {success} = props;
-  
+  const {success, clearNotifications} = props;
+    
     const { t } = useTranslation();
 
+    useEffect(()=>{clearNotifications()},[clearNotifications])
     
-   
+
     return (
         <Contacts 
         {...props}
@@ -21,21 +27,28 @@ const ContactsContainer = (props) =>{
 }
  
   const mapDispatchToProps = dispatch =>  {
-    return {
-      editContact: (contact) => dispatch(editContact(contact)),
-      deleteContact: (contact) => dispatch(deleteContact(contact)),
-      addContact: (user) => dispatch(addContact(user)),
+    const concerns = [FETCH_CONTACTS_REQUEST, ADD_CONTACT_REQUEST, EDIT_CONTACT_REQUEST, DELETE_CONTACT_REQUEST];
+    const clearNotificationsAndDispatch = (action) => {
+      dispatch(clearNotifications(concerns));
+      dispatch(action);
+    }
+
+    return {  
+      clearNotifications : () => {dispatch(clearNotifications(concerns))},
+      editContact: (user) => {clearNotificationsAndDispatch(editContact(user))},
+      deleteContact: (contact) => {clearNotificationsAndDispatch(deleteContact(contact))},
+      addContact: (user) => {clearNotificationsAndDispatch(addContact(user))},
     }
   }
 
-  const mapStateToProps = ({ contact }) => {
-    
+  const mapStateToProps = ({ user, loading, error, success}) => {
+    const concerns = [FETCH_CONTACTS_REQUEST, ADD_CONTACT_REQUEST, EDIT_CONTACT_REQUEST, DELETE_CONTACT_REQUEST];
     return {
-      contacts: getAllContacts(contact),
-      loading: contact.isFetching,
-      error: contact.error,
-      success:contact.success,
-      getContactByUserId: (userId) => getContactByUserId(contact, userId)
+      contacts: getContacts(user),
+      loading: isRequestLoading(loading, concerns),
+      error: getRequestError(error, concerns),
+      success: getRequestSuccessMessage(success, concerns),
+      getUserById: (id) => getUserById(user, id)
     };
   };
 

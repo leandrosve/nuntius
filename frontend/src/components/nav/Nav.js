@@ -1,7 +1,6 @@
 import React from "react";
 import "../../App.css";
 import { Link } from "react-router-dom";
-import { AiFillAlipayCircle } from "react-icons/ai";
 import { useTranslation } from "react-i18next";
 import NavMenu from "./NavMenu";
 import { makeStyles } from "@material-ui/core/styles";
@@ -10,8 +9,9 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import { connect } from "react-redux";
-import { logout } from "../../redux/user/userActions";
+import { logout } from "../../redux/session/sessionActions";
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import NuntiusLogo from "../util/NuntiusLogo";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -47,7 +47,7 @@ function Nav({ logout }) {
     <AppBar position="static" className={classes.appBar}>
       <Toolbar className={classes.toolBar}>
         <NavMenu />
-        <AiFillAlipayCircle style={{ fontSize: "40px" }} />
+        <NuntiusLogo style={{width:"50px", height:"50px"}} />
         <Typography variant="h5" color="inherit" className={classes.title}>
           NUNTIUS
         </Typography>

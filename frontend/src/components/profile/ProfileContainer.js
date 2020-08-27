@@ -2,7 +2,8 @@ import React, { useCallback, useEffect } from "react";
 import Profile from "./Profile";
 
 import { connect } from "react-redux";
-import { editProfile, clearSessionErrors } from "../../redux/user/userActions";
+import { clearSessionErrors } from "../../redux/session/sessionActions";
+import {editProfile} from "../../redux/user/userActions";
 
 const ProfileContainer = (props) => {
   const {saveProfile, clearSessionErrors, ...params} = props;
@@ -22,11 +23,11 @@ const ProfileContainer = (props) => {
 };
 
 
-const mapStateToProps = ({ user }) => {
+const mapStateToProps = ({ session }) => {
   return {
-    ...user.session.currentUser,
-    success: user.session.success,
-    error: user.session.error,
+    ...session.currentUser,
+    success: session.success,
+    error: session.error,
   };
 };
 

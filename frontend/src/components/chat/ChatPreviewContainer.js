@@ -1,7 +1,6 @@
 import React, { useEffect, useCallback } from "react";
 import ChatPreview from "./ChatPreview";
 import { getUserById } from "../../redux/user/userReducer";
-import { getContactByUserId } from "../../redux/contacts/contactReducer";
 import { fetchUserById } from "../../redux/user/userActions";
 import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
@@ -49,16 +48,14 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-const mapStateToProps = ({ user, contact }, {chat}) => {
-  const currentUserId = user.session.currentUser.id;
+const mapStateToProps = ({ user, session }, {chat}) => {
+  const currentUserId = session.currentUser.id;
   const userId =
     chat.groupal ? null : chat.userIds.filter((id) => id !== currentUserId)[0];
   return {
-    currentUserId: user.session.currentUser.id,
+    currentUserId: session.currentUser.id,
     userId: userId,
-    user:
-      userId &&
-      (getContactByUserId(contact, userId) || getUserById(user, userId)),
+    user: userId ? getUserById(user, userId) : null,
   };
 };
 export default connect(

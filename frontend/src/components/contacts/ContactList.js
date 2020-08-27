@@ -3,7 +3,7 @@ import profilePicPlaceholder from "../assets/images/profile-pic-placeholder.jpg"
 import ContactListItem from "./ContactListItem";
 
 const ContactList = ({
-  onRemoveContact,
+  deleteContact,
   onClickContact,
   handleClose,
   contacts,
@@ -12,11 +12,11 @@ const ContactList = ({
     <React.Fragment>
       {contacts.map((contact) => {
         return (
-          <div key={contact.id} onClick={() => onClickContact(contact)}>
+          <div key={contact.id} onClick={() => {onClickContact(contact)}}>
             <ContactListItem
               avatar={profilePicPlaceholder}
               {...contact}
-              onRemoveContact={()=>onRemoveContact(contact)}
+              deleteContact={()=>deleteContact(contact)}
               handleClose={handleClose}
             />
           </div>

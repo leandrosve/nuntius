@@ -2,7 +2,6 @@ import * as actionTypes from "./contactActionTypes";
 import ApiService from "../../ApiService";
 import { normalize } from "normalizr";
 import * as schema from "../schema";
-import { addUser } from "../user/userActions";
 
 const fetchContactsRequest = () => ({
   type: actionTypes.FETCH_CONTACTS_REQUEST,
@@ -25,6 +24,7 @@ const editContactRequest = () => ({
 const editContactSuccess = (contact) => ({
   type: actionTypes.EDIT_CONTACT_SUCCESS,
   payload: contact,
+  success:"success:saved"
 });
 
 const editContactFailure = (error) => ({
@@ -39,11 +39,12 @@ const addContactRequest = () => ({
 const addContactSuccess = (contact) => ({
   type: actionTypes.ADD_CONTACT_SUCCESS,
   payload: contact,
+  success:"success:contact_saved"
 });
 
 const addContactFailure = (error) => ({
   type: actionTypes.ADD_CONTACT_FAILURE,
-  payload: error,
+  error: error,
 });
 
 const deleteContactRequest = () => ({
@@ -53,6 +54,7 @@ const deleteContactRequest = () => ({
 const deleteContactSuccess = (contact) => ({
   type: actionTypes.DELETE_CONTACT_SUCCESS,
   payload: contact,
+  success:"success:contact_removed"
 });
 
 const deleteContactFailure = (error) => ({
@@ -66,7 +68,7 @@ export const contacts = () => {
     ApiService.get("/contacts")
       .then((response) => {
         const contacts = response.data;
-        const normalized = normalize(contacts, schema.arrayOfContacts);
+        const normalized = normalize(contacts, schema.arrayOfUsers);
         dispatch(fetchContactsSuccess(normalized));
       })
       .catch((error) => {
@@ -75,10 +77,10 @@ export const contacts = () => {
   };
 };
 
-export const editContact = (contact) => {
+export const editContact = (user) => {
   return (dispatch) => {
     dispatch(editContactRequest());
-    ApiService.patch(`/contacts/${contact.id}`, { ...contact })
+    ApiService.patch(`/contacts/${user.contactId}`, { ...user })
       .then((response) => {
         dispatch(editContactSuccess(response.data));
       })
@@ -104,16 +106,9 @@ export const addContact = (userId) => {
 export const deleteContact = (contact) => {
   return (dispatch) => {
     dispatch(deleteContactRequest());
-    ApiService.delete(`/contacts/${contact.id}`)
-      .then(() => {
-        dispatch(
-          addUser({
-            id: contact.userId,
-            name: contact.name,
-            username: contact.username,
-          })
-        );
-        dispatch(deleteContactSuccess(contact));
+    ApiService.delete(`/contacts/${contact.contactId}`)
+      .then((response) => {
+        dispatch(deleteContactSuccess(response.data));
       })
       .catch((error) => {
         dispatch(deleteContactFailure(error.message));

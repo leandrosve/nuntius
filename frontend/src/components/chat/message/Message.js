@@ -9,7 +9,7 @@ import MessageCheckMarker from "./MessageCheckMarker";
 import Media from "./Media";
 import useProfileImage from "../../profile/useProfileImage";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   messageContainer: {
     width: "100%",
     overflow: "hidden",
@@ -24,10 +24,13 @@ const useStyles = makeStyles(() => ({
     cursor: "pointer",
     position: "relative",
     borderRadius: "10px",
-    boxShadow: " 2px 2px 8px rgba(0, 0, 0, 0.7)",
+    boxShadow: theme.shadows[4],
     color: "black",
     padding: "5px",
     "& a": { color: "rgba(0, 0, 0, 0.7)", fontStyle: "italic" },
+  },
+  avatar:{
+    boxShadow: theme.shadows[3],
   },
   avatarLeft: {
     display: "flex",
@@ -82,7 +85,7 @@ function Message({
           <div
             className={details ? classes.avatarRight : classes.avatarLeft}
           >
-            <Avatar src={avatar} alt="user" />
+            <Avatar src={avatar}className={classes.avatar} alt="user" />
           </div>
         )}
 

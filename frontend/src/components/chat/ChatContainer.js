@@ -2,7 +2,6 @@ import React, { useEffect, useCallback } from "react";
 import { connect } from "react-redux";
 import Chat from "./Chat";
 import { openUserDetail, openMedia } from "../../redux/modal/modalActions";
-import { getContactByUsername } from "../../redux/contacts/contactReducer";
 import { getUserByUsername } from "../../redux/user/userReducer";
 import { withRouter } from "react-router-dom";
 import { fetchUserByUsername } from "../../redux/user/userActions";
@@ -13,27 +12,27 @@ import {bool, string, func} from "prop-types";
 import { fetchMessagesFromUser, fetchMessagesFromChat, sendMessageToUser, sendMessageToChat, setCurrentChat, leaveChat} from "../../redux/chats/chatActions";
 import {Redirect} from "react-router-dom"
 import useProfileImage from "../profile/useProfileImage";
+import { isRequestLoading } from "../../redux/notification/loadingReducer";
+import { FETCH_USER_REQUEST } from "../../redux/user/userActionTypes";
 
 const ChatContainer = ({
-  user, contact, group, fetchUserByUsername, openUserDetail, 
-  loading = true, username, openMedia,
-   messages, fetchMessagesFromChat, sendMessageToUser, sendMessageToChat, 
+  user, group, fetchUserByUsername, openUserDetail, 
+  loading = true, username, openMedia,messages, fetchMessagesFromChat, sendMessageToUser, sendMessageToChat, 
   setCurrentChat, chatId, privateChatId, leaveChat, currentUser
 }) => {
 
   const getUserId= useCallback(() =>{
-    return contact ? contact.userId : user ? user.id : null
+    return user ? user.id : null
   }
-  ,[contact,user]);
+  ,[user]);
 
-  const avatar = useProfileImage(!group ? getUserId() : null);
+  const avatar = useProfileImage(getUserId());
   
   useEffect(()=>{
-    if (group|| user || contact ){
-      const id = group ? group.id : privateChatId;    
-    setCurrentChat({id:id, userId:getUserId()});
+    if (group || user){ 
+    setCurrentChat({id:(group ? group.id : privateChatId), userId:getUserId()});
   }
-  },[user, contact, getUserId, setCurrentChat, privateChatId, group]);
+  },[user, getUserId, setCurrentChat, privateChatId, group]);
 
   useEffect(()=>{
     if(chatId) fetchMessagesFromChat(chatId);
@@ -41,16 +40,15 @@ const ChatContainer = ({
   [chatId, fetchMessagesFromChat])
 
   useEffect(() => { 
-     if (username && !contact && !user ){
+     if (username && !user ){
       fetchUserByUsername(username); 
     }
-  }, [fetchUserByUsername, username, user, contact]);
+  }, [fetchUserByUsername, username, user]);
 
   const handleOpenDetail = useCallback(() => {
-    if(contact) openUserDetail({user:{ ...contact, id:contact.userId }}) 
-    else if (user)openUserDetail({ user }) 
+    if (user)openUserDetail({ user }) 
     else alert("not yet");
-  }, [user, openUserDetail, contact]);
+  }, [user, openUserDetail]);
 
   const handleOpenMedia = useCallback((src) => {
     openMedia(src)
@@ -72,21 +70,20 @@ const ChatContainer = ({
     <>
       {loading && <LinearProgress color="secondary" />}
 
-      {!loading && (contact || user || group) ? (
+      {(user || group) ? (
         <Chat
           title={
             group
-              ? group.title
-              : contact
-              ? contact.alias
+              ? group.title            
               : user
-              ? user.name
+              ? user.alias || user.name
               : null
           }
           avatar={avatar}
-          username={contact ? contact.username : user ? user.username : null}
+          username={user ? user.username : null}
           messages={messages}
-          type={group? "group" : contact ? "contact" : user ? "user" : null}
+          canDelete={!!chatId}
+          type={group? "group" : user.contactId ? "contact" : user ? "user" : null}
           handleOpenDetail={handleOpenDetail}
           handleOpenMedia={handleOpenMedia}
           handleSendMessage={handleSendMessage}
@@ -113,24 +110,22 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-const mapStateToProps = ({ contact, user, chat}, { match }) => {
+const mapStateToProps = ({ user, chat, session, loading}, { match }) => {
   const username = match.params.username;
   const groupId = match.params.groupId;
-  const c = username ? getContactByUsername(contact, username) : null;
-  const u=  !c ? getUserByUsername(user.users, username) : null;
-  const privateChat = (c || u ) ? getPrivateChatByUserId(chat, c? c.userId : u.id) : null;
+  const u = getUserByUsername(user, username);
+  const privateChat = u ? getPrivateChatByUserId(chat,u.id) : null;
   return {
-    contact: c,
+   // contact: c,
     user: u,
     group: groupId ? getChatGroupById(chat, groupId) : null,
     groupId :match.params.groupId,
-    loading: user.users.loading,
+    loading: isRequestLoading(loading, [FETCH_USER_REQUEST]),
     chatId: chat.currentChat.id,
-    shouldFetchUser: (username && !c && !u ),
     username: username,
     messages: chat.currentChat.messages,
     privateChatId: privateChat ? privateChat.id : null,
-    currentUser: user.session.currentUser,
+    currentUser: session.currentUser,
   };
 };
 

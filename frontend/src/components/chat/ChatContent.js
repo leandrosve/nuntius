@@ -27,7 +27,7 @@ const ChatContent = ({handleOpenMedia, messages}) => {
     }, 200);
   }, [messages, chatEndRef]);
 
-  const sortByDate = (a, b) => (a.sendTime > b.sendTime ? 1 : -1);
+  const sortByDate = (a, b) => (a.sentTime > b.sentTime ? 1 : -1);
   return (
     <>
       <div className="ChatMessages">

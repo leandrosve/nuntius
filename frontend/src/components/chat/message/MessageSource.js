@@ -28,6 +28,7 @@ const MessageSource = ({user, receiveMessage, deleteChat}) => {
     // called when the client receives a STOMP message from the server
     if (message.body) {
       const parsedMessage = JSON.parse(message.body);
+      parsedMessage.sentTime = new Date(parsedMessage.sentTime).getTime();
       receiveMessage(parsedMessage)
     } else {
       alert("got empty message");
@@ -66,9 +67,9 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-const mapStateToProps = ({user}) => {
+const mapStateToProps = ({session}) => {
   return {
-    user: user.session.currentUser
+    user: session.currentUser
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(MessageSource);
