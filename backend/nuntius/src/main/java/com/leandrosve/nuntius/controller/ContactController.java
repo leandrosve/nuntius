@@ -1,10 +1,12 @@
 package com.leandrosve.nuntius.controller;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.validation.Valid;
 
 import com.leandrosve.nuntius.beans.ContactDTO;
+import com.leandrosve.nuntius.beans.UserDTOv2;
 import com.leandrosve.nuntius.service.ContactService;
 import com.leandrosve.nuntius.service.UserService;
 import com.leandrosve.nuntius.util.AuthUtil;
@@ -34,33 +36,36 @@ public class ContactController {
     @Autowired
     AuthUtil authUtil;
 
-    @GetMapping("/contacts")
-    public Set<ContactDTO> contacts() {   
-        Set<ContactDTO> contacts = contactService.getContacts();
-        return contacts;
-    }
-
     @GetMapping("/contacts/{id}")
-    public ContactDTO contacts(@PathVariable Long id) {   
-        final ContactDTO contact = contactService.getContact(id);
+    public UserDTOv2 getContact(@PathVariable Long id) {
+        final UserDTOv2 contact = contactService.getContact(id);
         return contact;
     }
 
-    @PostMapping("/contacts")
-    public ResponseEntity<ContactDTO> createContact(@Valid @RequestBody ContactDTO contact){   
-      final ContactDTO createdContact=contactService.createContact(contact);
-      return new ResponseEntity<ContactDTO>(createdContact, HttpStatus.CREATED);
-    }
-
     @PatchMapping("/contacts/{id}")
-    public ContactDTO updateContact(@PathVariable Long id, @RequestBody ContactDTO contact){   
+    public UserDTOv2 updateContact(@PathVariable Long id, @RequestBody ContactDTO contact){
       return contactService.updateContact(id, contact);
     }
 
     @DeleteMapping("/contacts/{id}")
-    public ContactDTO deleteContact(@PathVariable Long id) {   
-        final ContactDTO contact = contactService.deleteContact(id);
-        return contact;
+    public UserDTOv2 deleteContact(@PathVariable Long id) {
+        final UserDTOv2 user = contactService.deleteContact(id);
+        return user;
+    }
+
+
+    /* ================= v2 ================= */
+
+    @GetMapping("/contacts")
+    public List<UserDTOv2> contacts() {
+        List<UserDTOv2> contacts = contactService.getContacts();
+        return contacts;
+    }
+
+    @PostMapping("/contacts")
+    public ResponseEntity<UserDTOv2> createContact(@Valid @RequestBody ContactDTO contact){
+        final UserDTOv2 createdContact=contactService.createContact(contact);
+        return new ResponseEntity<UserDTOv2>(createdContact, HttpStatus.CREATED);
     }
 
 }

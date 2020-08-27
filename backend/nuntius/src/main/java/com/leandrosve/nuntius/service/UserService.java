@@ -94,7 +94,7 @@ public class UserService implements UserDetailsService {
         return userDTOs;
 	}
 
-    private UserDTO mapToDTO(User user){
+    public UserDTO mapToDTO(User user){
         return new UserDTO(user.getId(), user.getUsername(), user.getBiography(), user.getName());
     }
 
