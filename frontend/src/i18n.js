@@ -157,5 +157,10 @@ i18n
     moment.locale(i18n.language);
   });
 
+  i18n.on('languageChanged', ()=>{
+    moment.locale(i18n.language)
+  })
+
+
  
 export default i18n;
