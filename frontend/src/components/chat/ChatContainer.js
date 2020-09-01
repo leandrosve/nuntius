@@ -1,24 +1,25 @@
 import React, { useEffect, useCallback } from "react";
 import { connect } from "react-redux";
 import Chat from "./Chat";
-import { openUserDetail, openMedia } from "../../redux/modal/modalActions";
+import { openUserDetail, openMedia, openGroupDetail } from "../../redux/modal/modalActions";
 import { getUserByUsername } from "../../redux/user/userReducer";
 import { withRouter } from "react-router-dom";
 import { fetchUserByUsername } from "../../redux/user/userActions";
-import { LinearProgress } from "@material-ui/core";
 import { getChatGroupById, getPrivateChatByUserId } from "../../redux/chats/chatReducer";
 import {userType, contactType, chatType} from "../../types";
 import {bool, string, func} from "prop-types";
 import { fetchMessagesFromUser, fetchMessagesFromChat, sendMessageToUser, sendMessageToChat, setCurrentChat, leaveChat} from "../../redux/chats/chatActions";
 import {Redirect} from "react-router-dom"
-import useProfileImage from "../profile/useProfileImage";
+import useAvatar from "../profile/useAvatar";
 import { isRequestLoading } from "../../redux/notification/loadingReducer";
 import { FETCH_USER_REQUEST } from "../../redux/user/userActionTypes";
+import { FETCH_MESSAGES_REQUEST } from "../../redux/chats/chatActionTypes";
+import { chat } from "../../redux/schema";
 
 const ChatContainer = ({
   user, group, fetchUserByUsername, openUserDetail, 
   loading = true, username, openMedia,messages, fetchMessagesFromChat, sendMessageToUser, sendMessageToChat, 
-  setCurrentChat, chatId, privateChatId, leaveChat, currentUser
+  setCurrentChat, chatId, privateChatId, leaveChat, currentUser, openGroupDetail
 }) => {
 
   const getUserId= useCallback(() =>{
@@ -26,13 +27,13 @@ const ChatContainer = ({
   }
   ,[user]);
 
-  const avatar = useProfileImage(getUserId());
+  const avatar = useAvatar({userId: user ? user.id : null, chatId:group? group.id : null});
   
   useEffect(()=>{
     if (group || user){ 
-    setCurrentChat({id:(group ? group.id : privateChatId), userId:getUserId()});
+    setCurrentChat({id:(group ? group.id : privateChatId), userId:user? user.id : null});
   }
-  },[user, getUserId, setCurrentChat, privateChatId, group]);
+  },[user, setCurrentChat, privateChatId, group]);
 
   useEffect(()=>{
     if(chatId) fetchMessagesFromChat(chatId);
@@ -46,9 +47,9 @@ const ChatContainer = ({
   }, [fetchUserByUsername, username, user]);
 
   const handleOpenDetail = useCallback(() => {
-    if (user)openUserDetail({ user }) 
-    else alert("not yet");
-  }, [user, openUserDetail]);
+    if (user)openUserDetail({userId: user.id}) 
+    else if (group) openGroupDetail({chatId: group.id}) 
+  }, [user, openUserDetail, openGroupDetail, group]);
 
   const handleOpenMedia = useCallback((src) => {
     openMedia(src)
@@ -68,8 +69,7 @@ const ChatContainer = ({
 
   return (
     <>
-      {loading && <LinearProgress color="secondary" />}
-
+      
       {(user || group) ? (
         <Chat
           title={
@@ -79,10 +79,11 @@ const ChatContainer = ({
               ? user.alias || user.name
               : null
           }
+          loading={loading}
           avatar={avatar}
           username={user ? user.username : null}
           messages={messages}
-          canDelete={!!chatId}
+          canDelete={!!chatId || !!group}
           type={group? "group" : user.contactId ? "contact" : user ? "user" : null}
           handleOpenDetail={handleOpenDetail}
           handleOpenMedia={handleOpenMedia}
@@ -98,7 +99,8 @@ const ChatContainer = ({
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    openUserDetail: (props) => dispatch(openUserDetail(props)),
+    openUserDetail: (userId) => dispatch(openUserDetail(userId)),
+    openGroupDetail: (props) => dispatch(openGroupDetail(props)),
     fetchUserByUsername: (username) => dispatch(fetchUserByUsername(username)),
     fetchMessagesFromUser: (userId) => dispatch(fetchMessagesFromUser(userId)),
     fetchMessagesFromChat: (chatId) => dispatch(fetchMessagesFromChat(chatId)),
@@ -120,7 +122,7 @@ const mapStateToProps = ({ user, chat, session, loading}, { match }) => {
     user: u,
     group: groupId ? getChatGroupById(chat, groupId) : null,
     groupId :match.params.groupId,
-    loading: isRequestLoading(loading, [FETCH_USER_REQUEST]),
+    loading: isRequestLoading(loading, [FETCH_USER_REQUEST, FETCH_MESSAGES_REQUEST]),
     chatId: chat.currentChat.id,
     username: username,
     messages: chat.currentChat.messages,

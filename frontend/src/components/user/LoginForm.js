@@ -50,9 +50,9 @@ const LoginForm = ( {error="", login, loading, success="", clearErrors, clearSuc
 
   return (
     <Formik
-      validateOnMount={true}
       validateOnBlur={true}
       initialValues={initialValues}
+      isInitialValid={false}
       validationSchema={Yup.object({
         username: Yup.string().required(t("error:required_field")),
         password: Yup.string().required(t("error:required_field")),

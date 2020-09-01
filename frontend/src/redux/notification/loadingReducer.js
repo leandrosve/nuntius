@@ -1,3 +1,5 @@
+import { omit } from "lodash";
+
 const loadingReducer = (state = {}, action) => {
   // We only take actions that include 'REQUEST_' in the type.
   let isRequestType = action.type.includes("_REQUEST");
@@ -11,7 +13,7 @@ const loadingReducer = (state = {}, action) => {
 
   if (isRequestType) {
     const requestName = action.type.replace("_SUCCESS", "_REQUEST").replace("_FAILURE","_REQUEST");
-    return { ...state, [requestName]: false };
+    return omit( state, [requestName]);
   }
 
   return {...state};

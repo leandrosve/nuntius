@@ -10,19 +10,27 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { Spring } from "react-spring/renderprops";
 
+import { makeStyles } from "@material-ui/core/styles";
+
+const useStyles = makeStyles(() => ({
+  root:{
+    textAlign:"center",
+  }
+}));
+
 const ImageEditor = ({ image, handleCancel, editorRef, handleAccept }) => {
   const [zoom, setZoom] = React.useState(1);
-
+  const classes = useStyles();
   const handleChange = (event, newValue) => {
     setZoom(newValue);
   };
 
   const { t } = useTranslation();
-
+ 
   return (
     <Spring from={{ opacity: 0 }} to={{ opacity: 1 }} duration="2500">
       {(props) => (
-        <div style={props}>
+        <div style={props} className={classes.root}>
           <Typography style={{ margin: "5px" }} variant="h5">
             {t("image_adjust")}
           </Typography>

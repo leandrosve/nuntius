@@ -11,12 +11,12 @@ import CameraAltIcon from "@material-ui/icons/CameraAlt";
 import Alert from '../util/Alert';
 import ImageEditor from "./ImageEditor";
 import { Avatar } from "@material-ui/core";
-import useProfileImage from "./useProfileImage";
+import useAvatar from "./useAvatar";
 
 const Profile = ({username, name, email, biography, id , handleSave, success, error}) => {
   const { t } = useTranslation();
 
-  let originalImage = useProfileImage(id);
+  let originalImage = useAvatar({userId:id});
 
   const [uneditedImage, setUneditedImage] = useState();
   const [editedImage, setEditedImage] = useState();

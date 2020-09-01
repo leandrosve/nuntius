@@ -39,7 +39,7 @@ const AddContact = ({ searchUsers, users , handleUserSearchClick}) => {
             options={users}
             freeSolo
             getOptionLabel={(user) => `${user.name} - @${user.username}`}
-            onChange={(e, value)=>{handleUserSearchClick(value);e.stopPropagation();}}
+            onChange={(e, value)=>{handleUserSearchClick(value.id);e.stopPropagation();}}
             renderInput={(params) => (
               <TextField
                 {...params}

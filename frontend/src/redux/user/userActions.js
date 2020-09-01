@@ -64,6 +64,27 @@ export const fetchUserFailure= (error) =>{
     }
 }
 
+export const fetchUsersRequest= () =>{
+    return {
+        type: actionTypes.FETCH_USERS_REQUEST,
+    }
+}
+
+export const fetchUsersSuccess= (user) =>{
+    return {
+        type: actionTypes.FETCH_USERS_SUCCESS,
+        payload:user
+    }
+}
+
+export const fetchUsersFailure= (error) =>{
+    return {
+        type: actionTypes.FETCH_USERS_FAILURE,
+        error:error
+
+    }
+}
+
 export const addUser= (user) =>{
     return {
         type: actionTypes.ADD_USER,
@@ -102,13 +123,13 @@ export const signUp= (username, password, name, email) =>{
 }
 
 export const editProfile= (name, biography, avatar) =>{
-    console.log(avatar);
+   
     return (dispatch) => {
         ApiService.patch("/profile", {name, biography})
             .then((response) => {
-                if(avatar){
-                    ApiService.putProfileImage(avatar).then(()=>dispatch(editProfileSuccess(response.data)));
-                }else{
+                if(avatar){                
+                    ApiService.putProfileImage(avatar).then((avatarURL)=>dispatch(editProfileSuccess({avatar:avatarURL})));
+                }else{                                     
                     dispatch(editProfileSuccess(response.data));   
                 }                      
             })
@@ -160,6 +181,21 @@ export const fetchUserById= (id) =>{
             .catch(
                 error => {              
                     dispatch(fetchUserFailure(error.message))
+                }
+            )               
+    }
+}
+
+export const fetchUsersById= (ids) =>{
+    return (dispatch) => {
+        dispatch(fetchUsersRequest());
+        ApiService.get(`/users/${ids}`)
+            .then((response) => {
+                dispatch(fetchUsersSuccess(response.data));
+            })
+            .catch(
+                error => {              
+                    dispatch(fetchUsersFailure(error.message))
                 }
             )               
     }

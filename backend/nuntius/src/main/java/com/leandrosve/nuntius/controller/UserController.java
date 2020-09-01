@@ -26,7 +26,7 @@ public class UserController {
     @Autowired
     SmartValidator validator;
 
-    @GetMapping("/users")
+    @GetMapping(value="/users" , params = "id")
     public List<User> users() {
         return userService.listUsers();
     }
@@ -52,6 +52,11 @@ public class UserController {
          user.setName(q);
          user.setUsername(q);
         return userService.searchUsers(new UserSpecification(user));
+    }
+
+    @GetMapping(value="/users", params = "ids")
+    public List<UserDTO> getUsersById(@RequestParam List<Long> ids) {
+        return userService.getUsersById(ids);
     }
 
     @PostMapping("/signup")

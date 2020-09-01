@@ -8,17 +8,17 @@ import {
   addContact,
 } from "../../redux/contacts/contactActions";
 import UserDetail from "./UserDetail";
-import { getUserById } from "../../redux/user/userReducer";
+import { getUserById, getSearchedUserById } from "../../redux/user/userReducer";
 import { ADD_CONTACT_REQUEST, EDIT_CONTACT_REQUEST, DELETE_CONTACT_REQUEST } from "../../redux/contacts/contactActionTypes";
 import { clearNotifications } from "../../redux/notification/notificationActions";
 
 const UserDetailContainer = (props) => {
-  const { user, ...params } = props;
-  return <UserDetail {...params} {...user} />;
+  return <UserDetail {...props} {...props.user}  />;
 };
 
-const mapStateToProps = (state, { user }) => {
-  return { user: getUserById(state.user, user.id) };
+const mapStateToProps = ({ user }, {userId}) => {
+  const u = getUserById(user, userId);
+  return { user: u ? u : getSearchedUserById(user, userId) };
 };
 
 const mapDispatchToProps = (dispatch) => {

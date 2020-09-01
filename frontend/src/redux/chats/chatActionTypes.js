@@ -27,6 +27,7 @@ export const ADD_MESSAGE = "ADD_MESSAGE";
 
 export const SET_CURRENT_CHAT = "SET_CURRENT_CHAT";
 
+export const ADD_CHAT = "ADD_CHAT";
 
 export const LEAVE_CHAT_SUCCESS = "LEAVE_CHAT_SUCCESS";
 

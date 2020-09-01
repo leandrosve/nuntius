@@ -103,10 +103,10 @@ export const addContact = (userId) => {
   };
 };
 
-export const deleteContact = (contact) => {
+export const deleteContact = (contactId) => {
   return (dispatch) => {
     dispatch(deleteContactRequest());
-    ApiService.delete(`/contacts/${contact.contactId}`)
+    ApiService.delete(`/contacts/${contactId}`)
       .then((response) => {
         dispatch(deleteContactSuccess(response.data));
       })

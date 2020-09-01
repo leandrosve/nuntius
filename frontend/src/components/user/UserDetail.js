@@ -3,7 +3,6 @@ import DeleteContactButton from "../contacts/DeleteContactButton";
 import IconButton from "@material-ui/core/IconButton";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
-import Avatar from "@material-ui/core/Avatar";
 import TextField from "@material-ui/core/TextField";
 import { Spring } from "react-spring/renderprops";
 import EditIcon from "@material-ui/icons/Edit";
@@ -15,7 +14,8 @@ import { useTranslation } from "react-i18next";
 import PropTypes from 'prop-types';
 import StartChatButton from "../chat/StartChatButton";
 import Username from "./Username";
-import useProfileImage from "../profile/useProfileImage";
+import useAvatar from "../profile/useAvatar";
+import Avatar from "../util/Avatar";
 
 const UserDetail = ({
   editContact,
@@ -28,7 +28,7 @@ const UserDetail = ({
     setOpenAliasForm((prev) => !prev);
   }, []);
 
-  const avatar = useProfileImage(id);
+  const avatar = useAvatar({userId:id});
 
 
   const renderAliasForm = () =>{
@@ -75,7 +75,7 @@ const UserDetail = ({
             <Avatar
               src={avatar}
               style={{ width: "125px", height: "125px", marginBottom: "auto" }}
-              alt={username}
+              alt={alias ? alias : username}
             />          
             <Box
               display="flex"
@@ -106,7 +106,7 @@ const UserDetail = ({
               <div>
                 <Box display="flex" justifyContent="flex-end">
                   <label>
-                  <StartChatButton username={username}/>
+                  <StartChatButton userId={id}/>
                   </label>
                 {!contactId ? 
                   <label>
@@ -120,7 +120,7 @@ const UserDetail = ({
                   </label>
                   :
                   <label>
-                    <DeleteContactButton deleteContact={deleteContact} contact={{username:username, alias:alias, contactId:contactId, name:name}}/>
+                    <DeleteContactButton contactUserId={id}/>
                   </label>
                 }
 
@@ -146,12 +146,15 @@ const AliasForm = ({ alias, contactId, handleToggleAliasForm, editContact }) => 
           e.preventDefault();
         }}
       >
+        <div style={{display:"flex", alignItems:"center"}}>
         <TextField
           label={t("alias")}
           value={newAlias}
+          style={{flex:"1"}}
           autoFocus
           onChange={(e) => setNewAlias(e.target.value)}
         />
+        <div>
         <label>
           <IconButton
             aria-label="submit"
@@ -167,12 +170,14 @@ const AliasForm = ({ alias, contactId, handleToggleAliasForm, editContact }) => 
           <IconButton
             aria-label="cancel"
             size="small"
-            component="span"
+            component="button"
             onClick={() => handleToggleAliasForm()}
           >
             <ClearIcon />
           </IconButton>
         </label>
+        </div>
+        </div>
       </form>
     </React.Fragment>
   );

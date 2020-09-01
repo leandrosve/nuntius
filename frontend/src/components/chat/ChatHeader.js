@@ -8,13 +8,13 @@ import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from "@material-ui/icons/Search";
 import ListItem from "@material-ui/core/ListItem";
 import DropdownMenu from "../util/DropdownMenu";
-import SupervisedUserCircleIcon from "@material-ui/icons/SupervisedUserCircle";
 import { withRouter } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import { string, func } from "prop-types";
 import Username from "../user/Username";
-import { Avatar } from "@material-ui/core";
 import ConfirmationDialog from "../util/ConfirmationDialog";
+import Avatar from "../util/Avatar";
+
 
 
 
@@ -46,24 +46,26 @@ function ChatHeader({
 
   return (
     <div>
-      <Toolbar style={{ padding: "0px" }} className={classes.root}>
+      
+      
+      <Toolbar style={{ padding: "0px" }} className={classes.root}>   
         <ListItem
           button
           style={{ width: "auto" }}
           className="ChatHeader-userInfo"
           onClick={handleOpenDetail}
         >
-          <Avatar           
+          <Avatar          
             src={avatar}
-            className="ChatHeader-profilePic"
-            alt="user"
+            group={type === "group"}
+            alt={title}  
           />
+           
+          
 
-          <div style={{ display: "flex", alignItems: "baseline" }}>
+          <div style={{ display: "flex", paddingLeft:"10px", alignItems: "baseline" }}>
             <h1>
-              {type === "group" && (
-                <SupervisedUserCircleIcon style={{ verticalAlign: "middle" }} />
-              )}
+              
               {title || t("group_untitled")}
             </h1>
             {online && <p>{t("online")}</p>}

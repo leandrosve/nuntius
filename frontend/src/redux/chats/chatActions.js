@@ -67,6 +67,18 @@ export const leaveChatSuccess = (chat) => ({
   payload: chat,
 });
 
+export const receiveChatSuccess = (chat) => {
+  return (dispatch) =>{
+    ApiService.getGroupImage(chat.id).then((response) =>{
+      return{
+        type: actionTypes.ADD_CHAT,
+        payload: {...chat, avatar:response},
+      }
+    })
+    
+  } 
+};
+
 const leaveChatFailure = (error) => ({
   type: actionTypes.LEAVE_CHAT_FAILURE,
   payload: error,
@@ -82,7 +94,7 @@ export const chats = () => {
   return (dispatch) => {
     dispatch(fetchChatsRequest());
     ApiService.get("/chats")
-      .then((response) => {
+      .then((response) => {     
         const normalized = normalize(response.data, schema.arrayOfChats);
         dispatch(fetchChatsSuccess(normalized));
       })

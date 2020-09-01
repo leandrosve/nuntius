@@ -5,7 +5,7 @@ import { fetchUserById } from "../../redux/user/userActions";
 import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import useProfileImage from "../profile/useProfileImage";
+import useAvatar from "../profile/useAvatar";
 
 const ChatPreviewContainer = ({ chat, userId, user, fetchUserById }) => {
     
@@ -27,7 +27,7 @@ const ChatPreviewContainer = ({ chat, userId, user, fetchUserById }) => {
     }
   }, [userId,user,fetchUserById]);
 
-  const avatar = useProfileImage(userId);
+  const avatar = useAvatar({userId: user ? user.id : null, chatId: !user && chat ? chat.id : null});
 
   return (
     <ChatPreview

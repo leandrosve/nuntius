@@ -8,6 +8,8 @@ export const modalContentTypes = {
   SIGN_UP: "SIGN_UP",
   USER_DETAILS: "USER_DETAILS",
   MEDIA: "MEDIA",
+  GROUP_ADD: "GROUP_ADD",
+  GROUP_DETAILS: "GROUP_DETAILS"
 }
 
 export const openModal = (contentType, contentProps) => ({
@@ -46,4 +48,12 @@ export const openUserDetail = (props) =>{
 
 export const openMedia = (props) =>{
   return openModal(modalContentTypes.MEDIA, props);
+};
+
+export const openAddGroup = (props) =>{
+  return openModal(modalContentTypes.GROUP_ADD, props);
+};
+
+export const openGroupDetail = (props) =>{
+  return openModal(modalContentTypes.GROUP_DETAILS, props);
 };

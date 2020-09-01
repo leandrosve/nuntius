@@ -5,7 +5,6 @@ import { Formik , Form} from "formik";
 import * as Yup from "yup";
 import FormContainer from "../util/FormContainer";
 import Button from "@material-ui/core/Button";
-import AccountBoxIcon from "@material-ui/icons/AccountBox";
 import { makeStyles } from "@material-ui/core/styles";
 import Alert from '../util/Alert';
 import { signUp } from "../../redux/user/userActions";
@@ -36,8 +35,9 @@ function RegisterForm({signUp, error, loading, clearErrors}) {
 
   return (
     <FormContainer title={t("register")} icon={<NuntiusLogo />}>
+       {loading && <CircularProgress color="secondary"/>}
       <Formik
-        validateOnMount={true}
+        isInitialValid={false}
         initialValues={{
           username: "",
           password: "",
@@ -74,7 +74,7 @@ function RegisterForm({signUp, error, loading, clearErrors}) {
       >
         {({ isValid }) => (
           <Form className={classes.form}>
-            {loading && <CircularProgress color="secondary" />}
+           
 
             <Alert
             severity='error'

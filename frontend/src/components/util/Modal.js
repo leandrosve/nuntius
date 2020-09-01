@@ -14,6 +14,8 @@ import RegisterForm from "../user/RegisterForm";
 import {modalContentTypes} from "../../redux/modal/modalActions"
 import UserDetailContainer from "../user/UserDetailContainer";
 import Image from 'material-ui-image';
+import GroupForm from "../group/GroupForm";
+import GroupDetail from "../group/GroupDetail";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -50,6 +52,8 @@ const MODAL_COMPONENTS = {
   [modalContentTypes.SIGN_UP] : RegisterForm,
   [modalContentTypes.USER_DETAILS] : UserDetailContainer,
   [modalContentTypes.MEDIA] : Image ,
+  [modalContentTypes.GROUP_ADD]: GroupForm,
+  [modalContentTypes.GROUP_DETAILS]: GroupDetail,
 }
 
 const Modal = ({ open, hideModal, contentType, contentProps}) => {
@@ -80,6 +84,7 @@ const Modal = ({ open, hideModal, contentType, contentProps}) => {
     );
   else return null;
 };
+
 const mapStateToProps = ({ modal }) => {
   return {
     open: modal.open,

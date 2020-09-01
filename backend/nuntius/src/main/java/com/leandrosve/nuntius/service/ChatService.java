@@ -48,8 +48,13 @@ public class ChatService {
         }
         List<User> users = userRepository.findByUserIds(userIds);
 
-        Chat chat = new Chat(users, null, chatDTO.getGroupal(), chatDTO.getTitle());
-        return prepareChatForUser(chatV2Repository.save(chat), currentUser);
+        Chat chat = new Chat(users, null, true, chatDTO.getTitle());
+        chat = chatV2Repository.save(chat);
+
+        for(User member : chat.getMembers()){
+            messagingTemplate.convertAndSendToUser(member.getUsername(), "/queue/chats", prepareChatForUser(chat, member));
+        }
+        return prepareChatForUser(chat, currentUser);
     }
 
 

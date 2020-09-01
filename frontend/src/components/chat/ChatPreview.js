@@ -8,7 +8,7 @@ import MessageCheckMarker from "./message/MessageCheckMarker";
 import SupervisedUserCircleIcon from "@material-ui/icons/SupervisedUserCircle";
 import moment from "moment";
 import "moment/locale/es";
-import { Avatar } from "@material-ui/core";
+import Avatar from "../util/Avatar";
 
 const ellipsis = {
   whiteSpace: "nowrap",
@@ -28,7 +28,7 @@ function ChatPreview({
   const displayDate = (date)=>{
     const momentDate = moment(date);
     const momentCompare = moment(new Date());
-    return momentDate.isSame(momentCompare, 'day') ? momentDate.format('LT'):
+    return momentDate.isSame(momentCompare, 'day') ? (momentDate.format('LT')):
       momentDate.isSame(momentCompare.subtract(1, 'day'),'day') ?  t("date:yesterday") : 
       momentDate.format('l'); 
   }
@@ -38,7 +38,7 @@ function ChatPreview({
       button
       onClick={handleClick}
       style={{ background: "#1f1f23", borderBottom: "1px solid #303035" }}
-      left={<Avatar src={avatar} style={{width:"50px", height:"50px"}} alt={title} />}
+      left={<Avatar src={avatar} style={{width:"50px", height:"50px"}} group={type === "group"} alt={title} />}
       center={
         <React.Fragment>
           <h3 style={ellipsis}>

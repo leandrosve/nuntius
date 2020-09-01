@@ -1,28 +1,34 @@
 import React from "react";
-import profilePicPlaceholder from "../assets/images/profile-pic-placeholder.jpg";
-import ContactListItem from "./ContactListItem";
+import UserListItem from "../user/UserListItem";
+import DeleteContactButton from "./DeleteContactButton";
+import StartChatButton from "../chat/StartChatButton";
 
+//sort((a,b)=>a.alias > b.alias)
 const ContactList = ({
-  deleteContact,
   onClickContact,
-  handleClose,
-  contacts,
+  contactIds,
 }) => {
   return (
-    <React.Fragment>
-      {contacts.map((contact) => {
+    <>
+      {contactIds.map((userId) => {
         return (
-          <div key={contact.id} onClick={() => {onClickContact(contact)}}>
-            <ContactListItem
-              avatar={profilePicPlaceholder}
-              {...contact}
-              deleteContact={()=>deleteContact(contact)}
-              handleClose={handleClose}
+            <UserListItem
+              key={userId}
+              userId={userId}
+              handleClick={() => {onClickContact(userId)}}
+              actions={
+                <>
+                <StartChatButton 
+                  userId={userId} 
+                 />
+                <DeleteContactButton contactUserId={userId}/>
+                </>
+              }
             />
-          </div>
+          
         );
       })}
-    </React.Fragment>
+    </>
   );
 };
 

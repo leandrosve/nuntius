@@ -70,8 +70,16 @@ const ApiService = {
   },
 
   getProfileImage(userId) {
+    return this.getImage(`/users/${userId}/avatar`);       
+  },
+
+  getGroupImage(chatId) {
+    return this.getImage(`/group/${chatId}/avatar`);       
+  },
+
+  getImage(url){
     return instance
-      .get(`/users/${userId}/image`, { responseType: 'arraybuffer' })
+      .get(url, { responseType: 'arraybuffer' })
       .then(response => {
         let blob = new Blob([response.data], 
         { type: response.headers['content-type'] }
@@ -79,12 +87,24 @@ const ApiService = {
       let image = URL.createObjectURL(blob)
       return image}   
       )
-      .catch((reason) => console.log(reason));   
+      .catch(() => null );   
   },
 
   putProfileImage(avatar) {
     return instance
-      .put(`/profile/avatar`, avatar )
+      .put(`/profile/avatar`, avatar, { responseType: 'arraybuffer' } )
+      .then(response => {
+        let blob = new Blob([response.data], 
+        { type: response.headers['content-type'] });
+        let image = URL.createObjectURL(blob)
+        return image}) 
+      .catch((reason) => console.log(reason));   
+  },
+
+  
+  putGroupImage(chatId, avatar) {
+    return instance
+      .put(`/group/${chatId}/avatar`, avatar )
       .then(res => res)
       .catch((reason) => console.log(reason));   
   },

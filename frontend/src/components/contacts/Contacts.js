@@ -22,6 +22,7 @@ function Contacts({
   error,
   success,
   clearNotifications,
+  contactIds = [],
 }) {
   const { t } = useTranslation();
 
@@ -29,16 +30,16 @@ function Contacts({
 
   const [userDetail, setContactDetail] = React.useState({
     open: false,
-    user: null,
+    userId: null,
   });
 
-  const handleOpenContactDetail = React.useCallback((contact) => {
-    setContactDetail({ open: true, user:contact });
+  const handleOpenContactDetail = React.useCallback((userId) => {
+    setContactDetail({ open: true, userId:userId });
   }, []);
 
   const handleUserSearchClick = React.useCallback(
-    (user) => {
-      setContactDetail({ open: true, user: user });
+    (userId) => {
+      setContactDetail({ open: true, userId: userId });
     },
     [setContactDetail]
   );
@@ -72,12 +73,11 @@ function Contacts({
             {error || success}
           </Alert>
 
-          {userDetail.open && userDetail.user && (
+          {userDetail.open && userDetail.userId && (
             <>
               <UserDetailContainer
-                user={userDetail.user}
-                handleClose={handleClose}
-                {...userDetail.user}                        
+                userId={userDetail.userId}
+                handleClose={handleClose}                
               />
               <WideCloseButton
                 onClick={() => setContactDetail({ open: false })}
@@ -90,6 +90,7 @@ function Contacts({
       {loading && <CircularProgress color="secondary" />}
       <ContactList
         contacts={contacts}
+        contactIds={contactIds}
         handleClose={handleClose}
         deleteContact={deleteContact}
         onClickContact={handleOpenContactDetail}

@@ -1,6 +1,8 @@
 import * as actionTypes from "./chatActionTypes";
 import { combineReducers } from "redux";
 import currentChatReducer from "./currentChatReducer";
+import { union } from "lodash";
+import { EDIT_GROUP_SUCCESS, SET_GROUP_AVATAR } from "../groups/groupActions";
 
 const isFetching = (state = false, action) => {
   switch (action.type) {
@@ -35,11 +37,15 @@ const byIds = (state = {}, action) => {
       const contacts = action.payload.entities.chats;
       return contacts ? contacts : state;
     case actionTypes.FETCH_CHAT_SUCCESS:
+    case actionTypes.ADD_CHAT:
       return {...state, [action.payload.id]:action.payload}
-    
       case actionTypes.ADD_MESSAGE:
         const chat = state[action.payload.chatId];
         return chat ? {...state, [action.payload.chatId]:{...chat, lastMessage:action.payload}} : state
+    case EDIT_GROUP_SUCCESS:
+      return {...state, [action.payload.id]:{...state[action.payload.id], ...action.payload}}
+    case SET_GROUP_AVATAR:
+      return {...state, [action.payload.id]:{...state[action.payload.id], avatar:action.payload.avatar}}
     default:
       return state;
   }
@@ -52,7 +58,8 @@ const allIds = (state = [], action) => {
     case actionTypes.FETCH_CHATS_SUCCESS:
       return action.payload.result;
     case actionTypes.FETCH_CHAT_SUCCESS:
-      return state.includes(action.payload.id) ? state : [...state, action.payload.id]
+    case actionTypes.ADD_CHAT:
+      return union(state, [action.payload.id])
     default:
       return state;
   }

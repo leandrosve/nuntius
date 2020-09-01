@@ -4,7 +4,7 @@ const errorReducer = (state = {}, action) => {
     
     if (action.type.includes("_REQUEST") || action.type.includes("_SUCCESS")) {
       const requestName = action.type.replace("_SUCCESS", "_REQUEST");
-      return { ...state, [requestName]: null };
+      return omit(state, [requestName]);
     }
    
     if (action.type.includes("_FAILURE")) {

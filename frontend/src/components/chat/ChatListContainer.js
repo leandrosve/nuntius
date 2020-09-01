@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import ChatList from "./ChatList";
 import { chats } from "../../redux/chats/chatActions";
 import { getAllChats } from "../../redux/chats/chatReducer";
-import { openContacts } from "../../redux/modal/modalActions";
+import { openContacts, openAddGroup } from "../../redux/modal/modalActions";
 
 const ChatListContainer = (props) => {
   const { fetchChats, ...params } = props;
@@ -21,6 +21,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     fetchChats: () => dispatch(chats()),
     openContacts: () => dispatch(openContacts()),
+    openAddGroup: () => dispatch(openAddGroup()),
   };
 };
 

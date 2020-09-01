@@ -1,13 +1,13 @@
 import React, { memo } from "react";
 import Typography from "@material-ui/core/Typography";
 import Linkify from "react-linkify";
-import Avatar from "@material-ui/core/Avatar";
 import { makeStyles } from "@material-ui/core/styles";
 import dateFormat from "dateformat";
 import EmbededYoutube from "./EmbededYoutube";
 import MessageCheckMarker from "./MessageCheckMarker";
 import Media from "./Media";
-import useProfileImage from "../../profile/useProfileImage";
+import useAvatar from "../../profile/useAvatar";
+import { Avatar } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   messageContainer: {
@@ -73,7 +73,7 @@ function Message({
   const classes = useStyles();
 
   
-  const avatar=useProfileImage(displayAvatar ? userId : null);
+  const avatar=useAvatar({userId: displayAvatar ?  userId:  null} );
   
   return (
     <div className={classes.messageContainer}>

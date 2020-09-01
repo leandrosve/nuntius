@@ -15,6 +15,7 @@ import javax.validation.Valid;
 import com.leandrosve.nuntius.exception.BadRequestException;
 import com.leandrosve.nuntius.exception.NotFoundException;
 import com.leandrosve.nuntius.model.User;
+import com.leandrosve.nuntius.service.ChatService;
 import com.leandrosve.nuntius.util.AuthUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,9 +35,12 @@ import org.springframework.web.multipart.MultipartFile;
 public class ImageController {
 
     private String profileImagesDirectory =  System.getProperty("user.dir").concat("/uploads/profile_images/");
+    private String groupImagesDirectory =  System.getProperty("user.dir").concat("/uploads/group_images/");
 
     private AuthUtil authUtil;
 
+    @Autowired
+    private ChatService chatService;
 
     private Logger logger = LoggerFactory.getLogger(ImageController.class);
 
@@ -45,36 +49,72 @@ public class ImageController {
         this.authUtil = authUtil;
     }
 
-    @RequestMapping(value = "/users/{userId}/image", method = RequestMethod.GET, produces = MediaType.IMAGE_PNG_VALUE)
-
+    @RequestMapping(value = "/users/{userId}/avatar", method = RequestMethod.GET, produces = MediaType.IMAGE_PNG_VALUE)
     public ResponseEntity<byte[]> getImage(@PathVariable @Valid long userId) throws IOException {
-        Path imgFile =  Paths.get(profileImagesDirectory+userId+".png");
-        byte[] bytes;
-        try {
-            bytes = Files.readAllBytes(imgFile);
-        }catch (Exception e){
-            throw new NotFoundException("Profile image not found");
-        }
+        Path imagePath =  Paths.get(profileImagesDirectory+userId+".png");
+        byte[] image = retrieveImage(imagePath);
         return ResponseEntity
                 .ok()
                 .cacheControl(CacheControl.maxAge(5, TimeUnit.SECONDS))
                 .contentType(MediaType.IMAGE_PNG)
-                .body(bytes);
+                .body(image);
     }
 
-    @PutMapping("/profile/avatar")
-    public ResponseEntity<?> storeImage(@RequestBody String avatar) throws IOException {
+    @RequestMapping(value = "/group/{chatId}/avatar", method = RequestMethod.GET, produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<byte[]> getGroupImage(@PathVariable @Valid long chatId) throws IOException {
+        chatService.getChat(chatId); //throws AccessDeniedException
+        Path imagePath =  Paths.get(groupImagesDirectory+chatId+".png");
+        byte[] image = retrieveImage(imagePath);
+        return ResponseEntity
+                .ok()
+                .cacheControl(CacheControl.maxAge(5, TimeUnit.SECONDS))
+                .contentType(MediaType.IMAGE_PNG)
+                .body(image);
+    }
+
+
+    @PutMapping(value="/profile/avatar", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<byte[]> storeImage(@RequestBody String avatar) throws IOException {
         final User currentUser = authUtil.getCurrentUser();
-        String encodedImg = avatar.split(",")[1];
+        Path fileNameAndPath = Paths.get(profileImagesDirectory + currentUser.getId()+".png");
+        byte[] image = saveImage(avatar, fileNameAndPath);
+        return ResponseEntity
+                .ok()
+                .cacheControl(CacheControl.maxAge(5, TimeUnit.SECONDS))
+                .contentType(MediaType.IMAGE_PNG)
+                .body(image);
+    }
+
+    @PutMapping(value="/group/{chatId}/avatar", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<?> storeGroupAvatar(@RequestBody String avatar, @PathVariable @Valid Long chatId) throws IOException {
+        chatService.getChat(chatId);
+
+        Path fileNameAndPath = Paths.get(groupImagesDirectory + chatId +".png");
+
+        saveImage(avatar, fileNameAndPath);
+
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    private byte[] saveImage(String imageString, Path fileNameAndPath) throws IOException {
+        final User currentUser = authUtil.getCurrentUser();
+        String encodedImg = imageString.split(",")[1];
         logger.debug(encodedImg);
         byte[] image = Base64.getMimeDecoder().decode(encodedImg);
-        Path fileNameAndPath = Paths.get(profileImagesDirectory + currentUser.getId()+".png");
         try {
             Files.write(fileNameAndPath, image);
         }catch(NoSuchFileException e){
             throw new BadRequestException("Unable to upload the image");
         }
-
-        return new ResponseEntity(HttpStatus.OK);
+        return image;
+    }
+    private byte[] retrieveImage (Path fileNameAndPath) throws IOException {
+        byte[] bytes;
+        try {
+            bytes = Files.readAllBytes(fileNameAndPath);
+        }catch (Exception e){
+            throw new NotFoundException("Profile image not found");
+        }
+        return bytes;
     }
 }

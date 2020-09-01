@@ -28,7 +28,7 @@ const currentChatReducer = (state = initialState, action)=>{
     case actionTypes.FETCH_MESSAGES_SUCCESS:
       const messages=action.payload;
       return {
-        id:messages[0]? messages[0].chatId : null ,
+        id:messages[0]? messages[0].chatId : state.id ,
          loading:false,
           messages:action.payload
         };

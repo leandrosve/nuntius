@@ -12,7 +12,6 @@ const ProfileContainer = (props) => {
   
   const handleSave = useCallback((name, biography, avatar)=>{
     clearSessionErrors()
-    console.log(avatar);
     saveProfile(name, biography, avatar)
   }
   ,[saveProfile, clearSessionErrors]);
