@@ -1,10 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { getRequestSuccessMessage } from "../../redux/notification/successReducer";
 import Alert from "../util/Alert";
 import { editGroupImage, editGroupTitle } from "../../redux/chats/groups/groupActions";
-import { isRequestLoading } from "../../redux/notification/loadingReducer";
 import { connect } from "react-redux";
-import { clearNotifications } from "../../redux/notification/notificationActions";
 import { useTranslation } from "react-i18next";
 import { getChatById } from "../../redux/chats/chatReducer";
 import InlineForm from "../util/InlineForm";
@@ -18,10 +15,11 @@ import { sortAlphabetically } from "../../redux/user/userReducer";
 import { fetchUsersById } from "../../redux/user/userActions";
 import ParticipantList from "./ParticipantList";
 import ImageEditor from "../util/ImageEditor";
-import useAvatar from "../util/hooks/useAvatar";
 import AddParticipants from "./AddParticipants";
 import WideCloseButton from "../util/WideCloseButton";
 import { ADD_GROUP_REQUEST,EDIT_GROUP_REQUEST,  KICK_USER_REQUEST, ADD_USER_TO_CHAT_REQUEST} from "../../redux/chats/groups/groupActionTypes";
+import SmartAlert from "../util/SmartAlert";
+import useAvatar from "../util/hooks/useAvatar";
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
@@ -56,9 +54,6 @@ const useStyles = makeStyles((theme) => ({
 
 const GroupDetail = ({
   loading,
-  success,
-  error,
-  clearNotifications,
   chat,
   sortAlphabetically,
   editImage,
@@ -71,8 +66,6 @@ const GroupDetail = ({
   const [editedImage, setEditedImage] = useState(null);
   const [uneditedImage, setUneditedImage] = useState(null);
   const editorRef = useRef();
-
-  const [displayNotification, setDisplayNotification] = useState({text:null, type:"info"});
 
   const [openAddParticipant, setOpenAddParticipant] =useState(false);
 
@@ -88,16 +81,10 @@ const GroupDetail = ({
   },[editTitle, chat])
 
 
-  const avatar=useAvatar({chatId:chat? chat.id: null})
+  const avatar=useAvatar({chatId: chat.id});
   useEffect(() => {
     if(!!chat)setUserIds(sortAlphabetically(chat.userIds));
   }, [chat, setUserIds, sortAlphabetically]);
-
-  useEffect(()=>{
-      if(!!success) setDisplayNotification({text: success, type:"success"});
-      else if(!!error) setDisplayNotification({text: error, type:"error"});
-      clearNotifications();
-  },[success, error, clearNotifications])
 
    return (
     <div className={classes.root}>
@@ -133,13 +120,7 @@ const GroupDetail = ({
           </Fab>
         </div>
       </div>
-      <Alert
-        open={!loading && !!displayNotification.text}
-        severity={displayNotification.type}
-        onClick={() => setDisplayNotification({text:null})}
-      >
-        {displayNotification.type === "error" ? displayNotification.text : t(displayNotification.text)}
-      </Alert>
+      <SmartAlert concerns={concerns}/>
       {uneditedImage && (
         <ImageEditor
           handleCancel={() => setUneditedImage(null)}
@@ -173,12 +154,10 @@ const GroupDetail = ({
 };
 
 const concerns = [ADD_GROUP_REQUEST, EDIT_GROUP_REQUEST, KICK_USER_REQUEST, ADD_USER_TO_CHAT_REQUEST];
-const mapStateToProps = ({ success, loading, chat, user }, { chatId }) => {
+const mapStateToProps = ({ chat, user }, { chatId }) => {
   return {
     chat: chatId ? getChatById(chat, chatId) : null,
     sortAlphabetically: (userIds) => sortAlphabetically(user, userIds),
-    success: getRequestSuccessMessage(success, concerns),
-    loading: isRequestLoading(loading, concerns),
   };
 };
 
@@ -186,9 +165,6 @@ const mapDispatchToProps = (dispatch) => {
   return {
     editImage: (chatId, image) =>{dispatch(editGroupImage(chatId, image))},   
     editTitle: (chatId, title) =>{dispatch(editGroupTitle(chatId, title))},
-    clearNotifications: () => {
-      dispatch(clearNotifications(concerns));
-    },
     fetchUsers: (ids) => dispatch(fetchUsersById(ids)),
   };
 };

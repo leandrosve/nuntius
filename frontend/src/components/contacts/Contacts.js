@@ -7,22 +7,23 @@ import IconButton from "@material-ui/core/IconButton";
 import WideCloseButton from "../util/WideCloseButton";
 import TitledContainer from "../util/TitledContainer";
 import { useTranslation } from "react-i18next";
-import Alert from "../util/Alert";
 import ContactList from "./ContactList";
 import AddContact from "./AddContact";
 
 import CircularProgress from "@material-ui/core/CircularProgress";
 import UserDetailContainer from "../user/UserDetailContainer";
+import SmartAlert from "../util/SmartAlert";
+import { FETCH_CONTACTS_REQUEST, ADD_CONTACT_REQUEST, EDIT_CONTACT_REQUEST, DELETE_CONTACT_REQUEST } from "../../redux/contacts/contactActionTypes";
+
+
+const concerns = [FETCH_CONTACTS_REQUEST, ADD_CONTACT_REQUEST, EDIT_CONTACT_REQUEST, DELETE_CONTACT_REQUEST];
 
 function Contacts({
   handleClose,
   contacts = [],
-  loading,
   deleteContact,
-  error,
-  success,
-  clearNotifications,
   contactIds = [],
+  loading,
 }) {
   const { t } = useTranslation();
 
@@ -65,13 +66,8 @@ function Contacts({
               <WideCloseButton onClick={() => setOpenAddContact(false)} />
             </>
           )}
-          <Alert
-            open={!loading && (!!error || !!success)}
-            severity={error? "error" : "success"}
-            onClick={() => clearNotifications()}
-          >
-            {error || success}
-          </Alert>
+
+          <SmartAlert concerns={concerns}/>
 
           {userDetail.open && userDetail.userId && (
             <>

@@ -10,10 +10,14 @@ import {
 import UserDetail from "./UserDetail";
 import { getUserById, getSearchedUserById } from "../../redux/user/userReducer";
 import { ADD_CONTACT_REQUEST, EDIT_CONTACT_REQUEST, DELETE_CONTACT_REQUEST } from "../../redux/contacts/contactActionTypes";
-import { clearNotifications } from "../../redux/notification/notificationActions";
+import SmartAlert from "../util/SmartAlert";
 
 const UserDetailContainer = (props) => {
-  return <UserDetail {...props} {...props.user}  />;
+  return (
+    <>
+      <SmartAlert concerns ={concerns}/>
+      <UserDetail {...props} {...props.user}  />
+    </>);
 };
 
 const mapStateToProps = ({ user }, {userId}) => {
@@ -21,30 +25,23 @@ const mapStateToProps = ({ user }, {userId}) => {
   return { user: u ? u : getSearchedUserById(user, userId) };
 };
 
-const mapDispatchToProps = (dispatch) => {
-  const concerns = [
-    ADD_CONTACT_REQUEST,
-    EDIT_CONTACT_REQUEST,
-    DELETE_CONTACT_REQUEST,
-  ];
+const concerns = [
+  ADD_CONTACT_REQUEST,
+  EDIT_CONTACT_REQUEST,
+  DELETE_CONTACT_REQUEST,
+];
 
-  const clearNotificationsAndDispatch = (action) => {
-    dispatch(clearNotifications(concerns));
-    dispatch(action);
-  };
+const mapDispatchToProps = (dispatch) => {
 
   return {
-    clearNotifications: () => {
-      dispatch(clearNotifications(concerns));
-    },
     editContact: (user) => {
-      clearNotificationsAndDispatch(editContact(user));
+      dispatch(editContact(user))
     },
     deleteContact: (contact) => {
-      clearNotificationsAndDispatch(deleteContact(contact));
+      dispatch(deleteContact(contact))
     },
     addContact: (user) => {
-      clearNotificationsAndDispatch(addContact(user));
+      dispatch(addContact(user));
     },
   };
 };

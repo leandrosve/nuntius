@@ -7,17 +7,12 @@ import { useTranslation } from "react-i18next";
 import { getContacts, getUserById, getContactIds, getSearchedUserById } from "../../redux/user/userReducer";
 import { isRequestLoading } from "../../redux/notification/loadingReducer";
 import { FETCH_CONTACTS_REQUEST, ADD_CONTACT_REQUEST, EDIT_CONTACT_REQUEST, DELETE_CONTACT_REQUEST } from "../../redux/contacts/contactActionTypes";
-import { getRequestError } from "../../redux/notification/errorReducer";
-import { getRequestSuccessMessage } from "../../redux/notification/successReducer";
 import { clearNotifications } from "../../redux/notification/notificationActions";
 
 const ContactsContainer = (props) =>{
   const {success, clearNotifications} = props;
     
-    const { t } = useTranslation();
-
-    useEffect(()=>{clearNotifications()},[clearNotifications])
-    
+    const { t } = useTranslation();  
 
     return (
         <Contacts 
@@ -28,28 +23,22 @@ const ContactsContainer = (props) =>{
  
   const mapDispatchToProps = dispatch =>  {
     const concerns = [FETCH_CONTACTS_REQUEST, ADD_CONTACT_REQUEST, EDIT_CONTACT_REQUEST, DELETE_CONTACT_REQUEST];
-    const clearNotificationsAndDispatch = (action) => {
-      dispatch(clearNotifications(concerns));
-      dispatch(action);
-    }
 
     return {  
       clearNotifications : () => {dispatch(clearNotifications(concerns))},
-      editContact: (user) => {clearNotificationsAndDispatch(editContact(user))},
-      deleteContact: (contact) => {clearNotificationsAndDispatch(deleteContact(contact))},
-      addContact: (user) => {clearNotificationsAndDispatch(addContact(user))},
+      editContact: (user) => {editContact(user)},
+      deleteContact: (contact) => {deleteContact(contact)},
+      addContact: (user) => {addContact(user)},
     }
   }
 
-  const mapStateToProps = ({ user, loading, error, success}) => {
+  const mapStateToProps = ({ user, loading}) => {
     const concerns = [FETCH_CONTACTS_REQUEST, ADD_CONTACT_REQUEST, EDIT_CONTACT_REQUEST, DELETE_CONTACT_REQUEST];
     
     return {
       contacts: getContacts(user),
       contactIds: getContactIds(user),
       loading: isRequestLoading(loading, concerns),
-      error: getRequestError(error, concerns),
-      success: getRequestSuccessMessage(success, concerns),
       getUserById: (id) => { const u = getUserById(user, id); return  u ? u : getSearchedUserById(user, id)}
     };
   };
