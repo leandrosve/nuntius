@@ -14,7 +14,7 @@ import { useTranslation } from "react-i18next";
 import PropTypes from 'prop-types';
 import StartChatButton from "../chat/StartChatButton";
 import Username from "./Username";
-import useAvatar from "../profile/useAvatar";
+import useAvatar from "../util/hooks/useAvatar";
 import Avatar from "../util/Avatar";
 
 const UserDetail = ({
@@ -76,6 +76,7 @@ const UserDetail = ({
               src={avatar}
               style={{ width: "125px", height: "125px", marginBottom: "auto" }}
               alt={alias ? alias : username}
+              colorSource={id}
             />          
             <Box
               display="flex"

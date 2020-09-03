@@ -40,6 +40,7 @@ function ChatHeader({
   username,
   type,
   canDelete,
+  colorSource,
 }) {
   const { t } = useTranslation();
   const classes = useStyles();
@@ -59,6 +60,7 @@ function ChatHeader({
             src={avatar}
             group={type === "group"}
             alt={title}  
+            colorSource={colorSource}
           />
            
           

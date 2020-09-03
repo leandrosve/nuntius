@@ -6,8 +6,10 @@ import dateFormat from "dateformat";
 import EmbededYoutube from "./EmbededYoutube";
 import MessageCheckMarker from "./MessageCheckMarker";
 import Media from "./Media";
-import useAvatar from "../../profile/useAvatar";
-import { Avatar } from "@material-ui/core";
+import useAvatar from "../../util/hooks/useAvatar";
+import { useSelector } from "react-redux";
+import { getUserById } from "../../../redux/user/userReducer";
+import Avatar from "../../util/Avatar";
 
 const useStyles = makeStyles((theme) => ({
   messageContainer: {
@@ -72,9 +74,9 @@ function Message({
 }) {
   const classes = useStyles();
 
-  
+
   const avatar=useAvatar({userId: displayAvatar ?  userId:  null} );
-  
+  const alt= useSelector(state => {const u=getUserById(state.user, userId); return u ? u.alias ? u.alias :  u.name : null })
   return (
     <div className={classes.messageContainer}>
       <div
@@ -85,10 +87,10 @@ function Message({
           <div
             className={details ? classes.avatarRight : classes.avatarLeft}
           >
-            <Avatar src={avatar}className={classes.avatar} alt="user" />
+          <Avatar src={avatar} className={classes.avatar} alt={alt} />
           </div>
         )}
-
+        { displayAvatar && !details && <Typography variant="caption" color="textSecondary">{alt}</Typography>}
         {media ? (
           <Media src={media} handleOpenMedia={handleOpenMedia} />
         ) : (
@@ -97,13 +99,13 @@ function Message({
             handleOpenVideoPlayer={handleOpenVideoPlayer}
           />
         )}
-        <p style={{ wordWrap: "break-word", textOverflow: "string", margin: "0px" }}>
+        <Typography variant="body2" style={{ wordWrap: "break-word", textAlign:"left", textOverflow: "string", margin: "0px" }}>
           <Linkify target="_blank">{text}</Linkify>
-        </p>
+        </Typography>
         <div style={{ alignSelf: "flex-end" }}>
           <Typography
             variant="caption"
-            style={{ textAlign: "end", marginRight: "5px" }}
+            style={{ textAlign: "end" }}
             display="block"
             gutterBottom
           >

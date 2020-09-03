@@ -5,7 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Typography } from "@material-ui/core";
 import StartChatButton from "../chat/StartChatButton";
 import DeleteContactButton from "./DeleteContactButton";
-import useAvatar from "../profile/useAvatar";
+import useAvatar from "../util/useAvatar";
 import Username from "../user/Username";
 import Avatar from "../util/Avatar";
 const useStyles = makeStyles((theme) => ({

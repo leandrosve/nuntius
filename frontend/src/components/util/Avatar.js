@@ -16,24 +16,16 @@ const colors = [
   "#c81912",
 ];
 
-const getColor = function (string) {
-  if(!string) return null;  
-  var hash = 0,
-    length = string.length,
-    i = 0;
-  if (length > 0)
-    while (i < length) hash = ((hash << 5) - hash + string.charCodeAt(i++)) | 0;
-  hash = hash < 0 ? -hash : hash;
-  const index = hash % 10;
-  return colors[index];
-};
+const getColorFromNumber = (number) =>{
+  return number ? colors[number % 10] : colors[0]
+}
 
 const Avatar = (props) => {
  const {group, children, ...params} = props;
   return (
     <MaterialAvatar
       {...params}
-      style={{ ...props.style, backgroundColor: !props.src  ? getColor(props.alt) : null }}
+      style={{ ...props.style, backgroundColor: (!props.src || props.src === "not found") ? getColorFromNumber(props.colorSource) : null }}
     >
       {props.alt ? props.alt.charAt(0).toUpperCase() : null}
       {children}
@@ -43,5 +35,6 @@ const Avatar = (props) => {
 Avatar.propTypes = {
   ...MaterialAvatar.propTypes,
   group: PropTypes.any,
+  colorSource: PropTypes.number
 };
 export default Avatar;

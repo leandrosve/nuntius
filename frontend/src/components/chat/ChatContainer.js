@@ -10,11 +10,10 @@ import {userType, contactType, chatType} from "../../types";
 import {bool, string, func} from "prop-types";
 import { fetchMessagesFromUser, fetchMessagesFromChat, sendMessageToUser, sendMessageToChat, setCurrentChat, leaveChat} from "../../redux/chats/chatActions";
 import {Redirect} from "react-router-dom"
-import useAvatar from "../profile/useAvatar";
+import useAvatar from "../util/hooks/useAvatar";
 import { isRequestLoading } from "../../redux/notification/loadingReducer";
 import { FETCH_USER_REQUEST } from "../../redux/user/userActionTypes";
 import { FETCH_MESSAGES_REQUEST } from "../../redux/chats/chatActionTypes";
-import { chat } from "../../redux/schema";
 
 const ChatContainer = ({
   user, group, fetchUserByUsername, openUserDetail, 
@@ -27,13 +26,15 @@ const ChatContainer = ({
   }
   ,[user]);
 
+  const groupId = group ? group.id : null;
+
   const avatar = useAvatar({userId: user ? user.id : null, chatId:group? group.id : null});
   
   useEffect(()=>{
-    if (group || user){ 
-    setCurrentChat({id:(group ? group.id : privateChatId), userId:user? user.id : null});
+    if (groupId || user){ 
+    setCurrentChat({id:(groupId ? groupId : privateChatId), userId:user? user.id : null});
   }
-  },[user, setCurrentChat, privateChatId, group]);
+  },[user, setCurrentChat, privateChatId, groupId]);
 
   useEffect(()=>{
     if(chatId) fetchMessagesFromChat(chatId);
@@ -84,6 +85,7 @@ const ChatContainer = ({
           username={user ? user.username : null}
           messages={messages}
           canDelete={!!chatId || !!group}
+          colorSource={user ? user.id : group.id}
           type={group? "group" : user.contactId ? "contact" : user ? "user" : null}
           handleOpenDetail={handleOpenDetail}
           handleOpenMedia={handleOpenMedia}

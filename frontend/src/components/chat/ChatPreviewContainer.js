@@ -5,7 +5,8 @@ import { fetchUserById } from "../../redux/user/userActions";
 import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import useAvatar from "../profile/useAvatar";
+import useAvatar from "../util/hooks/useAvatar";
+import { getChatById } from "../../redux/chats/chatReducer";
 
 const ChatPreviewContainer = ({ chat, userId, user, fetchUserById }) => {
     
@@ -38,6 +39,7 @@ const ChatPreviewContainer = ({ chat, userId, user, fetchUserById }) => {
       avatar={avatar}
       lastMessageTime="20:00"
       handleClick={()=>handleClick(chat)}
+      colorSource={user ? user.id : chat.id}
     />
   );
 };
@@ -48,14 +50,15 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-const mapStateToProps = ({ user, session }, {chat}) => {
+const mapStateToProps = ({ user, session, chat}, {chatId}) => {
   const currentUserId = session.currentUser.id;
-  const userId =
-    chat.groupal ? null : chat.userIds.filter((id) => id !== currentUserId)[0];
+  const c =  getChatById(chat, chatId);
+  const userId = c.groupal ? null : c.userIds.filter((id) => id !== currentUserId)[0];
   return {
     currentUserId: session.currentUser.id,
     userId: userId,
     user: userId ? getUserById(user, userId) : null,
+    chat: c,
   };
 };
 export default connect(

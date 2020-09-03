@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {connect} from "react-redux";
 import {Client} from "@stomp/stompjs";
 import SockJS from "sockjs-client";
@@ -46,6 +46,7 @@ const MessageSource = ({username, jwtToken, receiveMessage, deleteChat, receiveC
   };
 
   const handleReceiveChat = function(message){
+    
     if (message.body) {
       receiveChat(JSON.parse(message.body));
     } else {

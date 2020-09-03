@@ -19,10 +19,11 @@ import { FormikTextField as TextField } from "formik-material-fields";
 import { getContactIds } from "../../redux/user/userReducer";
 import { connect } from "react-redux";
 import { remove, union } from "lodash";
-import { addGroup, ADD_GROUP_REQUEST } from "../../redux/groups/groupActions";
+import { addGroup } from "../../redux/chats/groups/groupActions";
 import { isRequestLoading } from "../../redux/notification/loadingReducer";
 import { openContacts } from "../../redux/modal/modalActions";
 import UserListItem from "../user/UserListItem";
+import { ADD_GROUP_REQUEST } from "../../redux/chats/groups/groupActionTypes";
 
 const useStyles = makeStyles(() => ({
   list: {
@@ -55,7 +56,7 @@ const GroupForm = ({
     }
     
   },[selectedParticipants, setSelectedParticipants])
-  console.log(selectedParticipants);
+ 
 
   const handleSubmit = (values)=>{
     addGroup(values.title,selectedParticipants)

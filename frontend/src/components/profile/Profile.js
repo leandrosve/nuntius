@@ -9,9 +9,9 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import AcUnitIcon from "@material-ui/icons/AcUnit";
 import CameraAltIcon from "@material-ui/icons/CameraAlt";
 import Alert from '../util/Alert';
-import ImageEditor from "./ImageEditor";
+import ImageEditor from "../util/ImageEditor";
 import { Avatar } from "@material-ui/core";
-import useAvatar from "./useAvatar";
+import useAvatar from "../util/hooks/useAvatar";
 
 const Profile = ({username, name, email, biography, id , handleSave, success, error}) => {
   const { t } = useTranslation();

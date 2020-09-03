@@ -2,10 +2,12 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import ChatList from "./ChatList";
 import { chats } from "../../redux/chats/chatActions";
-import { getAllChats } from "../../redux/chats/chatReducer";
 import { openContacts, openAddGroup } from "../../redux/modal/modalActions";
 
-const ChatListContainer = (props) => {
+
+
+
+const  ChatListContainer = (props) => {
   const { fetchChats, ...params } = props;
   useEffect(() => {
     fetchChats();
@@ -25,12 +27,24 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-const mapStateToProps = ({ chat, user, contact }) => {
+const mapStateToProps = ({ chat, }) => {
+  const byIds = chat.byIds;
+
+  const chatComparator = (a, b) => {
+    if (byIds[a].lastMessage && byIds[b].lastMessage) {
+      return byIds[a].lastMessage.sentTime > byIds[b].lastMessage.sentTime ? -1 : 1;
+    } else if (byIds[a].lastMessage) {
+      return -1;
+    } else if (byIds[b].lastMessage) {
+      return 1;
+    } else {
+      return byIds[a].id > byIds[b].id ? -1 : 1;
+    }
+  };
   return {
-    chats: getAllChats(chat),
-    loading: chat.isFetching,
-    error: chat.error,
+    chatIds: chat.allIds.sort((a,b) => chatComparator(a,b)),
+    byIds: byIds //solo para que se reordene :(
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ChatListContainer);
+export default  connect(mapStateToProps, mapDispatchToProps)(ChatListContainer);

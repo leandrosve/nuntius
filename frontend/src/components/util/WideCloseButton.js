@@ -5,7 +5,7 @@ import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 const WideCloseButton = ({ onClick }) => {
   return (
     <Button
-      style={{ width: "100%", marginTop: "10px" }}
+      style={{ width: "100%" }}
       color="primary"
       size="large"
       aria-label="close"

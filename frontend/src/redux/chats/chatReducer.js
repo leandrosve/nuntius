@@ -2,7 +2,7 @@ import * as actionTypes from "./chatActionTypes";
 import { combineReducers } from "redux";
 import currentChatReducer from "./currentChatReducer";
 import { union } from "lodash";
-import { EDIT_GROUP_SUCCESS, SET_GROUP_AVATAR } from "../groups/groupActions";
+import { EDIT_GROUP_SUCCESS, SET_GROUP_AVATAR, KICK_USER_SUCCESS, ADD_USER_TO_CHAT_SUCCESS } from "./groups/groupActionTypes";
 
 const isFetching = (state = false, action) => {
   switch (action.type) {
@@ -29,7 +29,13 @@ const error = (state = "", action) => {
 };
 
 const byIds = (state = {}, action) => {
+  let chat;
   switch (action.type) {
+    case ADD_USER_TO_CHAT_SUCCESS:
+      return {...state, [action.payload.id]:action.payload};
+    case KICK_USER_SUCCESS:
+      chat=state[action.payload.chatId];
+      return {...state, [chat.id]:{...chat, userIds: chat.userIds.filter((id)=> id !== action.payload.userId) }};
     case actionTypes.LEAVE_CHAT_SUCCESS:
       const {[action.payload.id]: removed, ...rest} = state;
       return rest;
@@ -40,7 +46,7 @@ const byIds = (state = {}, action) => {
     case actionTypes.ADD_CHAT:
       return {...state, [action.payload.id]:action.payload}
       case actionTypes.ADD_MESSAGE:
-        const chat = state[action.payload.chatId];
+        chat = state[action.payload.chatId];
         return chat ? {...state, [action.payload.chatId]:{...chat, lastMessage:action.payload}} : state
     case EDIT_GROUP_SUCCESS:
       return {...state, [action.payload.id]:{...state[action.payload.id], ...action.payload}}
@@ -68,6 +74,7 @@ const allIds = (state = [], action) => {
 export const getAllChats = (state) => {
   return state.allIds.map((chatId) => {
     return state.byIds[chatId];
+    
   });
 };
 
@@ -84,6 +91,8 @@ export const getPrivateChatByUserId = (state, userId) => {
   const result = getAllChats(state).find((c)=> !c.groupal &&  c.userIds.includes(userId));
  return result
 };
+
+
 
 const chatReducer = combineReducers({
   byIds,

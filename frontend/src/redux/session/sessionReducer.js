@@ -1,5 +1,4 @@
 import * as actionTypes from "../user/userActionTypes";
-import { user } from "../schema";
 
 const initialState = {
   currentUser: JSON.parse(localStorage.getItem("user")),

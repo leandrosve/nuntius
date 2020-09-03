@@ -67,17 +67,10 @@ export const leaveChatSuccess = (chat) => ({
   payload: chat,
 });
 
-export const receiveChatSuccess = (chat) => {
-  return (dispatch) =>{
-    ApiService.getGroupImage(chat.id).then((response) =>{
-      return{
-        type: actionTypes.ADD_CHAT,
-        payload: {...chat, avatar:response},
-      }
-    })
-    
-  } 
-};
+export const receiveChatSuccess = (chat) => ({
+  type: actionTypes.ADD_CHAT,
+  payload: chat,      
+});
 
 const leaveChatFailure = (error) => ({
   type: actionTypes.LEAVE_CHAT_FAILURE,

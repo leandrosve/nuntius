@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback } from "react";
-import useAvatar from "../profile/useAvatar";
+import useAvatar from "../util/hooks/useAvatar";
 
 import {
   ListItem,
@@ -52,7 +52,7 @@ const UserListItem = ({userId, handleClick, actions, dontHideActions}) => {
     <div className={classes.root}>
       <ListItem  button={!!handleClick} onClick={handleClick}>
         <ListItemAvatar >
-          <Avatar src={avatar} alt={ user.alias ? user.alias : user.username}/>
+          <Avatar src={avatar} alt={ user.alias ? user.alias : user.username} colorSource={userId}/>
         </ListItemAvatar>
         <ListItemText id={user.id} primary={userId === currentUserId ? t("you") : user.alias ? user.alias : user.name} secondary={"@"+user.username}/>
         <ListItemSecondaryAction >

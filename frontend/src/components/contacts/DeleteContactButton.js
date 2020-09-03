@@ -3,7 +3,6 @@ import IconButton from "@material-ui/core/IconButton";
 import ConfirmationDialog from "../util/ConfirmationDialog";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import { useTranslation } from "react-i18next";
-import {func} from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import { getUserById } from "../../redux/user/userReducer";
 import {deleteContact as deleteContactAction} from "../../redux/contacts/contactActions";
@@ -37,8 +36,4 @@ const DeleteContactButton = ({ contactUserId }) => {
   );
 };
 
-
-DeleteContactButton.propTypes = {
-  deleteContact: func.isRequired,
-}
 export default DeleteContactButton;

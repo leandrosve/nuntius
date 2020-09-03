@@ -4,20 +4,21 @@ import IconButton from '@material-ui/core/IconButton';
 import Collapse from '@material-ui/core/Collapse';
 import CloseIcon from '@material-ui/icons/Close';
 
-const Alert = ({open, severity, onClick, children}) => {
+const Alert = ({open, severity, onClick, children, isDismissible=true}) => {
     return(
         <Collapse in={open}>
         <MaterialAlert
           severity={severity}
           action={
-            <IconButton
-              aria-label="close"
-              color="inherit"
-              size="small"
-              onClick={onClick}
-            >
-              <CloseIcon fontSize="inherit" />
-            </IconButton>
+              isDismissible &&
+              <IconButton
+                aria-label="close"
+                color="inherit"
+                size="small"
+                onClick={onClick}
+              >
+                <CloseIcon fontSize="inherit" />
+              </IconButton>          
           }
         >
          {children}

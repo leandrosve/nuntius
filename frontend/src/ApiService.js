@@ -87,7 +87,7 @@ const ApiService = {
       let image = URL.createObjectURL(blob)
       return image}   
       )
-      .catch(() => null );   
+      .catch(() => "not found"); 
   },
 
   putProfileImage(avatar) {

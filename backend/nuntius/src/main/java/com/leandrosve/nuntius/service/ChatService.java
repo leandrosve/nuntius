@@ -7,6 +7,7 @@ import java.util.Set;
 
 import com.leandrosve.nuntius.beans.ChatDTO;
 import com.leandrosve.nuntius.exception.AccessDeniedException;
+import com.leandrosve.nuntius.exception.BadRequestException;
 import com.leandrosve.nuntius.exception.UserNotFoundException;
 import com.leandrosve.nuntius.exception.chat.ChatNotFoundException;
 import com.leandrosve.nuntius.exception.chat.UserAlreadyMemberException;
@@ -122,5 +123,34 @@ public class ChatService {
             throw new AccessDeniedException();
         }
         return chat;
+    }
+
+    public ChatDTO editChatTitle(Long chatId, String title) {
+        Chat chat = retrieveChat(chatId);
+        if(!chat.getGroupal()){throw new BadRequestException("Private chats cannot hold a title");}
+        chat.setTitle(title);
+        chat=chatV2Repository.save(chat);
+        return prepareChatForUser(chat, authUtil.getCurrentUser());
+    }
+
+    public boolean deleteUserFromChat(Long chatId, Long userId) {
+        Chat chat = retrieveChat(chatId);
+        if(!chat.isUserMember(userId)) throw new BadRequestException("User not found in this chat");
+        User user = userRepository.findById(userId).orElseThrow(()-> new UserNotFoundException());
+        chat.removeMember(user);
+        chatV2Repository.save(chat);
+        ChatDTO chatDTO = new ChatDTO(chat.getId(), null, true, null);
+        messagingTemplate.convertAndSendToUser(user.getUsername(), "/queue/chats/delete", chatDTO);
+        return true;
+    }
+
+    public ChatDTO addUserToChat(Long chatId, Long userId) {
+        Chat chat = retrieveChat(chatId);
+        User user = userRepository.findById(userId).orElseThrow(()-> new UserNotFoundException());
+        chat.addMember(user);
+        chat= chatV2Repository.save(chat);
+        ChatDTO chatDTO = prepareChatForUser(chat, user);
+        messagingTemplate.convertAndSendToUser(user.getUsername(), "/queue/chats", chatDTO);
+        return  prepareChatForUser(chat, authUtil.getCurrentUser());
     }
 }

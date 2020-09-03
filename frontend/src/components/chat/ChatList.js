@@ -9,19 +9,9 @@ import ChatPreviewContainer from "./ChatPreviewContainer";
 import AddCommentIcon from "@material-ui/icons/AddComment";
 import GroupAddIcon from "@material-ui/icons/GroupAdd";
 
-function ChatList({ loading, chats = [], openContacts, openAddGroup }) {
+function ChatList({ loading, chatIds = [], openContacts, openAddGroup }) {
   const { t } = useTranslation();
-  const sort = (a, b) => {
-    if (a.lastMessage && b.lastMessage) {
-      return a.lastMessage.sentTime > b.lastMessage.sentTime ? -1 : 1;
-    } else if (a.lastMessage) {
-      return -1;
-    } else if (b.lastMessage) {
-      return 1;
-    } else {
-      return a.id > b.id ? -1 : 1;
-    }
-  };
+
   return (
     <div className="ChatList">
       {loading && (
@@ -29,7 +19,7 @@ function ChatList({ loading, chats = [], openContacts, openAddGroup }) {
           <LinearProgress color="secondary" />
         </div>
       )}
-      {chats.length === 0 && !loading &&  (
+      {chatIds.length === 0 && !loading &&  (
         <Button
           color="secondary"
           style={{ color: "white", width:"100%", borderRadius:'0px' }}
@@ -50,10 +40,10 @@ function ChatList({ loading, chats = [], openContacts, openAddGroup }) {
       </Button>
       
 
-      {chats.sort(sort).map((chat) => {
+      {chatIds.map((chatId) => {
         return (
-          <div key={chat.id}>
-            <ChatPreviewContainer avatar={profilePicPlaceholder} chat={chat} />
+          <div key={chatId}>
+            <ChatPreviewContainer avatar={profilePicPlaceholder} chatId={chatId} />
           </div>
         );
       })}
