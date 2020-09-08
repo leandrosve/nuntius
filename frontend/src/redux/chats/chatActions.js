@@ -3,6 +3,11 @@ import ApiService from "../../ApiService";
 import { normalize } from "normalizr";
 import * as schema from "../schema";
 import { getChatById} from "./chatReducer";
+import { fetchGroupImage, setGroupAvatar } from "./groups/groupActions";
+import { SET_EMPTY_GROUP_AVATARS } from "./groups/groupActionTypes";
+import { getUserById } from "../user/userReducer";
+import { fetchUserById } from "../user/userActions";
+import { uniqBy } from "lodash";
 
 const fetchChatsRequest = () => ({
   type: actionTypes.FETCH_CHATS_REQUEST,
@@ -90,6 +95,15 @@ export const chats = () => {
       .then((response) => {     
         const normalized = normalize(response.data, schema.arrayOfChats);
         dispatch(fetchChatsSuccess(normalized));
+        let withoutAvatar=[];
+        response.data.forEach(
+          (c)=>{if(c.groupal)
+            ApiService.getGroupImage(c.id).then((avatar) =>{
+              if(avatar !== "not found") dispatch(setGroupAvatar({id:c.id, avatar:avatar}));
+              else withoutAvatar.push(c.id);
+            })     
+      })
+      dispatch({type:SET_EMPTY_GROUP_AVATARS, payload:withoutAvatar})
       })
       .catch((error) => {
         dispatch(fetchChatsFailure(error.message));
@@ -102,6 +116,7 @@ export const fetchChatById = (chatId) => {
     ApiService.get(`/chats/${chatId}`)
       .then((response) => {
         dispatch(fetchChatSuccess(response.data));
+        dispatch(fetchGroupImage(chatId));
       })
       .catch((error) => {
         dispatch(fetchChatFailure(error.message));
@@ -114,7 +129,7 @@ export const fetchMessagesFromUser = (userId) => {
     dispatch(fetchMessagesRequest());
     ApiService.get(`/users/${userId}/messages`)
       .then((response) => {
-        dispatch(fetchMessagesSuccess(response.data));
+        dispatch(fetchMessagesSuccess(response.data));   
       })
       .catch((error) => {
         dispatch(fetchMessagesFailure(error.message));
@@ -123,11 +138,21 @@ export const fetchMessagesFromUser = (userId) => {
 };
 
 export const fetchMessagesFromChat = (chatId) => {
-  return (dispatch) => {
+  return (dispatch, getState) => {
     dispatch(fetchMessagesRequest());
     ApiService.get(`/chats/${chatId}/messages`)
       .then((response) => {
         dispatch(fetchMessagesSuccess(response.data));
+        const userReducerState=getState().user;
+        let userIds = [];
+        response.data.forEach((message)=>{
+            if(!getUserById(userReducerState, message.userId)){
+              userIds.push(message.userId)
+            }
+          }
+        )
+        userIds = uniqBy(userIds, (id)=>id);
+        userIds.forEach((id)=>dispatch(fetchUserById(id))); 
       })
       .catch((error) => {
         dispatch(fetchMessagesFailure(error.message));
@@ -169,7 +194,22 @@ export const receiveMessage = (message) => {
 
 export const leaveChat = (chatId) => {
   return (dispatch) => {
+    ApiService.post(`/group/${chatId}/leave`)
+      .then(()=>{
+        dispatch(leaveChatSuccess({id:chatId}));
+      })
+      .catch((error) => {
+        dispatch(leaveChatFailure(error.message));
+      });
+  };
+};
+
+export const deleteConversation = (chatId) => {
+  return (dispatch) => {
     ApiService.delete(`/chats/${chatId}`)
+      .then(()=>{
+        dispatch(leaveChatSuccess({id:chatId}));
+      })
       .catch((error) => {
         dispatch(leaveChatFailure(error.message));
       });

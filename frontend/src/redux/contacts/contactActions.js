@@ -2,6 +2,8 @@ import * as actionTypes from "./contactActionTypes";
 import ApiService from "../../ApiService";
 import { normalize } from "normalizr";
 import * as schema from "../schema";
+import { fetchProfileImage } from "../user/userActions";
+import { SET_USER_AVATAR } from "../user/userActionTypes";
 
 const fetchContactsRequest = () => ({
   type: actionTypes.FETCH_CONTACTS_REQUEST,
@@ -70,6 +72,16 @@ export const contacts = () => {
         const contacts = response.data;
         const normalized = normalize(contacts, schema.arrayOfUsers);
         dispatch(fetchContactsSuccess(normalized));
+        let withoutAvatar=[];
+        response.data.forEach(
+          (c)=>{
+            ApiService.getProfileImage(c.id).then((avatar) =>{
+              if(avatar !== "not found") dispatch(({type:SET_USER_AVATAR, payload:{id:c.id, avatar:avatar}}));
+              else withoutAvatar.push(c.id);
+            })     
+      })
+     
+        
       })
       .catch((error) => {
         dispatch(fetchContactsFailure(error.message));

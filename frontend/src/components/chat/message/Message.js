@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useEffect, useCallback } from "react";
 import Typography from "@material-ui/core/Typography";
 import Linkify from "react-linkify";
 import { makeStyles } from "@material-ui/core/styles";
@@ -7,9 +7,10 @@ import EmbededYoutube from "./EmbededYoutube";
 import MessageCheckMarker from "./MessageCheckMarker";
 import Media from "./Media";
 import useAvatar from "../../util/hooks/useAvatar";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { getUserById } from "../../../redux/user/userReducer";
 import Avatar from "../../util/Avatar";
+import {fetchUserById} from "../../../redux/user/userActions";
 
 const useStyles = makeStyles((theme) => ({
   messageContainer: {
@@ -70,13 +71,18 @@ function Message({
   sentTime,
   details,
   userId,
+  displayUserName,
   displayAvatar = false,
 }) {
   const classes = useStyles();
 
+  const user = useSelector(state =>{ 
+    return (userId === state.session.currentUser.id) ?  
+      state.session.currentUser
+      : getUserById(state.user, userId)})
+  const avatar= user ? user.avatar : null;
+  const alt=  user ? user.alias ? user.alias :  user.name : null;
 
-  const avatar=useAvatar({userId: displayAvatar ?  userId:  null} );
-  const alt= useSelector(state => {const u=getUserById(state.user, userId); return u ? u.alias ? u.alias :  u.name : null })
   return (
     <div className={classes.messageContainer}>
       <div
@@ -90,7 +96,7 @@ function Message({
           <Avatar src={avatar} className={classes.avatar} alt={alt} />
           </div>
         )}
-        { displayAvatar && !details && <Typography variant="caption" color="textSecondary">{alt}</Typography>}
+        { displayUserName && !details && displayAvatar && <Typography variant="caption" color="textSecondary">{alt}</Typography>}
         {media ? (
           <Media src={media} handleOpenMedia={handleOpenMedia} />
         ) : (

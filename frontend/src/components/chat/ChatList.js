@@ -13,12 +13,7 @@ function ChatList({ loading, chatIds = [], openContacts, openAddGroup }) {
   const { t } = useTranslation();
 
   return (
-    <div className="ChatList">
-      {loading && (
-        <div>
-          <LinearProgress color="secondary" />
-        </div>
-      )}
+    <div className="ChatList">     
       {chatIds.length === 0 && !loading &&  (
         <Button
           color="secondary"
@@ -39,6 +34,11 @@ function ChatList({ loading, chatIds = [], openContacts, openAddGroup }) {
         {t("group_add")}
       </Button>
       
+      {loading && (
+        <div>
+          <LinearProgress color="secondary" />
+        </div>
+      )}
 
       {chatIds.map((chatId) => {
         return (

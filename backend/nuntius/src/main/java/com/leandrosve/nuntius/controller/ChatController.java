@@ -43,6 +43,12 @@ public class ChatController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
+    @PostMapping("/group/{chatId}/leave")
+    public ResponseEntity<?> leaveGroup(@PathVariable @Valid Long chatId){
+        chatService.leaveGroup(chatId);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
     @GetMapping("/chats")
     public List<ChatDTO> getChats(){   
       return chatService.getChats();

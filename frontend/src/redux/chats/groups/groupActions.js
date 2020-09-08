@@ -1,6 +1,7 @@
 import ApiService from "../../../ApiService";
 import { hideModal } from "../../modal/modalActions";
 import * as actionTypes from "./groupActionTypes";
+import { fetchProfileImage } from "../../user/userActions";
 const addGroupRequest = () => ({
   type: actionTypes.ADD_GROUP_REQUEST,
 });
@@ -58,6 +59,11 @@ const addUserToChatSuccess = (chat) => ({
 const addUserToChatFailure = (error) => ({
   type: actionTypes.ADD_USER_TO_CHAT_FAILURE,
   error: error,
+});
+
+export const setGroupAvatar = (chat) =>({
+  type:actionTypes.SET_GROUP_AVATAR, 
+  payload:chat
 });
 
 
@@ -129,3 +135,11 @@ export const addUserToChat = (chatId, userId) => {
       });
   };
 };
+
+export const fetchGroupImage = (chatId) =>{
+  return (dispatch) =>{
+    ApiService.getGroupImage(chatId).then((avatar)=>{
+      dispatch(setGroupAvatar({id:chatId, avatar:avatar}))
+    })
+  }
+}

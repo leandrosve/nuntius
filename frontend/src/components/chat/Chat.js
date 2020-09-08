@@ -11,7 +11,7 @@ const Chat = (props) => {
       <>
       {props.loading && <div><LinearProgress color="secondary" /></div>}
       <ChatHeader {...props} />
-      <ChatContent handleOpenMedia={props.handleOpenMedia} messages={props.messages}/>
+      <ChatContent handleOpenMedia={props.handleOpenMedia} messages={props.messages} type={props.type}/>
       <MessageForm handleSendMessage={props.handleSendMessage} />
       </>
   );

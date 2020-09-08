@@ -2,7 +2,6 @@ import * as actionTypes from "../user/userActionTypes";
 
 const initialState = {
   currentUser: JSON.parse(localStorage.getItem("user")),
-  success: "",
   authenticated: !!localStorage.getItem("user"),
 };
 
@@ -18,14 +17,12 @@ const sessionReducer = (state = initialState, action) => {
     case actionTypes.EDIT_PROFILE_SUCCESS:
       return {
         ...state,
-        currentUser: { ...state.currentUser, ...action.payload },
-        success: "success:saved",
+        currentUser: { ...state.currentUser, ...action.payload }
       };
 
     case actionTypes.CLEAN_SESSION_ERRORS:
       return {
         ...state,
-        success: "",
       };
     case actionTypes.LOGIN_REQUEST:
       return {

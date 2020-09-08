@@ -10,10 +10,14 @@ import AcUnitIcon from "@material-ui/icons/AcUnit";
 import CameraAltIcon from "@material-ui/icons/CameraAlt";
 import Alert from '../util/Alert';
 import ImageEditor from "../util/ImageEditor";
-import { Avatar } from "@material-ui/core";
+import  Avatar  from "../util/Avatar"
 import useAvatar from "../util/hooks/useAvatar";
+import SmartAlert from "../util/SmartAlert";
+import { EDIT_PROFILE_REQUEST } from "../../redux/user/userActionTypes";
 
-const Profile = ({username, name, email, biography, id , handleSave, success, error}) => {
+const alertConcerns = [EDIT_PROFILE_REQUEST];
+
+const Profile = ({username, name, email, biography, id , handleSave}) => {
   const { t } = useTranslation();
 
   let originalImage = useAvatar({userId:id});
@@ -21,10 +25,7 @@ const Profile = ({username, name, email, biography, id , handleSave, success, er
   const [uneditedImage, setUneditedImage] = useState();
   const [editedImage, setEditedImage] = useState();
   const editorRef = useRef();
-  const [openAlert, setOpenAlert] = useState(false);
 
-
-  useEffect(()=>{setOpenAlert((success && success !== "") || (error && error !== "")  ? true : false)},[success, error])
   const getEditedImage = () =>{
     const image = editorRef.current.getImage().toDataURL('image/png');
     setEditedImage(image);
@@ -51,20 +52,15 @@ const Profile = ({username, name, email, biography, id , handleSave, success, er
 
   const save = useCallback(()=>{
     handleSave(newInfo.name, newInfo.biography, editedImage)
-  },[handleSave, newInfo, editedImage]);
+    setEditedImage(null);;
+  },[handleSave, newInfo, editedImage, setEditedImage]);
   
   return (
     <TitledContainer
       title={t("profile")}
       actions={showSaveButton && <Button onClick={()=>save()}>{t("save")}</Button>}
       fixedContent={
-       <Alert
-        severity={error ? "error" : 'success'}
-        open={openAlert}
-        onClick={()=>setOpenAlert(false)}
-       > 
-         { success ? t(success): error}
-       </Alert> 
+       <SmartAlert concerns={alertConcerns}/>
       }
     >
       <Container maxWidth="xs">
@@ -100,6 +96,7 @@ const Profile = ({username, name, email, biography, id , handleSave, success, er
             <Avatar
               alt={name}
               src={editedImage ||  originalImage}
+              colorSource={id}
               style={{ borderRadius: "50%", width: "250px", height: "250px", margin:"auto" }}
             />
           )}         
@@ -116,7 +113,7 @@ const Profile = ({username, name, email, biography, id , handleSave, success, er
                 }}
               ></input>
             </Button>
-            {editedImage && (editedImage !== originalImage) && <Button variant="contained" onClick={()=>{setEditedImage(originalImage)}}>{t("undo")}</Button>}
+            {editedImage && (editedImage !== originalImage) && <Button variant="contained" onClick={()=>{setEditedImage(null)}}>{t("undo")}</Button>}
           </div>
         </div>
 

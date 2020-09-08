@@ -11,13 +11,12 @@ import { makeStyles } from "@material-ui/core/styles";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import FormContainer from "../util/FormContainer";
 
-import Alert from "../util/Alert";
+import SmartAlert from "../util/SmartAlert";
 import { login} from "../../redux/session/sessionActions";
 import { connect } from "react-redux";
 import {isRequestLoading} from "../../redux/notification/loadingReducer";
 import { LOGIN_REQUEST, SIGNUP_REQUEST } from "../../redux/user/userActionTypes";
 import { getRequestError } from "../../redux/notification/errorReducer";
-import { clearError, clearSuccess } from "../../redux/notification/notificationActions";
 import { getRequestSuccessMessage } from "../../redux/notification/successReducer";
 import NuntiusLogo from "../util/NuntiusLogo";
 
@@ -31,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const LoginForm = ( {error="", login, loading, success="", clearErrors, clearSuccessMessages} ) => {
+const LoginForm = ( { login, loading} ) => {
   const { t } = useTranslation();
 
   const classes = useStyles();
@@ -40,13 +39,6 @@ const LoginForm = ( {error="", login, loading, success="", clearErrors, clearSuc
     username: "",
     password: "",
   };
-
-  useEffect(()=>{clearErrors()},[clearErrors]);
-
-  const handleCloseAlert = useCallback(()=>{
-    clearErrors();
-    clearSuccessMessages();
-  },[clearErrors, clearSuccessMessages])
 
   return (
     <Formik
@@ -59,7 +51,6 @@ const LoginForm = ( {error="", login, loading, success="", clearErrors, clearSuc
       })}
       onSubmit={(values, { setSubmitting }) => {   
           login(values.username.trim(), values.password.trim());
-          handleCloseAlert();
           setSubmitting(false);
       }}
     >
@@ -67,13 +58,8 @@ const LoginForm = ( {error="", login, loading, success="", clearErrors, clearSuc
         <FormContainer title={t("login")} icon={<NuntiusLogo/>}>
         
           {loading && <CircularProgress color="secondary" />}
-          <Alert
-            severity={success ? "success" : "error"}
-            open={!loading && (!!success || !!error)}
-            onClick={() => handleCloseAlert()}
-          >
-            {success ? t(success) : error}
-          </Alert>
+          <SmartAlert concerns={alertConcerns}/>
+            
        
           <Form className={classes.form}>
             <TextField
@@ -119,7 +105,7 @@ const LoginForm = ( {error="", login, loading, success="", clearErrors, clearSuc
   );
 };
 
-
+const alertConcerns = [LOGIN_REQUEST, SIGNUP_REQUEST];
 const mapStateToProps = ({loading, error, success}) =>{
   return {
       error: getRequestError(error, [LOGIN_REQUEST]),     
@@ -129,8 +115,6 @@ const mapStateToProps = ({loading, error, success}) =>{
 }
 const mapDispatchToProps = dispatch =>  {
   return {
-    clearErrors: () => {dispatch(clearError([LOGIN_REQUEST]));},
-    clearSuccessMessages: () => {dispatch(clearSuccess([SIGNUP_REQUEST]));},
     login: (username, password) => dispatch(login(username, password)),
   }
 }

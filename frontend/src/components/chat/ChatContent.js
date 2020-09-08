@@ -5,8 +5,13 @@ import DateMarker from "../util/DateMarker";
 import VideoPlayer from "../util/VideoPlayer";
 import Chip from "@material-ui/core/Chip";
 
+
 import { useTranslation } from "react-i18next";
-const ChatContent = ({handleOpenMedia, messages}) => {
+
+
+const sortByDate = (a, b) => (a.sentTime > b.sentTime ? 1 : -1);
+
+const ChatContent = ({handleOpenMedia, messages, type}) => {
   const { t } = useTranslation();
   const [videoPlayer, setVideoPlayer] = useState({
     open: false,
@@ -27,7 +32,6 @@ const ChatContent = ({handleOpenMedia, messages}) => {
     }, 200);
   }, [messages, chatEndRef]);
 
-  const sortByDate = (a, b) => (a.sentTime > b.sentTime ? 1 : -1);
   return (
     <>
       <div className="ChatMessages">
@@ -43,17 +47,19 @@ const ChatContent = ({handleOpenMedia, messages}) => {
           </div>
         }
           {messages.sort(sortByDate).map((message, index) => {
+            const showDateMarker = index === 0 || !sameDay(message.sentTime, messages[index - 1].sentTime);
+            const displayAvatar = (index === 0 || message.userId !== messages[index - 1].userId || showDateMarker);
             return (
               <div key={message.id}>
-                {index === 0 ||
-                !sameDay(message.sentTime, messages[index - 1].sentTime) ? (
+                { showDateMarker ? (
                   <DateMarker date={message.sentTime} />
                 ) : null}
                 <Message
                   handleOpenMedia={handleOpenMedia}
                   handleOpenVideoPlayer={handleOpenVideoPlayer}
                   {...message}
-                  displayAvatar={(index === 0 || message.userId !== messages[index - 1].userId)}
+                  displayUserName={type === "group"}
+                  displayAvatar={displayAvatar}
                 />
               </div>
             );

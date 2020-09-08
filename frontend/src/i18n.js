@@ -84,6 +84,7 @@ i18n
           "cancel":'Cancel',
           "contact_delete": 'Are you sure you want to remove {{name}} from your list of contacts?',
           "participant_add" : 'Are you sure you want to add {{name}} to this group?',     
+          "conversation_leave": "Are you sure you want to leave this conversation?",
           "chat_delete": 'Are you sure you want to delete this conversation? It will be gone for everyone.',
           "participant_delete" : 'Are you sure you want to kick {{name}} from this group?',
           "exit_without_saving": 'Exit without saving?',
@@ -171,6 +172,7 @@ i18n
           "participant_add" : '¿Estás seguro que quieres añadir a {{name}} a este grupo?',
           "chat_delete": '¿Confirma que desea eliminar esta conversación? Se borrará para todos sus integrantes.',
           "exit_without_saving": '¿Desea salir sin guardar los cambios?',
+          "conversation_leave": "¿Estás seguro que quieres abandonar el chat?",
         },
         date:{
           today:"Hoy",

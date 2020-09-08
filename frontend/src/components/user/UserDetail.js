@@ -21,16 +21,13 @@ const UserDetail = ({
   editContact,
   addContact,
   deleteContact,
-  id, username, alias, biography, contactId, name
+  id, username, alias, biography, contactId, name, avatar
 }) => {
   const [openAliasForm, setOpenAliasForm] = useState(false);
   const handleToggleAliasForm = useCallback(() => {
     setOpenAliasForm((prev) => !prev);
   }, []);
-
-  const avatar = useAvatar({userId:id});
-
-
+  console.log(contactId);
   const renderAliasForm = () =>{
     if(contactId){
       return(

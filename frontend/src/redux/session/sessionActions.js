@@ -1,6 +1,7 @@
 import * as actionTypes from '../user/userActionTypes';
 import ApiService from "../../ApiService";
 import { hideModal } from '../modal/modalActions';
+import { fetchProfileImage } from '../user/userActions';
 
 export const login= (username, password) =>{
     return (dispatch) => {

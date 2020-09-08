@@ -28,7 +28,7 @@ const ChatPreviewContainer = ({ chat, userId, user, fetchUserById }) => {
     }
   }, [userId,user,fetchUserById]);
 
-  const avatar = useAvatar({userId: user ? user.id : null, chatId: !user && chat ? chat.id : null});
+  const avatar = user ? user.avatar :chat ? chat.avatar : null;
 
   return (
     <ChatPreview

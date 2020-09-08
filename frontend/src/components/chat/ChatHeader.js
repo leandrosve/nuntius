@@ -34,6 +34,7 @@ const useStyles = makeStyles((theme) => ({
 function ChatHeader({
   handleOpenDetail,
   handleLeaveChat,
+  handleDeleteConversation,
   online = false,
   title,
   avatar,
@@ -81,26 +82,32 @@ function ChatHeader({
           <IconButton color="primary">
             <AttachFileIcon style={{ fontSize: "30px", color: "white" }} />
           </IconButton>
-          <ChatHeaderMenu handleOpenDetail={handleOpenDetail} handleLeaveChat={handleLeaveChat} type={type} canDelete={canDelete}/>
+          <ChatHeaderMenu handleOpenDetail={handleOpenDetail} handleLeaveChat={handleLeaveChat} handleDeleteConversation={handleDeleteConversation} type={type} canDelete={canDelete}/>
         </div>
       </Toolbar>
     </div>
   );
 }
 
-const ChatHeaderMenu = ({ handleOpenDetail, handleLeaveChat, type, canDelete}) => {
+const ChatHeaderMenu = ({ handleOpenDetail, handleLeaveChat, handleDeleteConversation, type}) => {
   const { t } = useTranslation();
   const [openMenu, setOpenMenu] = useState(false);
   const handleToggleMenu = () => {
     setOpenMenu((prev) => !prev);
   };
 
-  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+  const [confirmationDialog, setConfirmationDialog] = useState({open:false, action:null});
 
   const handleLeaveChatConfirm = useCallback(()=>{
     handleToggleMenu();
     handleLeaveChat();
   },[handleLeaveChat])
+
+  const handleDeleteChatConfirm = useCallback(()=>{
+    handleToggleMenu();
+    handleDeleteConversation();
+  },[handleLeaveChat])
+
 
   return (
     <React.Fragment>
@@ -124,23 +131,36 @@ const ChatHeaderMenu = ({ handleOpenDetail, handleLeaveChat, type, canDelete}) =
               }[type]
             }
           </ListItem>
-          {canDelete &&
-            <ListItem
-              button
+                   
+              <ListItem
+              button  
               onClick={() => {
-                setOpenConfirmDialog(true);
-              }}
-            >
-            {t("chat_delete")}
-            </ListItem>
-          }
+                setConfirmationDialog({open:true, action:"chat_delete"});
+              }}>       
+              
+                {t("chat_delete")}
+              </ListItem>
+              {type === "group" && 
+              <ListItem
+                button
+                onClick={() => {
+                  setConfirmationDialog({open:true, action:"conversation_leave"});
+                }}
+              >
+                {t("conversation_leave")}              
+              </ListItem>
+              }
         </DropdownMenu>     
       )}  
       <ConfirmationDialog 
-        open={openConfirmDialog}
-        title={t("confirmation:chat_delete")} 
-        handleAccept={()=>handleLeaveChatConfirm()} 
-        handleCancel={()=>setOpenConfirmDialog(false)}
+        open={confirmationDialog.open}
+        title={
+          confirmationDialog.action === "conversation_leave" ?
+            t("confirmation:conversation_leave")
+          : t("confirmation:chat_delete")
+        } 
+        handleAccept={confirmationDialog.action === "conversation_leave" ? handleLeaveChatConfirm : handleDeleteChatConfirm} 
+        handleCancel={()=>setConfirmationDialog({open:false})}
       />
     </React.Fragment>
   );

@@ -8,8 +8,9 @@ export const contact = (state, action) => {
       return { ...state, ...contacts };
     case actionTypes.ADD_CONTACT_SUCCESS:
     case actionTypes.EDIT_CONTACT_SUCCESS:  
-    case actionTypes.DELETE_CONTACT_SUCCESS:
-      return { ...state, [action.payload.id]: action.payload };     
+      return { ...state, [action.payload.id]: {...state[action.payload.id], ...action.payload} }; 
+    case actionTypes.DELETE_CONTACT_SUCCESS:    
+      return { ...state, [action.payload.id]:{...state[action.payload.id], alias:null, contactId:null } };         
     default:
       return state;
   }

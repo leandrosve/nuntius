@@ -50,6 +50,7 @@ public class MessageController {
       for(MessageReception reception : createdMessage.getReceivers()){
           //send through web socket
           messagingTemplate.convertAndSendToUser(reception.getUser().getUsername(), "/queue/messages", messageToSend);
+
       }
         messagingTemplate.convertAndSendToUser(currentUser.getUsername(), "/queue/messages", messageService.prepareMessageForSender(createdMessage));
 
@@ -66,7 +67,6 @@ public class MessageController {
       //send through web socket
       messagingTemplate.convertAndSendToUser(receiver.getUsername(), "/queue/messages", messageToSend);
       messagingTemplate.convertAndSendToUser(currentUser.getUsername(), "/queue/messages", messageService.prepareMessageForSender(createdMessage));
-
       return new ResponseEntity(HttpStatus.CREATED);
     }
 

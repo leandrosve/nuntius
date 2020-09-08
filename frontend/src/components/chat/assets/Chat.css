@@ -14,7 +14,6 @@
   width: 25vw;
   height: 100%;
   overflow-y: auto;
-  border-right: 1px solid #42433d;
   display: flex;
   flex-direction: column;
   align-content: stretch;

@@ -31,22 +31,18 @@ const useStyles = makeStyles(() => ({
 
 
 const UserListItem = ({userId, handleClick, actions, dontHideActions}) => {
-  const avatar= useAvatar({userId: userId});
+  
   const classes = useStyles();
   
   const { t } = useTranslation();
  const user = useSelector(({user})=>getUserById(user, userId));
  
+ const avatar = user ? user.avatar : null;
  const currentUserId = useSelector(({session})=>session.currentUser.id);
  const dispatch = useDispatch();
 
  const fetchUser = useCallback(()=>{dispatch(fetchUserById(userId))},[userId, dispatch]);
 
- useEffect(()=>{
-   if(!user){
-     fetchUser()
-   }
- },[user,fetchUser])
   if(!user) return null;
   return (
     <div className={classes.root}>

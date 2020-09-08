@@ -1,203 +1,209 @@
-import * as actionTypes from './userActionTypes';
+import * as actionTypes from "./userActionTypes";
 import ApiService from "../../ApiService";
-import { openLogin } from '../modal/modalActions';
+import { openLogin } from "../modal/modalActions";
+import { getUserById } from "./userReducer";
 
+export const signupRequest = () => {
+  return {
+    type: actionTypes.SIGNUP_REQUEST,
+  };
+};
 
-export const signupRequest= () =>{
-    return{      
-        type: actionTypes.SIGNUP_REQUEST
-    }
-}
+export const signupSuccess = () => {
+  return {
+    type: actionTypes.SIGNUP_SUCCESS,
+    success: "success:signup",
+  };
+};
 
-export const signupSuccess= () =>{
-    return {
-        type: actionTypes.SIGNUP_SUCCESS,
-        success:"success:signup"
-    }
-}
+export const signupFailure = (error) => {
+  return {
+    type: actionTypes.SIGNUP_FAILURE,
+    error: error,
+  };
+};
 
-export const signupFailure= (error) =>{
-    return {
-        type: actionTypes.SIGNUP_FAILURE,
-        error:error
-    }
-}
+export const searchUsersRequest = () => {
+  return {
+    type: actionTypes.SEARCH_USERS_REQUEST,
+  };
+};
 
-export const searchUsersRequest= () =>{
-    return{      
-        type: actionTypes.SEARCH_USERS_REQUEST
-    }
-}
+export const searchUsersSuccess = (users) => {
+  return {
+    type: actionTypes.SEARCH_USERS_SUCCESS,
+    payload: users,
+  };
+};
 
-export const searchUsersSuccess= (users) =>{
-    return {
-        type: actionTypes.SEARCH_USERS_SUCCESS,
-        payload:users
-    }
-}
+export const searchUsersFailure = (error) => {
+  return {
+    type: actionTypes.SEARCH_USERS_FAILURE,
+    error: error,
+  };
+};
 
-export const searchUsersFailure= (error) =>{
-    return {
-        type: actionTypes.SEARCH_USERS_FAILURE,
-        error:error
-    }
-}
+export const fetchUserRequest = () => {
+  return {
+    type: actionTypes.FETCH_USER_REQUEST,
+  };
+};
 
-export const fetchUserRequest= () =>{
-    return {
-        type: actionTypes.FETCH_USER_REQUEST,
-    }
-}
+export const fetchUserSuccess = (user) => {
+  return {
+    type: actionTypes.FETCH_USER_SUCCESS,
+    payload: user,
+  };
+};
 
-export const fetchUserSuccess= (user) =>{
-    return {
-        type: actionTypes.FETCH_USER_SUCCESS,
-        payload:user
-    }
-}
+export const fetchUserFailure = (error) => {
+  return {
+    type: actionTypes.FETCH_USER_FAILURE,
+    error: error,
+  };
+};
 
-export const fetchUserFailure= (error) =>{
-    return {
-        type: actionTypes.FETCH_USER_FAILURE,
-        error:error
+export const fetchUsersRequest = () => {
+  return {
+    type: actionTypes.FETCH_USERS_REQUEST,
+  };
+};
 
-    }
-}
+export const fetchUsersSuccess = (users) => {
+  return {
+    type: actionTypes.FETCH_USERS_SUCCESS,
+    payload: users,
+  };
+};
 
-export const fetchUsersRequest= () =>{
-    return {
-        type: actionTypes.FETCH_USERS_REQUEST,
-    }
-}
+export const fetchUsersFailure = (error) => {
+  return {
+    type: actionTypes.FETCH_USERS_FAILURE,
+    error: error,
+  };
+};
 
-export const fetchUsersSuccess= (user) =>{
-    return {
-        type: actionTypes.FETCH_USERS_SUCCESS,
-        payload:user
-    }
-}
+export const addUser = (user) => {
+  return {
+    type: actionTypes.ADD_USER,
+    payload: user,
+  };
+};
 
-export const fetchUsersFailure= (error) =>{
-    return {
-        type: actionTypes.FETCH_USERS_FAILURE,
-        error:error
+export const editProfileRequest = () => {
+  return {
+    type: actionTypes.EDIT_PROFILE_REQUEST,
+  };
+};
 
-    }
-}
+export const editProfileSuccess = (user) => {
+  return {
+    type: actionTypes.EDIT_PROFILE_SUCCESS,
+    payload: user,
+    success: "success:saved",
+  };
+};
 
-export const addUser= (user) =>{
-    return {
-        type: actionTypes.ADD_USER,
-        payload:user
-    }
-}
+export const editProfileFailure = (error) => {
+  return {
+    type: actionTypes.EDIT_PROFILE_FAILURE,
+    error: error,
+  };
+};
 
-export const editProfileSuccess= (user) =>{
-    return {
-        type: actionTypes.EDIT_PROFILE_SUCCESS,
-        payload:user
-    }
-}
+export const signUp = (username, password, name, email) => {
+  return (dispatch) => {
+    dispatch(signupRequest());
+    ApiService.post("/signup", { username, password, name, email })
+      .then(() => {
+        dispatch(signupSuccess());
+        dispatch(openLogin({ success: "success:signup" }));
+      })
+      .catch((error) => {
+        dispatch(signupFailure(error.message));
+      });
+  };
+};
 
-export const editProfileFailure= (error) =>{
-    return {
-        type: actionTypes.EDIT_PROFILE_FAILURE,
-        error:error
-    }
-}
+export const editProfile = (name, biography, avatar) => {
+  return (dispatch) => {
+    dispatch(editProfileRequest());
+    ApiService.patch("/profile", { name, biography })
+      .then((response) => {
+        if (avatar) {
+          ApiService.putProfileImage(avatar).then((avatarURL) =>
+            dispatch(editProfileSuccess({ avatar: avatarURL }))
+          );
+        } else {
+          dispatch(editProfileSuccess(response.data));
+        }
+      })
+      .catch((error) => {
+        dispatch(editProfileFailure(error.message));
+      });
+  };
+};
 
-export const signUp= (username, password, name, email) =>{
-    return (dispatch) => {
-        dispatch(signupRequest());
-        ApiService.post("/signup", {username, password,  name ,email})
-            .then(() => {
-                dispatch(signupSuccess());               
-                dispatch(openLogin({success:"success:signup"}));
-            })
-            .catch(
-                error => {              
-                    dispatch(signupFailure(error.message))
-                }
-            )                
-    }
-}
+export const searchUsers = (someString) => {
+  return (dispatch) => {
+    dispatch(searchUsersRequest());
+    ApiService.get(`/users/search?q=${someString}`)
+      .then((response) => {
+        dispatch(searchUsersSuccess(response.data));
+      })
+      .catch((error) => {
+        dispatch(searchUsersFailure(error.message));
+      });
+  };
+};
 
-export const editProfile= (name, biography, avatar) =>{
-   
-    return (dispatch) => {
-        ApiService.patch("/profile", {name, biography})
-            .then((response) => {
-                if(avatar){                
-                    ApiService.putProfileImage(avatar).then((avatarURL)=>dispatch(editProfileSuccess({avatar:avatarURL})));
-                }else{                                     
-                    dispatch(editProfileSuccess(response.data));   
-                }                      
-            })
-            .catch(
-                error => {              
-                    dispatch(editProfileFailure(error.message))
-                }
-            )                
-    }
-}
+export const fetchUserByUsername = (username) => {
+  return (dispatch) => {
+    dispatch(fetchUserRequest());
+    ApiService.get(`/user?username=${username}`)
+      .then((response) => {
+        dispatch(fetchUserSuccess(response.data));
+        dispatch(fetchProfileImage(response.data.id));
+      })
+      .catch((error) => {
+        dispatch(fetchUserFailure(error.message));
+      });
+  };
+};
 
-export const searchUsers= (someString) =>{
-    return (dispatch) => {
-        dispatch(searchUsersRequest());
-        ApiService.get(`/users/search?q=${someString}`)
-            .then((response) => {
-                dispatch(searchUsersSuccess(response.data));
-            })
-            .catch(
-                error => {              
-                    dispatch(searchUsersFailure(error.message))
-                }
-            )              
-    }
-}
+export const fetchUserById = (id) => {
+  return (dispatch) => {
+    dispatch(fetchUserRequest());
+    ApiService.get(`/users/${id}`)
+      .then((response) => {
+        dispatch(fetchUserSuccess(response.data));
+        dispatch(fetchProfileImage(id));
+      })
+      .catch((error) => {
+        dispatch(fetchUserFailure(error.message));
+      });
+  };
+};
 
-export const fetchUserByUsername= (username) =>{
-    return (dispatch) => {
-        dispatch(fetchUserRequest());
-        ApiService.get(`/user?username=${username}`)
-            .then((response) => {
-                dispatch(fetchUserSuccess(response.data));
-            })
-            .catch(
-                error => {              
-                    dispatch(fetchUserFailure(error.message))
-                }
-            )             
-    }
-}
+export const fetchUsersById = (ids = []) => {
+  return (dispatch, getState) => {
+    const users = getState().user;
+    dispatch(fetchUsersRequest());
+    ids.forEach((id) => {
+      if (!getUserById(users, id))
+        dispatch(fetchUserById(id));
+    });
+    dispatch(fetchUsersSuccess());
+  };
+};
 
-export const fetchUserById= (id) =>{
-    return (dispatch) => {
-        dispatch(fetchUserRequest());
-        ApiService.get(`/users/${id}`)
-            .then((response) => {
-                dispatch(fetchUserSuccess(response.data));
-            })
-            .catch(
-                error => {              
-                    dispatch(fetchUserFailure(error.message))
-                }
-            )               
-    }
-}
-
-export const fetchUsersById= (ids) =>{
-    return (dispatch) => {
-        dispatch(fetchUsersRequest());
-        ApiService.get(`/users/${ids}`)
-            .then((response) => {
-                dispatch(fetchUsersSuccess(response.data));
-            })
-            .catch(
-                error => {              
-                    dispatch(fetchUsersFailure(error.message))
-                }
-            )               
-    }
-}
-
+export const fetchProfileImage = (userId) => {
+  return (dispatch) => {
+    ApiService.getProfileImage(userId).then((avatar) => {
+      dispatch({
+        type: actionTypes.SET_USER_AVATAR,
+        payload: { id: userId, avatar: avatar },
+      });
+    });
+  };
+};

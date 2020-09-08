@@ -3,6 +3,8 @@ import { connect } from "react-redux";
 import ChatList from "./ChatList";
 import { chats } from "../../redux/chats/chatActions";
 import { openContacts, openAddGroup } from "../../redux/modal/modalActions";
+import { FETCH_CHATS_REQUEST } from "../../redux/chats/chatActionTypes";
+import { isRequestLoading } from "../../redux/notification/loadingReducer";
 
 
 
@@ -27,7 +29,7 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-const mapStateToProps = ({ chat, }) => {
+const mapStateToProps = ({ chat, loading }) => {
   const byIds = chat.byIds;
 
   const chatComparator = (a, b) => {
@@ -43,6 +45,7 @@ const mapStateToProps = ({ chat, }) => {
   };
   return {
     chatIds: chat.allIds.sort((a,b) => chatComparator(a,b)),
+    loading: isRequestLoading(loading, [FETCH_CHATS_REQUEST]),
     byIds: byIds //solo para que se reordene :(
   };
 };

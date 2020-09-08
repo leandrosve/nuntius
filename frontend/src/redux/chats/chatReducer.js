@@ -1,8 +1,8 @@
 import * as actionTypes from "./chatActionTypes";
 import { combineReducers } from "redux";
 import currentChatReducer from "./currentChatReducer";
-import { union } from "lodash";
-import { EDIT_GROUP_SUCCESS, SET_GROUP_AVATAR, KICK_USER_SUCCESS, ADD_USER_TO_CHAT_SUCCESS } from "./groups/groupActionTypes";
+import { union, mapValues } from "lodash";
+import { EDIT_GROUP_SUCCESS, SET_GROUP_AVATAR, KICK_USER_SUCCESS, ADD_USER_TO_CHAT_SUCCESS, SET_EMPTY_GROUP_AVATARS } from "./groups/groupActionTypes";
 
 const isFetching = (state = false, action) => {
   switch (action.type) {
@@ -31,6 +31,12 @@ const error = (state = "", action) => {
 const byIds = (state = {}, action) => {
   let chat;
   switch (action.type) {
+    case SET_EMPTY_GROUP_AVATARS:
+      return mapValues(state, chat => {
+        if(action.payload.includes(chat.id))
+          return {...chat, avatar:"not found"}
+        return chat;
+      });
     case ADD_USER_TO_CHAT_SUCCESS:
       return {...state, [action.payload.id]:action.payload};
     case KICK_USER_SUCCESS:

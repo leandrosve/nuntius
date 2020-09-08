@@ -15,6 +15,7 @@ import { getRequestError } from "../../redux/notification/errorReducer";
 import { isRequestLoading } from "../../redux/notification/loadingReducer";
 import { clearError } from "../../redux/notification/notificationActions";
 import NuntiusLogo from "../util/NuntiusLogo";
+import SmartAlert from "../util/SmartAlert";
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -26,12 +27,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function RegisterForm({signUp, error, loading, clearErrors}) {
+function RegisterForm({signUp,  loading}) {
   const { t } = useTranslation();
 
   const classes = useStyles();
-
-  useEffect(()=>{clearErrors()}, [clearErrors]);
 
   return (
     <FormContainer title={t("register")} icon={<NuntiusLogo />}>
@@ -75,14 +74,8 @@ function RegisterForm({signUp, error, loading, clearErrors}) {
         {({ isValid }) => (
           <Form className={classes.form}>
            
+            <SmartAlert onlyErrors concerns={alertConcerns}/>
 
-            <Alert
-            severity='error'
-            open={!loading && !!error}
-            onClick={() => clearErrors()}  
-          >
-            {error}
-            </Alert>
             <TextField
               variant="outlined"
               margin="normal"
@@ -155,15 +148,15 @@ function RegisterForm({signUp, error, loading, clearErrors}) {
   );
 }
 
-const mapStateToProps = ({loading, error}) =>{
+const alertConcerns=[SIGNUP_REQUEST];
+
+const mapStateToProps = ({loading}) =>{
   return {
-      error: getRequestError(error, [SIGNUP_REQUEST]),
       loading: isRequestLoading(loading, [SIGNUP_REQUEST]),
   }
 }
 const mapDispatchToProps = dispatch =>  {
   return {
-    clearErrors: () => dispatch(clearError([SIGNUP_REQUEST])),
     signUp: (username, password, name, email) => dispatch(signUp(username, password, name, email))
   }
 }

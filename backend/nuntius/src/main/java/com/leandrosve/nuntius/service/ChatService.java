@@ -135,10 +135,8 @@ public class ChatService {
 
     public boolean deleteUserFromChat(Long chatId, Long userId) {
         Chat chat = retrieveChat(chatId);
-        if(!chat.isUserMember(userId)) throw new BadRequestException("User not found in this chat");
         User user = userRepository.findById(userId).orElseThrow(()-> new UserNotFoundException());
-        chat.removeMember(user);
-        chatV2Repository.save(chat);
+        chat= removeUserFromChat(chat, user);
         ChatDTO chatDTO = new ChatDTO(chat.getId(), null, true, null);
         messagingTemplate.convertAndSendToUser(user.getUsername(), "/queue/chats/delete", chatDTO);
         return true;
@@ -152,5 +150,22 @@ public class ChatService {
         ChatDTO chatDTO = prepareChatForUser(chat, user);
         messagingTemplate.convertAndSendToUser(user.getUsername(), "/queue/chats", chatDTO);
         return  prepareChatForUser(chat, authUtil.getCurrentUser());
+    }
+
+    public boolean leaveGroup(Long chatId) {
+        Chat chat = retrieveChat(chatId);
+        User currentUser = authUtil.getCurrentUser();
+        removeUserFromChat(chat, currentUser);
+        if(chat.getMemberships().isEmpty()){
+            chatV2Repository.delete(chat);
+        }
+        return true;
+    }
+
+    private Chat removeUserFromChat (Chat chat, User user){
+        if(!chat.isUserMember(user.getId())) throw new BadRequestException("User not found in this chat");
+        chat.removeMember(user);
+        chat = chatV2Repository.save(chat);
+        return chat;
     }
 }
