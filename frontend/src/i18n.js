@@ -48,7 +48,7 @@ i18n
           bio:'Bio.',
           language:'Language',
           image_adjust:'Adjust image',
-          welcome_message:'Welcome {{name}}, please select chat to start messaging. Have a nice day!',
+          welcome_message:'Welcome {{name}}, please select a chat to start messaging. Have a nice day!',
           watch:'Watch',
           no_messages: "No messages yet...",
           group_untitled:"untitled group",  
@@ -69,6 +69,7 @@ i18n
           "no_spaces": 'This field cannot have spaces',
           login_failed: 'Username and password do not match',     
           chat_not_found: "Chat not found, you may have been removed from it...",
+          session_expired: "Session expired. Please log in again!",
         },
         success: {
           saved: 'Saved!',
@@ -154,6 +155,7 @@ i18n
           "no_spaces": 'No puede contener espacios',
           login_failed: 'El nombre de usuario y contraseña no coinciden',
           chat_not_found: "No se ha encontrado el chat, quizas te hayan eliminado...",
+          session_expired: "La sesión ha expirado. Por favor vuelva a iniciar sesión!",
         },
         success: {
           saved: 'Guardado!',

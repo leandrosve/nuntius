@@ -5,6 +5,8 @@ import App from './components/App';
 import * as serviceWorker from './serviceWorker';
 import WebFont from 'webfontloader';
 import "./i18n";
+import { Provider } from 'react-redux';
+import store from "./redux/store";
 
 WebFont.load({
   google: {
@@ -21,7 +23,9 @@ WebFont.load({
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+      <App />
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );

@@ -4,13 +4,12 @@ import Chat from "./Chat";
 import { openUserDetail, openMedia, openGroupDetail } from "../../redux/modal/modalActions";
 import { getUserByUsername } from "../../redux/user/userReducer";
 import { withRouter } from "react-router-dom";
-import { fetchUserByUsername, fetchUserById, fetchUsersById } from "../../redux/user/userActions";
+import { fetchUserByUsername, fetchUsersById } from "../../redux/user/userActions";
 import { getChatGroupById, getPrivateChatByUserId } from "../../redux/chats/chatReducer";
 import {userType, contactType, chatType} from "../../types";
 import {bool, string, func} from "prop-types";
 import { fetchMessagesFromUser, fetchMessagesFromChat, sendMessageToUser, sendMessageToChat, setCurrentChat, leaveChat, deleteConversation} from "../../redux/chats/chatActions";
 import {Redirect} from "react-router-dom"
-import useAvatar from "../util/hooks/useAvatar";
 import { isRequestLoading } from "../../redux/notification/loadingReducer";
 import { FETCH_USER_REQUEST } from "../../redux/user/userActionTypes";
 import { FETCH_MESSAGES_REQUEST } from "../../redux/chats/chatActionTypes";

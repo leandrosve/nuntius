@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useCallback } from "react";
+import React, { memo } from "react";
 import Typography from "@material-ui/core/Typography";
 import Linkify from "react-linkify";
 import { makeStyles } from "@material-ui/core/styles";
@@ -6,11 +6,9 @@ import dateFormat from "dateformat";
 import EmbededYoutube from "./EmbededYoutube";
 import MessageCheckMarker from "./MessageCheckMarker";
 import Media from "./Media";
-import useAvatar from "../../util/hooks/useAvatar";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { getUserById } from "../../../redux/user/userReducer";
 import Avatar from "../../util/Avatar";
-import {fetchUserById} from "../../../redux/user/userActions";
 
 const useStyles = makeStyles((theme) => ({
   messageContainer: {

@@ -3,10 +3,10 @@ import userReducer from "./user/userReducer";
 import chatReducer from "./chats/chatReducer";
 import modalReducer from "./modal/modalReducer";
 import sessionReducer from "./session/sessionReducer";
-import {LOGOUT} from "./user/userActionTypes";
 import loadingReducer from "./notification/loadingReducer";
 import errorReducer from "./notification/errorReducer";
 import successReducer from "./notification/successReducer";
+import { LOGOUT } from "./session/sessionActionTypes";
 
 const appReducer = combineReducers({
   user: userReducer,

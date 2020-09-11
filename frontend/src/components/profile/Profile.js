@@ -8,7 +8,6 @@ import Button from "@material-ui/core/Button";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import AcUnitIcon from "@material-ui/icons/AcUnit";
 import CameraAltIcon from "@material-ui/icons/CameraAlt";
-import Alert from '../util/Alert';
 import ImageEditor from "../util/ImageEditor";
 import  Avatar  from "../util/Avatar"
 import useAvatar from "../util/hooks/useAvatar";

@@ -38,7 +38,7 @@ function ChatPreview({
     <ListItem
       button
       onClick={handleClick}
-      style={{ background: "#1f1f23", borderBottom: "1px solid #303035" }}
+      style={{borderBottom: "1px solid #303035" }}
       left={<Avatar src={avatar} style={{width:"50px", height:"50px"}} colorSource={colorSource} group={type === "group"} alt={title} />}
       center={
         <React.Fragment>

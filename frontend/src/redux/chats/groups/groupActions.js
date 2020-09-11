@@ -1,7 +1,6 @@
 import ApiService from "../../../ApiService";
 import { hideModal } from "../../modal/modalActions";
 import * as actionTypes from "./groupActionTypes";
-import { fetchProfileImage } from "../../user/userActions";
 const addGroupRequest = () => ({
   type: actionTypes.ADD_GROUP_REQUEST,
 });

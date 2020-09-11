@@ -1,5 +1,4 @@
 import "../assets/Chat.css";
-import profilePicPlaceholder from "../../assets/images/profile-pic-placeholder.jpg";
 import React, { useRef} from "react";
 import InsertEmoticonIcon from "@material-ui/icons/InsertEmoticon";
 import OutlinedInput from "@material-ui/core/OutlinedInput";
@@ -10,7 +9,8 @@ import "emoji-mart/css/emoji-mart.css";
 import { Picker } from "emoji-mart";
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
-import { Avatar } from "@material-ui/core";
+import Avatar from "../../util/Avatar";
+import { useSelector } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   emojiPicker: {
@@ -61,7 +61,7 @@ function MessageForm({handleSendMessage}) {
     inputRef.current.selectionEnd=inputRef.current.selectionStart=0;
   }
 
- 
+  const avatar = useSelector(state => state.session.currentUser.avatar);
   return (
   
     <Box
@@ -70,7 +70,7 @@ function MessageForm({handleSendMessage}) {
       className={classes.root}
     >
       <Avatar
-        src={profilePicPlaceholder}
+        src={avatar}
         alt="user profile"
         style={{margin:"5px"}}
       />

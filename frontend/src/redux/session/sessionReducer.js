@@ -1,20 +1,22 @@
-import * as actionTypes from "../user/userActionTypes";
+import { EDIT_PROFILE_SUCCESS, SET_USER_AVATAR } from "../user/userActionTypes";
+import * as actionTypes from "./sessionActionTypes";
 
 const initialState = {
   currentUser: JSON.parse(localStorage.getItem("user")),
   authenticated: !!localStorage.getItem("user"),
+  refreshTokenTimestamp: localStorage.getItem("refreshTokenTimestamp")
 };
 
 const sessionReducer = (state = initialState, action) => {
   switch (action.type) {
-    case actionTypes.SET_USER_AVATAR:
+    case SET_USER_AVATAR:
       if(action.payload.id === state.currentUser.id)
         return{
           ...state,
           currentUser: { ...state.currentUser, ...action.payload },       
         };
       else return state;
-    case actionTypes.EDIT_PROFILE_SUCCESS:
+    case EDIT_PROFILE_SUCCESS:
       return {
         ...state,
         currentUser: { ...state.currentUser, ...action.payload }
@@ -29,10 +31,12 @@ const sessionReducer = (state = initialState, action) => {
         ...state,
       };
     case actionTypes.LOGIN_SUCCESS:    
+    case actionTypes.REFRESH_TOKEN_SUCCESS:
       return {
         ...state,
-        currentUser: action.payload,
+        currentUser: action.payload.user,
         authenticated: true,
+        refreshTokenTimestamp:action.payload.refreshTokenTimestamp,
       };
 
     case actionTypes.LOGIN_FAILURE:
@@ -40,12 +44,15 @@ const sessionReducer = (state = initialState, action) => {
         ...state,
         currentUser: null,
         authenticated: false,
+        refreshTokenTimestamp: null,
       };
-    case actionTypes.LOGOUT:
+    case actionTypes.LOGOUT:   
+    case actionTypes.REFRESH_TOKEN_FAILURE:
       return {
         ...state,
         currentUser: {},
-        authenticated: false,
+        authenticated: false,     
+        refreshTokenTimestamp: null,
       };
     default:
       return state;

@@ -92,21 +92,21 @@ function ChatHeader({
 const ChatHeaderMenu = ({ handleOpenDetail, handleLeaveChat, handleDeleteConversation, type}) => {
   const { t } = useTranslation();
   const [openMenu, setOpenMenu] = useState(false);
-  const handleToggleMenu = () => {
+  const handleToggleMenu = useCallback(() => {
     setOpenMenu((prev) => !prev);
-  };
+  },[])
 
   const [confirmationDialog, setConfirmationDialog] = useState({open:false, action:null});
 
   const handleLeaveChatConfirm = useCallback(()=>{
     handleToggleMenu();
     handleLeaveChat();
-  },[handleLeaveChat])
+  },[handleLeaveChat, handleToggleMenu])
 
   const handleDeleteChatConfirm = useCallback(()=>{
     handleToggleMenu();
     handleDeleteConversation();
-  },[handleLeaveChat])
+  },[handleToggleMenu, handleDeleteConversation])
 
 
   return (

@@ -12,19 +12,26 @@ const ChatWelcome = ({name}) => {
   return (
     <Box
       display="flex"
-      flexWrap="1"
-      flexDirection="column"
-      alignItems="center"
-      style={{ marginTop: "20%" }}
+      paddingTop="20%"
+      justifyContent="center"
+      flexGrow="1"
     >
-      <NuntiusLogo style={{ width: "200px", height: "200px" }} />
-      <Box display="flex" flexDirection="row" css={{ maxWidth: "400px" }}>
-        <div>
-          <EmojiPeopleIcon style={{ width: "100px", height: "100px" }} />
-        </div>
-        <div>
-          <Typography variant="h5">{t("welcome_message", { name: toTitleCase(name) })}</Typography>
-        </div>
+      <Box
+        display="flex"
+        flexWrap="1"     
+        flexDirection="column"
+        alignItems="center"
+        
+      >
+        <NuntiusLogo style={{ width: "200px", height: "200px" }} />
+        <Box display="flex" flexDirection="row" css={{ maxWidth: "400px" }}>
+          <div>
+            <EmojiPeopleIcon style={{ width: "100px", height: "100px" }} />
+          </div>
+          <div>
+            <Typography variant="h5">{t("welcome_message", { name: toTitleCase(name) })}</Typography>
+          </div>
+        </Box>
       </Box>
     </Box>
   );

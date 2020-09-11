@@ -23,7 +23,7 @@ const SmartAlert = ({concerns=[], onlyErrors, children, ...props}) =>{
             setDisplayNotification({text: success ? success : error, severity:success? "success" : "error", open:true})  
             !!onlyErrors ? clearErrors() : clearNotifications();
         }
-    },[success, error, clearNotifications])
+    },[success, error, clearNotifications, clearErrors, onlyErrors])
 
     
     return(

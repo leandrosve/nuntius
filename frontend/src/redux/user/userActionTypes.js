@@ -1,14 +1,3 @@
-
-export const LOGIN_REQUEST = "LOGIN_REQUEST";
-
-export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
-
-export const LOGIN_FAILURE = "LOGIN_FAILURE";
-
-export const CLEAN_SESSION_ERRORS = "CLEAN_SESSION_ERRORS";
-
-export const LOGOUT = "LOGOUT";
-
 export const SIGNUP = "SIGNUP";
 
 export const SIGNUP_REQUEST = "SIGNUP_REQUEST";
@@ -40,3 +29,4 @@ export const EDIT_PROFILE_FAILURE = "EDIT_PROFILE_FAILURE";
 export const EDIT_PROFILE_SUCCESS = "EDIT_PROFILE_SUCCESS";
 
 export const SET_USER_AVATAR = "SET_USER_AVATAR";
+

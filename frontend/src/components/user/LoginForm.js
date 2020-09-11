@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
@@ -15,10 +15,11 @@ import SmartAlert from "../util/SmartAlert";
 import { login} from "../../redux/session/sessionActions";
 import { connect } from "react-redux";
 import {isRequestLoading} from "../../redux/notification/loadingReducer";
-import { LOGIN_REQUEST, SIGNUP_REQUEST } from "../../redux/user/userActionTypes";
+import { SIGNUP_REQUEST } from "../../redux/user/userActionTypes";
 import { getRequestError } from "../../redux/notification/errorReducer";
 import { getRequestSuccessMessage } from "../../redux/notification/successReducer";
 import NuntiusLogo from "../util/NuntiusLogo";
+import { LOGIN_REQUEST } from "../../redux/session/sessionActionTypes";
 
 const useStyles = makeStyles((theme) => ({
   form: {

@@ -1,5 +1,4 @@
-import React, { useEffect, useCallback } from "react";
-import useAvatar from "../util/hooks/useAvatar";
+import React from "react";
 
 import {
   ListItem,
@@ -8,12 +7,9 @@ import {
   ListItemAvatar,
 } from "@material-ui/core";
 import Avatar from "../util/Avatar";
-
 import { makeStyles } from "@material-ui/core/styles";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector} from "react-redux";
 import { getUserById } from "../../redux/user/userReducer";
-import { fetchUserById } from "../../redux/user/userActions";
-
 import { useTranslation } from "react-i18next";
 const useStyles = makeStyles(() => ({
   root: {
@@ -39,9 +35,6 @@ const UserListItem = ({userId, handleClick, actions, dontHideActions}) => {
  
  const avatar = user ? user.avatar : null;
  const currentUserId = useSelector(({session})=>session.currentUser.id);
- const dispatch = useDispatch();
-
- const fetchUser = useCallback(()=>{dispatch(fetchUserById(userId))},[userId, dispatch]);
 
   if(!user) return null;
   return (

@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import { FormikTextField as TextField } from "formik-material-fields";
 import { Formik , Form} from "formik";
@@ -6,14 +6,11 @@ import * as Yup from "yup";
 import FormContainer from "../util/FormContainer";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
-import Alert from '../util/Alert';
 import { signUp } from "../../redux/user/userActions";
 import { connect } from "react-redux";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { SIGNUP_REQUEST } from "../../redux/user/userActionTypes";
-import { getRequestError } from "../../redux/notification/errorReducer";
 import { isRequestLoading } from "../../redux/notification/loadingReducer";
-import { clearError } from "../../redux/notification/notificationActions";
 import NuntiusLogo from "../util/NuntiusLogo";
 import SmartAlert from "../util/SmartAlert";
 

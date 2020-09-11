@@ -2,7 +2,6 @@ import * as actionTypes from "./contactActionTypes";
 import ApiService from "../../ApiService";
 import { normalize } from "normalizr";
 import * as schema from "../schema";
-import { fetchProfileImage } from "../user/userActions";
 import { SET_USER_AVATAR } from "../user/userActionTypes";
 
 const fetchContactsRequest = () => ({

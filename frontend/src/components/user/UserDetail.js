@@ -14,7 +14,6 @@ import { useTranslation } from "react-i18next";
 import PropTypes from 'prop-types';
 import StartChatButton from "../chat/StartChatButton";
 import Username from "./Username";
-import useAvatar from "../util/hooks/useAvatar";
 import Avatar from "../util/Avatar";
 
 const UserDetail = ({

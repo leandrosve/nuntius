@@ -13,7 +13,7 @@ import { fetchProfileImage } from "../redux/user/userActions";
 function Browse({ fetchContacts, fetchProfileImage }) {
   useEffect(() => fetchContacts(), [fetchContacts]);
   const currentUserId = useSelector((state) => state.session.currentUser.id);
-  useEffect(()=>fetchProfileImage(currentUserId, [fetchProfileImage, currentUserId]))
+  useEffect(()=>{if(!!currentUserId)fetchProfileImage(currentUserId)}, [fetchProfileImage, currentUserId])
   return (
     <div>
       <Nav />
@@ -22,7 +22,7 @@ function Browse({ fetchContacts, fetchProfileImage }) {
         <MessageSource/>
 
         <ChatListContainer />
-        <div className="Chat" style={{ position: "relative" }}>
+        <div  style={{ color:"white",  display:"flex", flexDirection:"column", flexGrow:1, justifyItems:"center", alignContent:"center", position: "relative" }}>
           <Switch>
             <Route
               path={[`/chat/@:username`, `/chat/group/:groupId`]}

@@ -23,8 +23,9 @@ const MessageSource = ({username, jwtToken, receiveMessage, deleteChat, receiveC
   });
 
   console.log(client.brokerURL);
-  
-  client.activate();
+  if(!!jwtToken){
+    client.activate();
+  }
   const handleReceiveMessage = function(message) {
     // called when the client receives a STOMP message from the server
     if (message.body) {

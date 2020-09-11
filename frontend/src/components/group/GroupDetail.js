@@ -19,7 +19,6 @@ import AddParticipants from "./AddParticipants";
 import WideCloseButton from "../util/WideCloseButton";
 import { EDIT_GROUP_REQUEST,  KICK_USER_REQUEST, ADD_USER_TO_CHAT_REQUEST} from "../../redux/chats/groups/groupActionTypes";
 import SmartAlert from "../util/SmartAlert";
-import { LEAVE_CHAT_SUCCESS } from "../../redux/chats/chatActionTypes";
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",

@@ -5,7 +5,6 @@ import { fetchUserById } from "../../redux/user/userActions";
 import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import useAvatar from "../util/hooks/useAvatar";
 import { getChatById } from "../../redux/chats/chatReducer";
 
 const ChatPreviewContainer = ({ chat, userId, user, fetchUserById }) => {

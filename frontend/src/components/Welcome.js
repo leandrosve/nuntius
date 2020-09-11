@@ -6,6 +6,9 @@ import Grid from "@material-ui/core/Grid";
 import {openLogin, openSignUp} from "../redux/modal/modalActions";
 import {connect} from "react-redux";
 import NuntiusLogo from "./util/NuntiusLogo";
+import SmartAlert from "./util/SmartAlert";
+import { Snackbar } from "@material-ui/core";
+import { REFRESH_TOKEN_REQUEST } from "../redux/session/sessionActionTypes";
 
 function Welcome({openLogin, openSignUp}) {
   const { t } = useTranslation();
@@ -14,6 +17,9 @@ function Welcome({openLogin, openSignUp}) {
     <header className="App-header">
       <NuntiusLogo className="App-logo" />
       <h1 className="App-link">NUNTIUS</h1>
+      <Snackbar open={true} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}  autoHideDuration={6000}>        
+        <SmartAlert concerns={alertConcens}/>     
+      </Snackbar>
       <Grid>
         <Button
           color="secondary"
@@ -39,6 +45,8 @@ function Welcome({openLogin, openSignUp}) {
     </header>
   );
 }
+
+const alertConcens=[REFRESH_TOKEN_REQUEST];
 
 const mapDispatchToProps = (dispatch) => {
   return {
