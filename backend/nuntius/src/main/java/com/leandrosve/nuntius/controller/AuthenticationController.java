@@ -48,7 +48,7 @@ public class AuthenticationController {
     }
 
     
-    @PostMapping("/authenticate/refresh")
+        @PostMapping("/authenticate/refresh")
     public ResponseEntity<SessionDTO> refreshAuthentication(@RequestBody RefreshTokenRequest data) {
         User user = userRepository.findByUsername(data.getUsername());
         boolean validated = jwtUtil.validateToken(data.getJwtToken(),user);

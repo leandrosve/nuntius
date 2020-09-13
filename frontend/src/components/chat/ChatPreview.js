@@ -4,17 +4,18 @@ import ListItem from "../util/ListItem";
 import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
 import Badge from "@material-ui/core/Badge";
 import { useTranslation } from "react-i18next";
-import MessageCheckMarker from "./message/MessageCheckMarker";
 import SupervisedUserCircleIcon from "@material-ui/icons/SupervisedUserCircle";
 import moment from "moment";
 import "moment/locale/es";
 import Avatar from "../util/Avatar";
+import MessagePreview from "./message/MessagePreview";
 
 const ellipsis = {
   whiteSpace: "nowrap",
   overflow: "hidden",
   textOverflow: "ellipsis",
 };
+
 function ChatPreview({
   avatar,
   title,
@@ -48,14 +49,8 @@ function ChatPreview({
             )}
             {title}
           </h3>
-          <div>
-            <p style={ellipsis}>
-              {lastMessage && lastMessage.details && (
-                <MessageCheckMarker {...lastMessage} />
-              )}
-              {lastMessage ? lastMessage.text : t("no_messages")}
-            </p>
-          </div>
+         
+          <MessagePreview message={lastMessage}/>
         </React.Fragment>
       }
       right={
@@ -71,7 +66,7 @@ function ChatPreview({
               {unreadMessagesCount > 0 && (
                 <Badge
                   className="ChatPreview-messageCount"
-                  badgeContent={unreadMessagesCount}
+                  badgeContent="?"
                   color="secondary"
                   children={<ChatBubbleOutlineIcon />}
                 />

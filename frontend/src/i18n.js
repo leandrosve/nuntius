@@ -58,6 +58,7 @@ i18n
           undo:"Undo",
           you: "You",
           kick:"Kick",
+          no_results:"No results",
         },
         error: {
           "passwords_must_match" : "Passwords must match",
@@ -79,6 +80,7 @@ i18n
           signup:'Account registered, please log in!',
           participant_delete: "User removed from chat!",
           participant_add: "Participant added!",
+          chat_leave: "Conversation removed!",
         },
         confirmation:{
           "accept":'Accept',
@@ -144,6 +146,7 @@ i18n
           undo:"Deshacer",
           you: "Tú",
           kick:"Expulsar",
+          no_results:"Sin resultados",
         },
         error: {
           "passwords_must_match" : "Las contraseñas no coinciden",
@@ -163,6 +166,7 @@ i18n
           contact_saved: 'Contacto guardado!',
           group_saved: 'Grupo guardado!',
           participant_delete: "Participante eliminado!",
+          chat_leave: "Conversación eliminada!",
           participant_add: "Participante agregado!",
           signup:'Registro exitoso, inicie sesión para continuar!',
         },

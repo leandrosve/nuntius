@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useCallback } from "react";
 import ChatPreview from "./ChatPreview";
 import { getUserById } from "../../redux/user/userReducer";
 import { fetchUserById } from "../../redux/user/userActions";
@@ -21,11 +21,7 @@ const ChatPreviewContainer = ({ chat, userId, user, fetchUserById }) => {
     history.push(route);
   }, [user, chat, history]);
 
-  useEffect(() => {
-    if (userId != null && user == null ) {
-      fetchUserById(userId);
-    }
-  }, [userId,user,fetchUserById]);
+  
 
   const avatar = user ? user.avatar :chat ? chat.avatar : null;
 

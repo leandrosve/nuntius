@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import DeleteContactButton from "../contacts/DeleteContactButton";
 import IconButton from "@material-ui/core/IconButton";
 import Box from "@material-ui/core/Box";
@@ -15,6 +15,8 @@ import PropTypes from 'prop-types';
 import StartChatButton from "../chat/StartChatButton";
 import Username from "./Username";
 import Avatar from "../util/Avatar";
+import { useDispatch } from "react-redux";
+import { fetchProfileImage } from "../../redux/user/userActions";
 
 const UserDetail = ({
   editContact,
@@ -27,6 +29,8 @@ const UserDetail = ({
     setOpenAliasForm((prev) => !prev);
   }, []);
   console.log(contactId);
+
+  
   const renderAliasForm = () =>{
     if(contactId){
       return(
@@ -57,6 +61,13 @@ const UserDetail = ({
       );
     }
   }
+
+  const dispatch = useDispatch();
+  useEffect(()=>{
+    if(!avatar){
+      dispatch(fetchProfileImage(id))
+    }
+  },[avatar, id, dispatch]);
 
   return (
     <Spring from={{ opacity: 0 }} to={{ opacity: 1 }} duration={2500}>

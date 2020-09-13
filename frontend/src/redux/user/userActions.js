@@ -188,8 +188,11 @@ export const fetchUserById = (id) => {
 export const fetchUsersById = (ids = []) => {
   return (dispatch, getState) => {
     const users = getState().user;
+    const currentUserId = getState().session.currentUser.id;
     dispatch(fetchUsersRequest());
-    ids.forEach((id) => {
+    ids.filter(id => id !== currentUserId).forEach((id) => {
+      
+     
       if (!getUserById(users, id))
         dispatch(fetchUserById(id));
     });

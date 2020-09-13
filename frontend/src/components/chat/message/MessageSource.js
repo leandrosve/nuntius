@@ -32,9 +32,7 @@ const MessageSource = ({username, jwtToken, receiveMessage, deleteChat, receiveC
       const parsedMessage = JSON.parse(message.body);
       parsedMessage.sentTime = new Date(parsedMessage.sentTime).getTime();
       receiveMessage(parsedMessage)
-    } else {
-      alert("got empty message");
-    }
+    } 
   };
 
   const handleDeleteChat = function(message) {

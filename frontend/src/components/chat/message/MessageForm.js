@@ -56,9 +56,11 @@ function MessageForm({handleSendMessage}) {
   const inputRef = useRef(null);
 
   const submitMessage = ()=>{
-    handleSendMessage(text);
-    setText('');
-    inputRef.current.selectionEnd=inputRef.current.selectionStart=0;
+    if(!!text && text.length > 0){
+      handleSendMessage(text);
+      setText('');
+      inputRef.current.selectionEnd=inputRef.current.selectionStart=0;
+    }
   }
 
   const avatar = useSelector(state => state.session.currentUser.avatar);

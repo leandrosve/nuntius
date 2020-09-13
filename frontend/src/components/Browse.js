@@ -9,6 +9,10 @@ import ChatWelcome from "./chat/ChatWelcome";
 import { Route, Switch } from "react-router-dom";
 import MessageSource from "./chat/message/MessageSource";
 import { fetchProfileImage } from "../redux/user/userActions";
+import { ADD_GROUP_REQUEST } from "../redux/chats/groups/groupActionTypes";
+import { Snackbar } from "@material-ui/core";
+import SmartAlert from "./util/SmartAlert";
+import { LEAVE_CHAT_REQUEST } from "../redux/chats/chatActionTypes";
 
 function Browse({ fetchContacts, fetchProfileImage }) {
   useEffect(() => fetchContacts(), [fetchContacts]);
@@ -22,6 +26,10 @@ function Browse({ fetchContacts, fetchProfileImage }) {
         <MessageSource/>
 
         <ChatListContainer />
+
+        <Snackbar open={true} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}  autoHideDuration={6000}>        
+          <SmartAlert concerns={snackbarConcerns}/>     
+        </Snackbar>
         <div  style={{ color:"white",  display:"flex", flexDirection:"column", flexGrow:1, justifyItems:"center", alignContent:"center", position: "relative" }}>
           <Switch>
             <Route
@@ -35,6 +43,8 @@ function Browse({ fetchContacts, fetchProfileImage }) {
     </div>
   );
 }
+
+const snackbarConcerns=[ADD_GROUP_REQUEST, LEAVE_CHAT_REQUEST];
 
 const mapDispatchToProps = (dispatch) => ({
   fetchContacts: () => dispatch(contacts()),

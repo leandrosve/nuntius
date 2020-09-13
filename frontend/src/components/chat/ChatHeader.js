@@ -2,10 +2,10 @@ import React, { useState, useCallback } from "react";
 import "./assets/Chat.css";
 import { useTranslation } from "react-i18next";
 import Toolbar from "@material-ui/core/Toolbar";
-import AttachFileIcon from "@material-ui/icons/AttachFile";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from "@material-ui/icons/Search";
+import CloseIcon from "@material-ui/icons/Close";
 import ListItem from "@material-ui/core/ListItem";
 import DropdownMenu from "../util/DropdownMenu";
 import { withRouter } from "react-router-dom";
@@ -14,6 +14,7 @@ import { string, func } from "prop-types";
 import Username from "../user/Username";
 import ConfirmationDialog from "../util/ConfirmationDialog";
 import Avatar from "../util/Avatar";
+import { TextField } from "@material-ui/core";
 
 
 
@@ -29,12 +30,16 @@ const useStyles = makeStyles((theme) => ({
     padding: "0px 10px 0px 10px",
     zIndex: theme.zIndex.appbar - 1,
   },
+  icon:{
+    fontSize: "30px", color: "white" 
+  }
 }));
 
 function ChatHeader({
   handleOpenDetail,
   handleLeaveChat,
   handleDeleteConversation,
+  handleFilterChange,
   online = false,
   title,
   avatar,
@@ -45,6 +50,7 @@ function ChatHeader({
 }) {
   const { t } = useTranslation();
   const classes = useStyles();
+  const [openSearchField, setOpenSearchField] = useState(false);
 
   return (
     <div>
@@ -76,12 +82,17 @@ function ChatHeader({
           </div>
         </ListItem>
         <div className="ChatHeader-options">
+         
+          {openSearchField ?
+          <>       
+            <TextField variant="outlined" autoFocus margin="dense" onChange={(e)=>handleFilterChange(e.target.value)} InputProps={{style:{background:"white"}}}></TextField>
+            <IconButton color="primary" onClick={()=>{setOpenSearchField(false); handleFilterChange(null)}}><CloseIcon className={classes.icon}/> </IconButton>
+          </>
+          :   
           <IconButton color="primary">
-            <SearchIcon style={{ fontSize: "30px", color: "white" }} />
-          </IconButton>
-          <IconButton color="primary">
-            <AttachFileIcon style={{ fontSize: "30px", color: "white" }} />
-          </IconButton>
+            <SearchIcon className={classes.icon}  onClick={()=>setOpenSearchField(true)}/>
+          </IconButton> 
+          }       
           <ChatHeaderMenu handleOpenDetail={handleOpenDetail} handleLeaveChat={handleLeaveChat} handleDeleteConversation={handleDeleteConversation} type={type} canDelete={canDelete}/>
         </div>
       </Toolbar>
@@ -95,7 +106,7 @@ const ChatHeaderMenu = ({ handleOpenDetail, handleLeaveChat, handleDeleteConvers
   const handleToggleMenu = useCallback(() => {
     setOpenMenu((prev) => !prev);
   },[])
-
+  const classes = useStyles();
   const [confirmationDialog, setConfirmationDialog] = useState({open:false, action:null});
 
   const handleLeaveChatConfirm = useCallback(()=>{
@@ -112,7 +123,7 @@ const ChatHeaderMenu = ({ handleOpenDetail, handleLeaveChat, handleDeleteConvers
   return (
     <React.Fragment>
       <IconButton color="primary" onClick={() => handleToggleMenu()}>
-        <MoreHorizIcon style={{ fontSize: "30px", color: "white" }} />
+        <MoreHorizIcon className={classes.icon}/>
       </IconButton>
       {openMenu && (
         <DropdownMenu style={{ position: "absolute", right: "0" }}>

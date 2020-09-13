@@ -4,19 +4,18 @@ import Message from "./message/Message";
 import DateMarker from "../util/DateMarker";
 import VideoPlayer from "../util/VideoPlayer";
 import Chip from "@material-ui/core/Chip";
-
-
 import { useTranslation } from "react-i18next";
-
 
 const sortByDate = (a, b) => (a.sentTime > b.sentTime ? 1 : -1);
 
-const ChatContent = ({handleOpenMedia, messages, type}) => {
+const ChatContent = ({handleOpenMedia, messages, type, filter}) => {
   const { t } = useTranslation();
   const [videoPlayer, setVideoPlayer] = useState({
     open: false,
     src: null,
   });
+
+  const filteredMessages = (!filter && filter !== "") ? messages : messages.filter(m=>m.text.includes(filter));
 
   const handleOpenVideoPlayer = React.useCallback((src) => {
     setVideoPlayer({ open: true, src: src });
@@ -41,12 +40,14 @@ const ChatContent = ({handleOpenMedia, messages, type}) => {
         
         
         <div className="ChatMessages-content">
-        {(!messages || (messages && messages.length === 0)) && 
+        {(!filteredMessages || (filteredMessages.length === 0)) && 
           <div style={{display:"flex", justifyContent:"center", marginTop:"10px"}}>
-            <Chip label={t("no_messages")}/>
+            <Chip label={!!filter && filter.length > 0 ? t("no_results") : t("no_messages")}/>
           </div>
         }
-          {messages.sort(sortByDate).map((message, index) => {
+        {}
+       
+          {filteredMessages.sort(sortByDate).map((message, index) => {
             const showDateMarker = index === 0 || !sameDay(message.sentTime, messages[index - 1].sentTime);
             const displayAvatar = (index === 0 || message.userId !== messages[index - 1].userId || showDateMarker);
             return (

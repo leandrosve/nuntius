@@ -13,13 +13,15 @@ import {Redirect} from "react-router-dom"
 import { isRequestLoading } from "../../redux/notification/loadingReducer";
 import { FETCH_USER_REQUEST } from "../../redux/user/userActionTypes";
 import { FETCH_MESSAGES_REQUEST } from "../../redux/chats/chatActionTypes";
+import { Box, Chip } from "@material-ui/core";
+import { useTranslation } from "react-i18next";
 
 const ChatContainer = ({
   user, group, fetchUserByUsername, openUserDetail, 
   loading = true, username, openMedia,messages, fetchMessagesFromChat, sendMessageToUser, sendMessageToChat, 
   setCurrentChat, chatId, privateChatId, leaveChat, currentUser, openGroupDetail, fetchUsers, deleteConversation
 }) => {
-
+  const { t } = useTranslation();
   const getUserId= useCallback(() =>{
     return user ? user.id : null
   }
@@ -105,7 +107,7 @@ const ChatContainer = ({
           handleDeleteConversation={handleDeleteConversation}
         />
       ) : (
-        !loading && <div>not found</div>
+        !loading && <Box display="flex"  justifyContent="center" marginTop="50px">  <Chip label={t("error:chat_not_found")}></Chip></Box>
       )}
     </>
   );

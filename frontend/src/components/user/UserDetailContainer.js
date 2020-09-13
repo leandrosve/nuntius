@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { connect } from "react-redux";
 
@@ -11,18 +11,30 @@ import UserDetail from "./UserDetail";
 import { getUserById, getSearchedUserById } from "../../redux/user/userReducer";
 import { ADD_CONTACT_REQUEST, EDIT_CONTACT_REQUEST, DELETE_CONTACT_REQUEST } from "../../redux/contacts/contactActionTypes";
 import SmartAlert from "../util/SmartAlert";
+import { addUser } from "../../redux/user/userActions";
 
-const UserDetailContainer = (props) => {
+const UserDetailContainer = ({ shouldAddUser, addUser, user, ...props}) => {
+
+  useEffect(()=>{
+    if(shouldAddUser && user){
+      addUser(user);
+    }
+  },[user, shouldAddUser, addUser])
+
   return (
     <>
       <SmartAlert concerns ={concerns}/>
-      <UserDetail {...props} {...props.user}  />
+      <UserDetail {...props} {...user}  />
     </>);
 };
 
 const mapStateToProps = ({ user }, {userId}) => {
   const u = getUserById(user, userId);
-  return { user: u ? u : getSearchedUserById(user, userId) };
+  const shouldAddUser = !u;
+  return { 
+    user: u ? u : getSearchedUserById(user, userId),
+    shouldAddUser: shouldAddUser
+  };
 };
 
 const concerns = [
@@ -43,6 +55,10 @@ const mapDispatchToProps = (dispatch) => {
     addContact: (user) => {
       dispatch(addContact(user));
     },
+    addUser: (user) =>{
+      dispatch(addUser(user));
+      
+    }
   };
 };
 
