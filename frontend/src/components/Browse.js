@@ -23,22 +23,24 @@ function Browse({ fetchContacts, fetchProfileImage }) {
       <Nav />
       <div className="Browse-content">
       
-        <MessageSource/>
+        <MessageSource>
 
         <ChatListContainer />
 
-        <Snackbar open={true} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}  autoHideDuration={6000}>        
-          <SmartAlert concerns={snackbarConcerns}/>     
-        </Snackbar>
-        <div  style={{ color:"white",  display:"flex", flexDirection:"column", flexGrow:1, justifyItems:"center", alignContent:"center", position: "relative" }}>
-          <Switch>
-            <Route
-              path={[`/chat/@:username`, `/chat/group/:groupId`]}
-              component={ChatContainer}
-            />
-            <ChatWelcome />
-          </Switch>
-        </div>
+          <Snackbar open={true} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}  autoHideDuration={6000}>        
+            <SmartAlert concerns={snackbarConcerns}/>     
+          </Snackbar>
+          <div  style={{ color:"white",  display:"flex", flexDirection:"column", flexGrow:1, justifyItems:"center", alignContent:"center", position: "relative" }}>
+            <Switch>
+              <Route
+                path={[`/chat/@:username`, `/chat/group/:groupId`]}
+                component={ChatContainer}
+              />
+              <ChatWelcome />
+            </Switch>
+          </div>
+
+        </MessageSource>
       </div>
     </div>
   );

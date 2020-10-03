@@ -15,7 +15,7 @@ const ChatContent = ({handleOpenMedia, messages, type, filter}) => {
     src: null,
   });
 
-  const filteredMessages = (!filter && filter !== "") ? messages : messages.filter(m=>m.text.includes(filter));
+  const filteredMessages = (!filter && filter !== "") ? messages : messages.filter(m=>m.text? m.text.toLowerCase().includes(filter.toLowerCase()): false);
 
   const handleOpenVideoPlayer = React.useCallback((src) => {
     setVideoPlayer({ open: true, src: src });

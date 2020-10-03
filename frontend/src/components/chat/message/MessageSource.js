@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {connect} from "react-redux";
 import {Client} from "@stomp/stompjs";
 import SockJS from "sockjs-client";
@@ -6,9 +6,9 @@ import { receiveMessage, leaveChatSuccess, receiveChatSuccess} from "../../../re
 
 
 
-const MessageSource = ({username, jwtToken, receiveMessage, deleteChat, receiveChat}) => {
+const MessageSource = ({username, jwtToken, receiveMessage, deleteChat, receiveChat, children}) => {
   
-  const client = new Client({
+  let client=new Client({
     webSocketFactory:()=> {return new SockJS('http://localhost:8080/ws')},
     connectHeaders: {
       username: username,
@@ -20,12 +20,18 @@ const MessageSource = ({username, jwtToken, receiveMessage, deleteChat, receiveC
     reconnectDelay: 10000,
     heartbeatIncoming: 10000,
     heartbeatOutgoing: 10000
-  });
+   });
+  
+  
+  
 
-  console.log(client.brokerURL);
-  if(!!jwtToken){
-    client.activate();
-  }
+  useEffect(()=>{
+    if(client){
+      client.activate();
+      return ()=>{console.log("deactivating"); client.deactivate();};
+    } 
+  },[client])
+
   const handleReceiveMessage = function(message) {
     // called when the client receives a STOMP message from the server
     if (message.body) {
@@ -66,7 +72,7 @@ const MessageSource = ({username, jwtToken, receiveMessage, deleteChat, receiveC
 
   return (
     <>
-     
+     {children}
     </>
   );
 };

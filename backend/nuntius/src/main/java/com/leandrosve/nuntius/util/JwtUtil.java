@@ -5,23 +5,27 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
-@Service
+@Component
 public class JwtUtil {
     public static final long JWT_TOKEN_VALIDITY = 10000 * 3600;
-    
-    //SACAR DE ACAAAAAAAAAAAAAAAAAAAAAAAAAA
-    //SACAR DE ACAAAAAAAAAAAAAAAAAAAAAAAAAA
-    //SACAR DE ACAAAAAAAAAAAAAAAAAAAAAAAAAA
-    //SACAR DE ACAAAAAAAAAAAAAAAAAAAAAAAAAA
-	private String SECRET_KEY="secret";
 
+	private String SECRET_KEY;
+
+	@Autowired
+	public JwtUtil(@Value("${authentication.jwt.secretKey}") String secretKey ){
+		super();
+		this.SECRET_KEY=secretKey;
+	}
 	// retrieve username from jwt token
 	public String extractUsername(String token) {
 		return extractClaim(token, Claims::getSubject);

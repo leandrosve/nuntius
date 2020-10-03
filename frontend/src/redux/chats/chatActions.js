@@ -189,7 +189,7 @@ export const sendMessageToUser = ({ userId, text }) => {
   return (dispatch) => {
     dispatch(sendMessageRequest());
     ApiService.post(`/users/${userId}/messages`, { text })
-      .then(dispatch(sendMessageSuccess()))
+      
       .catch((error) => {
         dispatch(sendMessageFailure(error.message));
       });
