@@ -12,4 +12,7 @@ Proyecto de servicio de mensajeria online desarrollado con el objetivo de aprend
 <img src="https://user-images.githubusercontent.com/37419225/94855642-337b5380-0405-11eb-9508-0e54434b15c2.png" width="15%"></img> 
 <img src="https://user-images.githubusercontent.com/37419225/94855654-370eda80-0405-11eb-9e6b-854567eb47bf.png" width="15%"></img> 
 <img src="https://user-images.githubusercontent.com/37419225/94855663-39713480-0405-11eb-9291-1500d89f9593.png" width="15%"></img> 
-<img src="https://user-images.githubusercontent.com/37419225/94855665-3bd38e80-0405-11eb-9e33-d02d0fe82e0b.png" width="15%"></img> 
+<img src="https://user-images.githubusercontent.com/37419225/94855665-3bd38e80-0405-11eb-9e33-d02d0fe82e0b.png" width="15%"></img>
+<img src="https://user-images.githubusercontent.com/37419225/95001399-1038db80-05a0-11eb-895d-ece28847920b.png" width="15%"></img>
+
+
