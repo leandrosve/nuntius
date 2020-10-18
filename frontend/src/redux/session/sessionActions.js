@@ -2,6 +2,7 @@ import * as actionTypes from './sessionActionTypes';
 import ApiService from "../../ApiService";
 import { hideModal } from '../modal/modalActions';
 import i18next from 'i18next';
+import { EDIT_PROFILE_FAILURE, EDIT_PROFILE_REQUEST, EDIT_PROFILE_SUCCESS } from '../user/userActionTypes';
 
 export const login= (username, password) =>{
     return (dispatch) => {
@@ -42,6 +43,48 @@ export const refreshToken= () =>{
             )               
     }
 }
+
+export const editProfile = (name, biography, avatar) => {
+    return (dispatch) => {
+      dispatch(editProfileRequest());
+      ApiService.patch("/profile", { name, biography })
+        .then((response) => {
+          if (avatar) {
+            ApiService.putProfileImage(avatar).then((avatarURL) =>
+              dispatch(editProfileSuccess({ avatar: avatarURL }))
+            );
+          } else {
+            const user =JSON.parse(localStorage.getItem("user"));
+            localStorage.setItem("user", JSON.stringify({...user, ...response.data}));
+            dispatch(editProfileSuccess(response.data));
+          }
+        })
+        .catch((error) => {
+          dispatch(editProfileFailure(error.message));
+        });
+    };
+  };
+
+export const editProfileRequest = () => { 
+    return {
+      type: EDIT_PROFILE_REQUEST,
+    };
+  };
+  
+  export const editProfileSuccess = (user) => {
+    return {
+      type: EDIT_PROFILE_SUCCESS,
+      payload: user,
+      success: "success:saved",
+    };
+  };
+  
+  export const editProfileFailure = (error) => {
+    return {
+      type: EDIT_PROFILE_FAILURE,
+      error: error,
+    };
+  };
 
 const clearStorage = () =>{
     localStorage.removeItem("user");

@@ -31,11 +31,13 @@ import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import org.springframework.beans.factory.annotation.Value;
+
 @RestController
 public class ImageController {
 
-    private String profileImagesDirectory =  System.getProperty("user.dir").concat("/uploads/profile_images/");
-    private String groupImagesDirectory =  System.getProperty("user.dir").concat("/uploads/group_images/");
+    private String profileImagesDirectory;
+    private String groupImagesDirectory;
 
     private AuthUtil authUtil;
 
@@ -45,8 +47,10 @@ public class ImageController {
     private Logger logger = LoggerFactory.getLogger(ImageController.class);
 
     @Autowired
-    public ImageController(AuthUtil authUtil) {
+    public ImageController(AuthUtil authUtil, @Value("${uploads.path}") String uploadsPath) {
         this.authUtil = authUtil;
+        this.profileImagesDirectory=uploadsPath.concat("/profile_images/");
+        this.groupImagesDirectory=uploadsPath.concat("/group_images/");
     }
 
     @RequestMapping(value = "/users/{userId}/avatar", method = RequestMethod.GET, produces = MediaType.IMAGE_PNG_VALUE)

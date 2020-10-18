@@ -90,27 +90,6 @@ export const addUser = (user) => {
   };
 };
 
-export const editProfileRequest = () => {
-  return {
-    type: actionTypes.EDIT_PROFILE_REQUEST,
-  };
-};
-
-export const editProfileSuccess = (user) => {
-  return {
-    type: actionTypes.EDIT_PROFILE_SUCCESS,
-    payload: user,
-    success: "success:saved",
-  };
-};
-
-export const editProfileFailure = (error) => {
-  return {
-    type: actionTypes.EDIT_PROFILE_FAILURE,
-    error: error,
-  };
-};
-
 export const signUp = (username, password, name, email) => {
   return (dispatch) => {
     dispatch(signupRequest());
@@ -125,24 +104,7 @@ export const signUp = (username, password, name, email) => {
   };
 };
 
-export const editProfile = (name, biography, avatar) => {
-  return (dispatch) => {
-    dispatch(editProfileRequest());
-    ApiService.patch("/profile", { name, biography })
-      .then((response) => {
-        if (avatar) {
-          ApiService.putProfileImage(avatar).then((avatarURL) =>
-            dispatch(editProfileSuccess({ avatar: avatarURL }))
-          );
-        } else {
-          dispatch(editProfileSuccess(response.data));
-        }
-      })
-      .catch((error) => {
-        dispatch(editProfileFailure(error.message));
-      });
-  };
-};
+
 
 export const searchUsers = (someString) => {
   return (dispatch) => {

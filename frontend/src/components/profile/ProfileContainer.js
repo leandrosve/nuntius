@@ -2,7 +2,7 @@ import React, { useCallback} from "react";
 import Profile from "./Profile";
 
 import { connect } from "react-redux";
-import {editProfile} from "../../redux/user/userActions";
+import {editProfile} from "../../redux/session/sessionActions";
 
 const ProfileContainer = (props) => {
   const {saveProfile, ...params} = props;

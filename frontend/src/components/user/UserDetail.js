@@ -43,7 +43,7 @@ const UserDetail = ({
         />
       ) : (
         <React.Fragment>
-          <Typography display="inline" variant="h5">
+          <Typography style={{display:"inline-block", textOverflow:"clip"}} variant="h5">
             {alias}
           </Typography>
           <label>
@@ -77,7 +77,7 @@ const UserDetail = ({
             display="flex"
             flexDirection="row"
             alignItems="center"
-            maxWidth="400px"
+            maxWidth="90%"
           >
             <Avatar
               src={avatar}

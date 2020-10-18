@@ -76,6 +76,11 @@ export const leaveChatSuccess = (chat) => ({
   success: "success:chat_leave",
 });
 
+export const deleteChat = (chat) => ({
+  type: actionTypes.DELETE_CHAT,
+  payload: chat,
+});
+
 export const receiveChatSuccess = (chat) => ({
   type: actionTypes.ADD_CHAT,
   payload: chat,
@@ -92,14 +97,13 @@ export const setCurrentChat = ({ id, userId }) => ({
 });
 
 export const chats = () => {
-  return (dispatch, ) => {
+  return (dispatch) => {
     dispatch(fetchChatsRequest());
     ApiService.get("/chats")
       .then((response) => {
         const normalized = normalize(response.data, schema.arrayOfChats);
         dispatch(fetchChatsSuccess(normalized));
         dispatch(fetchChatsMetadata(response.data));
-        
       })
       .catch((error) => {
         dispatch(fetchChatsFailure(error.message));
@@ -107,9 +111,8 @@ export const chats = () => {
   };
 };
 
-const fetchChatsMetadata  = (chats)=>{
-  
-  return(dispatch, getState) =>{
+const fetchChatsMetadata = (chats) => {
+  return (dispatch, getState) => {
     let withoutAvatar = [];
     const currentUserId = getState().session.currentUser.id;
     if (chats.length > 0) {
@@ -121,19 +124,25 @@ const fetchChatsMetadata  = (chats)=>{
             else withoutAvatar.push(c.id);
           });
           const lastMessage = c.lastMessage;
-          if(!!lastMessage && lastMessage.userId !== currentUserId && !getUserById(getState().user, lastMessage.userId)){           
-            dispatch(fetchUserById(lastMessage.userId))
+          if (
+            !!lastMessage &&
+            lastMessage.userId !== currentUserId &&
+            !getUserById(getState().user, lastMessage.userId)
+          ) {
+            dispatch(fetchUserById(lastMessage.userId));
           }
-        }else{
-          const userId = c.userIds.find(id => id !== currentUserId);       
-          if(!getUserById(getState().user, userId)) {
-            dispatch(fetchUserById(userId))};
+        } else {
+          const userId = c.userIds.find((id) => id !== currentUserId);
+          if (!getUserById(getState().user, userId)) {
+            dispatch(fetchUserById(userId));
+          }
         }
       });
-      if(withoutAvatar.length > 0)dispatch({ type: SET_EMPTY_GROUP_AVATARS, payload: withoutAvatar });
+      if (withoutAvatar.length > 0)
+        dispatch({ type: SET_EMPTY_GROUP_AVATARS, payload: withoutAvatar });
     }
-  }
-}
+  };
+};
 
 export const fetchChatById = (chatId) => {
   return (dispatch) => {
@@ -164,7 +173,7 @@ export const fetchMessagesFromUser = (userId) => {
 export const fetchMessagesFromChat = (chatId) => {
   return (dispatch, getState) => {
     dispatch(fetchMessagesRequest());
-    const currentUserId=getState().session.currentUser.id;
+    const currentUserId = getState().session.currentUser.id;
     ApiService.get(`/chats/${chatId}/messages`)
       .then((response) => {
         dispatch(fetchMessagesSuccess(response.data));
@@ -175,9 +184,12 @@ export const fetchMessagesFromChat = (chatId) => {
             userIds.push(message.userId);
           }
         });
-        userIds = uniqBy(userIds, (id) => id).filter(id=> id !== currentUserId);
+        userIds = uniqBy(userIds, (id) => id).filter(
+          (id) => id !== currentUserId
+        );
         userIds.forEach((id) => {
-          dispatch(fetchUserById(id))});
+          dispatch(fetchUserById(id));
+        });
       })
       .catch((error) => {
         dispatch(fetchMessagesFailure(error.message));
@@ -189,10 +201,9 @@ export const sendMessageToUser = ({ userId, text }) => {
   return (dispatch) => {
     dispatch(sendMessageRequest());
     ApiService.post(`/users/${userId}/messages`, { text })
-      
-      .catch((error) => {
-        dispatch(sendMessageFailure(error.message));
-      });
+    .catch((error) => {
+      dispatch(sendMessageFailure(error.message));
+    });
   };
 };
 
@@ -232,8 +243,12 @@ export const leaveChat = (chatId) => {
 export const deleteConversation = (chatId) => {
   return (dispatch) => {
     dispatch(leaveChatRequest());
-    ApiService.delete(`/chats/${chatId}`).catch((error) => {
-      dispatch(leaveChatFailure(error.message));
-    });
+    ApiService.delete(`/chats/${chatId}`)
+      .then(() => {
+        dispatch(leaveChatSuccess({ id: chatId }));
+      })
+      .catch((error) => {
+        dispatch(leaveChatFailure(error.message));
+      });
   };
 };

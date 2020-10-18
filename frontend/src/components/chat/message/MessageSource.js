@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import {connect} from "react-redux";
 import {Client} from "@stomp/stompjs";
 import SockJS from "sockjs-client";
-import { receiveMessage, leaveChatSuccess, receiveChatSuccess} from "../../../redux/chats/chatActions";
+import { receiveMessage, leaveChatSuccess, receiveChatSuccess, deleteChat} from "../../../redux/chats/chatActions";
 
 
 
@@ -80,7 +80,7 @@ const MessageSource = ({username, jwtToken, receiveMessage, deleteChat, receiveC
 const mapDispatchToProps = (dispatch) => {
   return {
    receiveMessage: (msg) => dispatch(receiveMessage(msg)),
-   deleteChat: (chat) => dispatch(leaveChatSuccess(chat)),
+   deleteChat: (chat) => dispatch(deleteChat(chat)),
    receiveChat: (chat) => dispatch(receiveChatSuccess(chat))
   };
 };

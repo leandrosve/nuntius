@@ -35,3 +35,6 @@ export const LEAVE_CHAT_FAILURE = "LEAVE_CHAT_FAILURE";
 
 
 export const LEAVE_CHAT_REQUEST = "LEAVE_CHAT_REQUEST";
+
+
+export const DELETE_CHAT = "DELETE_CHAT";
